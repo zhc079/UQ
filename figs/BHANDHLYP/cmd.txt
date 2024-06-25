@@ -1,0 +1,16 @@
+for k in 1 2 3 4 5 6
+do 
+	cp temp_FILES $k -r
+	cd $k
+	xtp_map -v -t ../MD_FILES/newfile.data -c ../MD_FILES/plus1_prod_wrap.dump -s system.xml -f state.hdf5 -i $k > mapping.out
+	xtp_run -e neighborlist -o OPTIONS/neighborlist.xml -f state.hdf5 
+	sleep 2
+	cp eqm_edots.jobs.back eqm_edots.jobs
+	# xtp_parallel -e eqm -o OPTIONS/eqm.xml -f state.hdf5 -j "write"
+	xtp_parallel -e eqm -o OPTIONS/eqm.xml -f state.hdf5 -x 7 -t 4 -j "run" > eqm.log
+	xtp_parallel -e iqm -o OPTIONS/iqm_noSCF.xml -f state.hdf5 -j "write"
+	sleep 2
+	xtp_parallel -e iqm -o OPTIONS/iqm_noSCF.xml -f state.hdf5 -x 7 -t 4 -j "run" > iqm.log
+	#rm OR_FILES -r
+	cd ..
+done

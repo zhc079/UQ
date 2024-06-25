@@ -1,0 +1,6 @@
+xtp_map -s mapping.xml -t MD_FILES/npt_prod.tpr -c MD_FILES/npt_conv.gro -f state.hdf5
+xtp_run -e ewdbgpol -o OPTIONS/ewdbgpol.xml -f state.hdf5 -t 28 > ewdbgpol.log
+xtp_parallel -e ewald -o OPTIONS/ewald_polar.xml -f state.hdf5 -x 7 -t 4 -j "write"
+cp jobs.xml.back jobs.xml
+xtp_parallel -e ewald -o OPTIONS/ewald_polar.xml -f state.hdf5 -x 1 -t 28 -j "run" > ewald.log
+

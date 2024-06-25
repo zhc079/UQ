@@ -1,0 +1,7 @@
+getEt.py: used to get the trap energy at each node, output: list of middleSite.txt, trap energy: Et.txt
+trap.py: used to find rho1, rho2 threshold
+
+rates_withTrap.py: calculate TOF with trap energy, output: TOF_trap.txt
+
+smalltest.py: used to plot and test packages, functions
+metric2.py: calculates the distribution of eigenvector, commute distance
