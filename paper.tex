@@ -23,22 +23,21 @@
 
 \begin{document}
 \linenumbers
-\title{Uncertain Effects of DFT Functionals on Calculations of Organic semiconductor Charge Mobility}
+\title{Uncertain Effects of DFT Functionals on Time-of-flight Calculations of Organic semiconductor }
 \author{authors}
 \date{\today}
 \maketitle
 
 \begin{abstract}
-    We study the uncertainty effect from the DFT functional to the charge mobility calculations of organic semiconductors (OSC). 
-    The ToF mobilities of the BCP and MADN devices are calculated from the first principle multiscale model. 
-    BCP has a large energy disorder while MADN has a small energy disorder.
-    Using a total of 10 different DFT functionals, we find that the electronic structure properties have similar distributions as indicated by Wasserstein distance, while the charge mobility of the could have a relatively large deviation.
-    Further investigation reveals that ToF can be sensitive to the energy of a single node, leading to the ToF being sensitive to DFT functionals.
-    
-    Further investigation reveals that the BHANDHLYP functional leads to a trap site, and the charge mobility is very sensitive to the trap sites' energy, so a small change in the site's energy results in a large deviation of ToF.  
+In this paper, the time-of-flight (ToF) is used to quantify the charge mobility in OSC. 
+Using ToF as the quantity of interest, the uncertainty effect of the DFT functionals on the ToF in a BCP device is studied. 
+Using a total of 10 different DFT functionals, we find that the electronic structure properties have similar distributions as indicated by Wasserstein distance, while the ToF can have a relatively large deviation.
+Further investigation reveals that ToF can be sensitive to the energy of a single molecule, leading to the ToF being sensitive to DFT functionals.
 
-    We further estimate the charge mobility distribution due to the uncertainty in electronic structure properties.  
-    We find that the uncertainty in site energy has the most significant effect on the charge mobility. Ultimately, a confidence level of charge mobility is obtained encoding the maximum amount of uncertainty in electronic structure parameters. 
+Further investigation reveals that the BHANDHLYP functional leads to a trap site, and the charge mobility is very sensitive to the trap sites' energy, so a small change in the site's energy results in a large deviation of ToF.  
+
+We further estimate the charge mobility distribution due to the uncertainty in electronic structure properties, and those properties' uncertainty is obtained from the maximum likelihood estimation of the 10 data points calculated using the 10 DFT functionals.
+Ultimately, a confidence level of charge mobility is obtained, and it is found that the uncertainty in site energy has the most significant effect on the ToF. 
 \end{abstract}
 
 \section{Introduction}
