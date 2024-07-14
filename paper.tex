@@ -34,35 +34,173 @@
     BCP has a large energy disorder while MADN has a small energy disorder.
     Using a total of 10 different DFT functionals, we find that the electronic structure properties have similar distributions as indicated by Wasserstein distance, while the charge mobility of the could have a relatively large deviation.
     Further investigation reveals that ToF can be sensitive to the energy of a single node, leading to the ToF being sensitive to DFT functionals.
-    And those nodes are effectively trap nodes.
+    
     Further investigation reveals that the BHANDHLYP functional leads to a trap site, and the charge mobility is very sensitive to the trap sites' energy, so a small change in the site's energy results in a large deviation of ToF.  
 
-    We further investigate the uncertainty effect of electronic structure properties on the charge mobility 
-    We find that the site energy has the most significant effect on the charge mobility and a confidence level of charge mobility is obtained encoding the maximum amount of uncertainty in electronic structure parameters. 
+    We further estimate the charge mobility distribution due to the uncertainty in electronic structure properties.  
+    We find that the uncertainty in site energy has the most significant effect on the charge mobility. Ultimately, a confidence level of charge mobility is obtained encoding the maximum amount of uncertainty in electronic structure parameters. 
 \end{abstract}
 
 \section{Introduction}
-Charge mobility is one of the main quantities of interest for OSC.
+Random walk in random environments is often used to model physical processes taking into account the varying disorder levels and environmental factors that influence the walker's movement. 
+These disorders and environmental factors can introduce a level of uncertainty that significantly impacts the overall rates of the random walk, ultimately affecting the quantities of interest one aims to obtain.
 
-Since the charge transport in OSC involves electrons, quantum mechanics and Schr\"odinger equation are essential for the theoretical study of charge mobility.
+A specific type of random walk in random environments is the charge transport in organic semiconductors (OSC), which consists of the amorphous mesoscopic structure due to spatially disordered molecular arrangement. 
+Such structural disorder translates into electronic structure disorder, including energy disorder and coupling element disorder, which eventually leads the charge transport processes to be modeled as continuous time random walks (CTRWs). By representing the molecule as vertexes, the edge weights are assigned as the transition rates between the corresponding molecules, and the charge carriers are random walkers. 
+The uncertainty brought by electronic structure disorder and environmental factors is reflected in the transition rates, that is the edge weights of the CTRWs. 
 
-Charge conductance is due to electron dynamics, so quantum mechanics and Schr\"odinger equation are essential for the theoretical study of charge mobility. 
-
-Due to the complexity of Schr\"odinger Equation, one alternative theory is the density functional theory (DFT). DFT has two challenges. Firstly, it is computationally impossible to perform electronic structure calculations for the whole OSC device. And secondly, the exchange-correlation potential in DFT has an unknown formula.
+While the transition rates in those CTRWs can be calculated in a first-principle multiscale approach, this method involves some level of approximations. 
+Since the charge transport in OSC involves electrons, quantum mechanics and Schr\"odinger equation are essential in providing a time-series behavior of the charge dynamics. 
+But due to the complexity of Schr\"odinger Equation, one alternative theory is the density functional theory (DFT). DFT has two challenges. Firstly, it is computationally impossible to perform electronic structure calculations for the whole OSC device. And secondly, the exchange-correlation potential in DFT has an unknown formula.
 
 The first challenge is overcome by approximating the electron dynamics as transition processes between the localized states, with the transition rates calculated as the temperature-activated bi-molecule transition rates, known as the Marcus rate. 
 The second challenge is addressed by utilizing DFT functionals to represent the exchange-correlation potential. 
-Those functionals are benchmarked to achieve good consistency with many physical quantities, such as ionization potential, and density of states. 
+While there are benchmark results concerning the molecular energy calculation using different DFT functionals as well as rich literature on charge transport in the multiscale model OSC, a quantitative study of DFT functionals' effect on the charge transport processes is missing. 
+Also missing is the influence of the uncertainty in the electronic structure properties on the quantity of interest. 
 
-In the framework of this multiscale model, the accuracy of the DFT functionals determine the accuracy of the calculated mobility. 
+There are many challenges for this investigation. Firstly, due to the number of molecules ($\sim 1000$), since the CTRWs are usually of high dimensions, quantifying uncertainty in such high dimensions is numerically challenging. Secondly, simulating the CTRWs process itself can be a computationally challenging task due to some convergence issues.
+Last but not least, the exact DFT functionals are not known so as the distribution of the transition rates for any two specific molecules. 
 
-We can use the steady state mobility, 
+One of the main quantities of interest to characterize the charge transport in OSC is charge mobility. Using this as the quantity of interest,
+the goal of this work is to investigate how the DFT functionals affect the electronic structures and charge mobility. The uncertainty due to the environmental factors that cause a change in the molecules' position is not considered in this work, although this topic itself is very important.
+We want to answer the following questions: 
+\begin{itemize}
+    \item How do DFT functionals change the reorganization energy, distribution of molecule energies and coupling elements? 
+    \item How do DFT functionals change the charge mobility?
+    \item Which electronic structure (among energy, coupling element and reorganization energy) has the most impact on the uncertainty of charge mobility?
+    \item Can we estimate the range of the quantity of interest, given a confidence level?
+\end{itemize}
 
-The influence of the different functionals on ToF calculation is missing. 
-In this work, we want to study how the DFT functionals affect the electronic structures and ToF charge mobility.
+With an external electric field, the charge mobility can be calculated as $\mu = \frac{\vec{v} \vec{F}}{|\vec{F}|^2}$ where $\vec{v}$ is the average drift-diffusive velocity of the charge carrier(s).
+Without an electric field, $\vec{v}$ is the purely diffusive velocity. 
+In electronic devices, the velocity is obtained from \textit{time-of-flight} (ToF) experiments, where charge carriers are injected into the cathode and collected at the anode. The ToF, denoted as $\tau$, is the period from injection to detection of at least one charge carrier. 
+Then the velocity is simply $|\vec{v}| = \frac{L}{\tau}$, where $L$ is the length of the sample, which is usually chosen to be along the electric field direction if there is any. 
 
-The goal of this work is to investigate how the DFT functionals affect the electronic structures and ToF charge mobility.
-We want to answer questions: 
+Analogously, the ToF calculation for multiscale modeled OSC sets up some molecules as \textit{Source} and some as \textit{Sink}. The key quantity for characterizing the charge transport, especially for uncertainty quantification, is the ToF, since the sample length $L$ is fixed and can be seen as a constant. 
+
+In literature regarding multiscale modeled OSC, most works on charge transport reported steady-state charge mobility. This setting repeats the molecule graph infinitely in all three dimensions by periodic boundary conditions. Then, the CTRWs on the graph are simulated, usually by kinetic Monte Carlo numerically. However, this method suffers from challenges such as convergence issues. Namely, there is no guarantee that the number of Monte Carlo simulations will correctly present the charge carrier occupation in each molecule, and this becomes a problem if we want to calculate some quantities for a confidence level. 
+
+Therefore, the charge mobility based on ToF is the focus to characterize charge transport.
+Specifically, diffusive ToF with one charge carrier is used as the quantities of interest, and its calculation is based on the hitting time of a continuous time Markov chain. 
+Diffusive ToF only considers electronic structures, without the influence of external electric fields, making clear the sensitivity effect path starting from DFT functional to electronic structures and eventually to ToF mobility. 
+We only consider the CTRWs with one charge carrier, since multiple charge carriers will lead to a huge dimension, making the uncertainty quantification difficult to approach computationally, plus other issues. Also, since we only simulate a very limited-size system, using only one charge carrier is aligned with the low carrier density at the electric device level. 
+Furthermore, multiple charge carriers will effectively disable some low-energy molecules which are important in uncertainty quantification. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Multiscale Model}
+\label{sec:MSM}
+To perform multiscale modeling, the BCP (dimethyl-diphenyl-1,10-phenanthroline) device is used as the OSC in this work, since BCP has small conductivity and has been used as hole-trapping materials \cite{tsung_carrier_2008}.
+A BCP device consisting of 1000 molecules is shown in Fig.\ref{fig:ToFFill}(b) with atomistic details.
+
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=0.4\textwidth]{figs/BCP_trap.png}
+%   \caption{ BCP device simulated from MD. The Source and Sink molecules are highlighted by the blue color, and the molecule corresponding to node 66 is highlighted by the red color. The other BCP molecules are in grey. }
+%   \label{fig:BCP}
+%\end{figure}
+
+The atomistic coordinates as well as the center-of-mass (COM) of each BCP molecule are generated from atomistic Molecular dynamics simulation, whose details are given in the Appendix.
+For modeling purposes, this molecular system is modeled as a graph on which the random walk takes place. Each vertice represents a molecule, which also corresponds to a localized state mentioned in the introduction. 
+Using a cutoff distance $r_\text{cutoff}$, any two molecules whose COM is within $r_\text{cutoff}=0.5$ [nm] are connected by directed edges with a weight $\omega_{i,j}$, and usually $\omega_{i,j} \neq \omega_{j,i}$.
+The directed edge weights $\omega_{i,j}$ takes the electron transfer rate from localized state of molecule $i$ to that of molecule $j$, commonly expressed as Marcus rate:
+%
+\begin{equation}
+    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{i,j}|^2}{\sqrt{4\pi \lambda_{i,j} k_\text{B}T}} \exp\left(-\frac{(\Delta E_{i,j} + q \cdot \vec{r}_{i,j} - \lambda_{i,j})^2}{4\lambda_{i,j} k_\text{B}T}\right) ,
+    \label{equ:Marcus}
+\end{equation}
+%
+where $\hbar$ is the reduced Planck constant, $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), and the charge of the carrier $q$ (in \unit[]{e}) can be considered as parameters of the simulation. The vector $\vec{r}_{i,j} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses of molecules $i$ and $j$, which is calculated cyclic boundary conditions depending on the boundary condition.
+The remaining quantities are calculated for each molecule using principles from quantum mechanics and classical mechanics: the reorganization energy $\lambda_{i,j}$, the electronic coupling $J_{ij}$, and the energy difference $\Delta E_{i,j} = E_i - E_j$ (all in \unit[]{eV}). 
+
+In summary, the multiscale model for ToF calculation refers to the process: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates from which the vertex and edge sets are defined,
+secondly, quantum electronic structure calculation is performed to obtain the parameter sets $\left\{\lambda_{i,j}\right\}$,  $\left\{J_{ij}\right\}$, and $\left\{\Delta E_{i,j}\right\}$ based on the atomistic details to define the edge weights. Finally from those parameters, ToF is evaluated.
+In the remaining section, we will introduce the calculation details of $\left\{\lambda_{i,j}\right\}$,  $\left\{J_{ij}\right\}$, $\left\{\Delta E_{i,j}\right\}$ and ToF. 
+
+\subsection{Electronic Structure Calculation} 
+Each molecule is an $N_\text{el}$-electron system, and in quantum mechanics, the probability of finding electrons in space is described by the wavefunction.
+The energy eigenvalue from the standard Kohn–Sham model \cite{kohn_self_1965} for a molecule (consisting of electrons and nuclei) reads:
+\begin{equation}
+    E_0 = \text{inf}\{ E^\text{KS}(\psi),\psi=(\phi_1,\cdots,\phi_{N_\text{el}}) \in (L_2(\mathbb{R}^3))^N, \int_{\mathbb{R}^3} \phi_i \phi_j =\delta_{ij} \} 
+    \label{eq:KS_model}
+\end{equation}
+where the single-electron wavefunction $\phi_i$ satisfies $(-\frac{1}{2}\nabla^2_\mathbf{r} + \hat{V}_\text{ext} + \hat{V}_\text{H}[\rho] + \hat{V}_\text{XC}) \phi_i^\text{KS} =  E^\text{KS}_i[\rho] \phi^\text{KS}_i$ with electron density $\rho$. 
+The kinetic energy operator is $-\frac{1}{2}\nabla^2_\mathbf{r}$, external potential energy operator $\hat{V}_\text{ext}$ includes all electrostatic background potentials such as the nuclear potential of all the atoms.
+The Coulomb interaction operator is $\hat{V}_\text{H}[\rho] = \int_{\mathbb{R}^3} \frac{\rho(\vec{r}')}{ |\vec{r} - \vec{r}'| }$, and Kohn-Sham energy $E^\text{KS}_i$ of electron $i$. The molecule wavefunction $\psi$ lives in squared integrable Lebesgue space $L_2(\mathbb{R}^3)$. 
+
+The exchange-correlation operator $\hat{V}_\text{XC}$ accounts for all the nonclassical terms, namely, the potential and kinetic energy associated with electron exchange and correlation. Knowledge of the exact $\hat{V}_\text{XC}$ makes obtaining the exact energy eigenvalue of many-body ground state possible. However, the exact $\hat{V}_\text{XC}$ is unknown and approximations, such as local density approximation (LDA), generalized gradient approximation (GGA) or a mixture of those two approximations with other models, are used in practice as the form of DFT functionals. 
+The ten DFT functionals are shown in Table \ref{tab:para}.
+
+The energy eigenvalue $E_0$ depends on the atomic coordinates of the molecule. The optimized geometry of a molecule refers to the atomic coordinates that minimize $E_0$.
+The reorganization energy $\lambda_{i,j}$ from molecule $i$ to molecule $j$ is given as:
+\begin{equation}
+    \lambda_{ij} = E_i^\text{nC} - E_i^\text{nN} + E_j^\text{cN} - E_j^\text{cC}
+\end{equation}
+where $E_i^\text{nC}$ is the energy eigenvalue of the neutral molecule $i$ with the optimized geometry of charged molecule. When charge carriers are holes, a charged molecule has one electron less compared to a neutral molecule. Similarly, $E_j^\text{cN}$ is the energy eigenvalue of the charged molecule with the optimized geometry of the neutral molecule. For the BCP device, we obtain $\lambda_{ij}=0.50$ eV since this is only one type of molecule.
+
+The site energy $E_i$ is calculated by:
+\begin{equation}
+    E_i = (E_i^\text{cC} - E_i^\text{nN}) + E_i^\text{el}
+    \label{eq:siteE}
+\end{equation}
+where $E_i^\text{nN}$ is single-point energy of the neutral molecule $i$ with the optimized geometry of neutral molecule. Similarly, $E_i^\text{cC}$ is the single-point energy of the charged molecule $i$ with the optimized geometry of the charged molecule. In physical interpretation, $E_i^\text{cC} - E_i^\text{nN}$ is the adiabatic ionization potential of molecule $i$.
+And $E_i^\text{el}$ is the electrostatic interactions given by:
+%
+\begin{equation}
+    E_i^\text{el} = \frac{1}{4 \pi \epsilon_0} \sum\limits_{a_i} \sum\limits_{b_k,k\neq i} 
+    \frac{(q_{a_i}^\text{c} - q_{a_i}^\text{n}) q_{b_k}^\text{n}}{\epsilon_s r_{a_i,b_k}}
+    \label{equ:Eel}
+\end{equation}
+%
+where $i,k$ index molecules, $a_i$ and $b_k$ refer to atoms belonging to molecule $i,k$, $r_{a_i,b_k} = || \vec{r}_{a_i} - \vec{r}_{b_k} ||_2$ is the distance between atoms $a_i$ and $b_k$, and $\epsilon_s$ represents the static relative dielectric constant and is a function of the dipole moment of the molecule. From the atomic charges, the dipole moment is calculated via $\mu_i = \sum\limits_{a_i} q_{a_i} \cdot \vec{r}_{a_i}$. The molecule energies and their distribution are shown in the appendix.
+
+%%%%%%%
+The coupling element $J_{i,j}$ between molecule $i$ and $j$ is calculated \cite{baumeier_density_2010} using the electron wave function of the molecules obtained from the Kohn-Sham equation: 
+\begin{equation}
+    J_{i,j} = \frac{ J^0_{i,j}- \frac{1}{2}(e_i+e_j)\mathbf{S}_{i,j} }{ 1- \mathbf{S}_{i,j}^2 }
+    \label{equ:JAB}
+\end{equation}
+where $J^0_{i,j} = \langle \psi^i | \hat{H} | \psi^j \rangle $, $e_i = \langle \psi^i | \hat{H} | \psi^i \rangle $, $e_j = \langle \psi^j | \hat{H} | \psi^j \rangle $, and $\mathbf{S}_{i,j}=\langle \psi^i | \psi^j \rangle $ with bra-ket notation, $\hat{H}$ is the Hamiltonian of the electron wave function, and $\psi^{i,(j)}$ is the electron wave function of molecule $i(j)$. A single molecule is called a monomer, and a pair of two molecules is called a dimer.
+
+Denote $\psi^\text{D}$ as the electron wave function of the two molecules,  $J^0_{i,j}$ can be calculated via:
+$
+    J^0_{i,j} = \mathbf{\gamma}^i \text{diag}(\mathcal{E}) \mathbf{\gamma}^j
+$, 
+where $\mathbf{\gamma}^i = \langle \psi^i | \psi^\text{D} \rangle$ and $\mathbf{\gamma}^j = \langle \psi^j | \psi^\text{D} \rangle$ are called the projections of the monomer orbitals $\psi^i, \psi^j$ on the dimer orbitals $\psi^\text{D}$. And $\text{diag}(\mathcal{E})$ is the diagonal matrix consisting of energy eigenvalues of the one-particle wave function of the dimer. The molecular coupling element distribution is shown in the appendix.
+
+
+\section{Time-of-flight Calculation}
+After defining the graph $\mathbf{G}=(\mathbf{W},\mathbf{E})$ and calculating the edge weights from the multiscale model, the charge dynamics can be modeled as a continuous-time random walk process on the graph. 
+To model the Source-Sink conditions in many devices such as the neuromorphic devices mentioned in the introduction, some vertices are used as \textbf{Source} to represent the electrode where charge carriers are injected, and some vertices as \textbf{Sink} where charge carriers are detected and ToF recorded.
+Due to Coulomb repulsion, each node can be occupied by one charge carrier at most, so a system with $N$ molecules and $N_c$ charge carriers has a total of $C^N_{N_C}$ occupation situations. Each of these occupation situations is considered as a state $\mathbf{s}$. 
+If all the carriers' occupations are in the Source node, the state is called the Source state, and if at least one of the Sink nodes is occupied, the state is called the Sink state. 
+The transition rates between the states can be obtained from the adjacency matrix $\mathbf{W}:\omega_{i,j}$, since the connectivity of states is encoded in the connectivity of the nodes, as detailed in ~\cite{chen_graph_2024}. 
+According to such connectivity, 
+the transition rates $\Omega_{\mathbf{s} \mathbf{s}' }$ from state $\mathbf{s}$ to $\mathbf{s}'$ is:
+\begin{equation}\label{eq:transition_rates}
+	\Omega_{\mathbf{s} \mathbf{s}^\prime} =
+	\begin{cases}
+	     0			&  \mathbf{s} \text{ is not connected to } \mathbf{s}^\prime,\\
+	    \omega_{ij}	&  \mathbf{s} \text{ is connected to } \mathbf{s}^\prime \text{ due to } (i,j)
+	\end{cases}
+\end{equation}
+
+Then the transition probability from state $\mathbf{s}$ to $\mathbf{s}'$ is $p_{\mathbf{s} \mathbf{s}^\prime} = \Omega_{\mathbf{s} \mathbf{s}^\prime}/D_\mathbf{s}$ where $D_\mathbf{s} := \sum_{\mathbf{s}^\prime \ne \mathbf{s}} \Omega_{\mathbf{s} \mathbf{s}^\prime}$.
+And the expected time from state $\mathbf{s}$ to reach the Sink state $\tau_\mathbf{s}$ is calculated 
+~\cite{chen_graph_2024} via: 
+\begin{equation}\label{eq:hitting_time}
+	\tau_\mathbf{s} = \begin{cases}
+		\frac{1}{D_\mathbf{s}} + \sum_{\mathbf{s}^\prime \ne \mathbf{s}} p_{\mathbf{s} \mathbf{s}^\prime} \tau_{\mathbf{s}^\prime} &\text{if $\mathbf{s}$ is not a sink state},\\
+		0 &\text{else.} 
+	\end{cases}
+\end{equation} 
+
+Since we need to consider all possible starting nodes of the carriers, all the Source states need to be considered. 
+The random walk process has been modeled as a parallel electric network of capacitors~\cite{doyle_random_2000}, and accordingly, we evaluate the ToF to be the harmonic mean:
+%
+\begin{equation}
+\tau = N_\text{source} \left[\sum_{\mathbf{s}\in \text{source}} (\tau_\mathbf{s}^\ast)^{-1}\right]^{-1},
+\end{equation}
+with $N_\text{source}$ the number of source states.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
