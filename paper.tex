@@ -168,6 +168,7 @@ where $\mathbf{\gamma}^i = \langle \psi^i | \psi^\text{D} \rangle$ and $\mathbf{
 
 \section{Time-of-flight Calculation}
 After defining the graph $\mathbf{G}=(\mathbf{W},\mathbf{E})$ and calculating the edge weights from the multiscale model, the charge dynamics can be modeled as a continuous-time random walk process on the graph. 
+One of the quantity of interest in charge transport is the Time-of-flight from Source to Sink. 
 To model the Source-Sink conditions in many devices such as the neuromorphic devices mentioned in the introduction, some vertices are used as \textbf{Source} to represent the electrode where charge carriers are injected, and some vertices as \textbf{Sink} where charge carriers are detected and ToF recorded.
 Due to Coulomb repulsion, each node can be occupied by one charge carrier at most, so a system with $N$ molecules and $N_c$ charge carriers has a total of $C^N_{N_C}$ occupation situations. Each of these occupation situations is considered as a state $\mathbf{s}$. 
 If all the carriers' occupations are in the Source node, the state is called the Source state, and if at least one of the Sink nodes is occupied, the state is called the Sink state. 
@@ -380,6 +381,13 @@ When we use $E_i \in N(\bar{E_i},\sigma(E_i))$, $\lambda \in N(\bar{\lambda},\si
     \label{fig:ToFs2}
 \end{figure} 
 
+\section{Uncertainty in ToF}
+Now we need to answer which ToF is accurate. 
+Using the multiscale model to determine the ToF is a function $f: \mathbb{R}^d \rightarrow \mathbb{R}^+$, which maps the parameter vector $$\vec{x} = [ E_1,E_2,\cdots,E_N, R_1,R_2,\cdots,R_N,J_1,J_2,\cdots,J_{N_\text{pair}} ]$$ to a real value $\tau \in \mathbb{R}^+$.
+
+Due to noise and approximation in the multiscale model, each element in $\vec{x}$ can be considered as an exact value plus an error term, for example $$E_1 = \hat{E}_1 + \epsilon_{E_1} $$
+There is no prior knowledge about this error terms. 
+Since the normal distribution inserts the least amount of prior knowledge into a model and encodes the maximum amount of uncertainty, we want to quantify the uncertainty when those error terms are normally distributed. 
 %\bibliographystyle{unsrt}
 %\bibliography{references}
 
