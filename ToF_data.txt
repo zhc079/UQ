@@ -1,0 +1,59 @@
+
+\section{Drift-diffusive Charge Mobility Estimation}
+The charge mobility with the electric field as drift force is calculated as:
+\begin{equation}
+    \mu = \frac{\vec{v} \vec{F} }{|\vec{F}|^2}
+    \label{eq:mobility}
+\end{equation}
+where the vector $\vec{v}$ is the charge velocity and $\vec{F}$ is the electric field. 
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 0.0038 & $1.8 \times 10^{-9}$ & 0 & 0.028 & 0.033 & 0 \\
+    0.15 & 0.029 & $3.0 \times 10^{-9}$ & 0 & 0.029 & 0.021 & 0 \\
+    0.25 & 0.016 & $8.8 \times 10^{-9}$ & 0 & 0.016 & 0.013 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Drift-diffusive ToF mobility $v_\text{ToF,X}=\frac{L_X}{\tau_X} [cm^2/Vs]$  comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 0.0017 & $2.0 \times 10^{-9}$ & 0 & 0.026 & 0.033 & 0 \\
+    0.15 & 0.023 & $3.0 \times 10^{-9}$  & 0 & 0.023 & 0.021 & 0 \\
+    0.25 & 0.014 & $1.4 \times 10^{-8}$ & 0 & 0.014 & 0.014 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Drift-diffusive ToF velocity $v_\text{ToF,Y}=\frac{L_Y}{\tau_Y}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 0.0037 & $4.0 \times 10^{-8}$ & 0 & 0.026 & 0.036 & 0 \\
+    0.15 & 0.026 & $1.0 \times 10^{-7}$ & 0 & 0.026 & 0.021 & 0 \\
+    0.25 & 0.015 & $5.9 \times 10^{-8}$ & 0 & 0.015 & 0.013 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Drift-diffusive ToF velocity $v_\text{ToF,Z}=\frac{L_Z}{\tau_Z}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}

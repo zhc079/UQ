@@ -7,6 +7,9 @@
 \usepackage[margin=1in,letterpaper]{geometry} % decreases margins
 \usepackage{cite} % takes care of citations
 \usepackage[final]{hyperref} % adds hyper links inside the generated pdf file
+
+\usepackage{booktabs}
+
 \hypersetup{
 	colorlinks=true,       % false: boxed links; true: colored links
 	linkcolor=blue,        % color of internal links
@@ -25,7 +28,7 @@
 
 \begin{document}
 \linenumbers
-\title{Uncertain Effects of DFT Functionals on Time-of-flight Calculations of Organic semiconductor }
+\title{Uncertain Effects of DFT Functionals on Charge Dynamic of Organic Semiconductor }
 \author{authors}
 \date{\today}
 \maketitle
@@ -41,6 +44,22 @@ Ultimately, a confidence level of charge mobility is obtained, and it is found t
 \end{abstract}
 
 \section{Introduction}
+
+Theoretical model and computer simulation for understanding a physical system must contain some uncertainties in predicting the system features. 
+For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, etc.
+Nevertheless, those uncertainties should not affect the validity of the model or the accuracy for the predicting system in terms of some quantities of interest (QoI). 
+Here the terminology "uncertainties" refers to the impossibility of getting a deterministic QoI, and excludes theoretical or numerical errors. 
+
+In this work, an investigated model containing uncertainties is the first-principle multiscale model for charge dynamics in organic semiconductors (OSCs).
+From a broad perspective, this model contains uncertainties due to the limitation of the model, the randomness nature of the QoI, and the limitation of the numerical simulations.
+
+To explain in detail those uncertainties, the first-principle multiscale model is briefly reviewed. 
+Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is too complex to solve due to complexity, so Density Functional Theory (DFT) appears as a manageable way to model electrons.
+DFT has its own challenges that introduce uncertainties into the first-principle multiscale model. 
+{\huge Here}
+
+A commonly used model for theoretical investigation of organic semiconductors is the first-principle multiscale model, which contains uncertainties in terms of the comprehensiveness of the theory, the mo
+
 Random walks in random environments (RWRE) are widely used to model physical processes, incorporating the varying levels of disorder and environmental factors that influence movement. 
 These disorders and environmental factors can introduce a level of uncertainty that significantly impacts the overall rates of the random walk, ultimately affecting the quantities of interest one aims to obtain.
 
@@ -237,7 +256,7 @@ Using ten different functionals, the molecule energies, coupling elements and re
 Table \ref{tab:para} summarizes the names of the DFT functionals, the amount of Hartree-Fock exchange (HFX), the reorganization energies, ToFs, the standard deviation of the molecule energy distributions, the drift ToFs under an electric field $6 \times 10^7$ V/m and mobility.
 The table indicates that while the energy standard deviations $\sigma(E)$ are similar across different functionals, the ToF vary significantly, notably for functionals like BHANDHLYP, M06L, and BHLYP.
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{c c c c c c c}
     \hline
@@ -276,9 +295,9 @@ The $\pi$-electron conjugation and interactions in OSC such as BCP and MADN lead
 So our first investigation use the range of HFX=$0.05,0.15,0.23,0.24,0.25,0.26,0.27,0.35,0.45,0.55$. The values of HFX=$0.23,0.24,0.26,0.27$ are used because we want to see if a small perturbation in HFX would affect ToF significantly. 
 
 Since ToF is sensitively affected by site energy, which is affected by the isotropic polarizability $P_\text{iso}$ and dipole moment $\mu$ of the molecules, we plot the those molecular properties as a function of HFX. 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figs/BCP_HFX/fig_autogen_BCP.png}
+    \includegraphics[width=0.9\textwidth]{figs/BCP_HFX/fig_autogen_BCP.pdf}
     \caption{(a) The neutral state BCP molecule dipole moment $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters. }
     \label{fig:autogen}
 \end{figure}
@@ -295,7 +314,7 @@ The ToF of the BCP molecular system calculated using different HFX is shown in t
 In contrast to the almost linear HFX-$\lambda$ relationship, those large ToFs are not physical. 
 
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{c c c }
     \hline
@@ -324,14 +343,14 @@ Those difference in atomic charges and polarizability affect the site energy cal
 So the atomic charges and polarizability in the optimized structure can not be transferred to the BCP molecules generated from the MD simulation. 
 For very disorder material system such as BCP, using the atomic charges and polarizability in the optimized structure can result in site energies that are deviated from the majority of the molecules. 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterE_qmmm.png}
-    \caption{Scatter plot of site energy calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterE_qmmm.pdf}
+    \caption{Scatter plot of BCP site energy calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:E_qmmm_BCP}
 \end{figure}
 
-Figure \ref{fig:E_qmmm_BCP} shows that for HFX<0.3, the site energies of all molecules are relatively close to the site energy obtained from PBE0 functional. When HFX=0.35, 0.45, 0.55, there are obvious low-energy molecules. 
+Figure \ref{fig:E_qmmm_BCP} shows that for HFX$<0.3$, the site energies of all molecules are relatively close to the site energy obtained from PBE0 functional. When HFX=0.35, 0.45, 0.55, there are obvious low-energy molecules as shown by the points below the diagonal line. 
 Those low molecules results in the large energy disorder $\sigma(E)$ as shown in table \ref{tab:para}. 
 For those three systems the ToFs are extremely large. 
 
@@ -345,34 +364,34 @@ When HFX is varied, the change of the polarizability and reorganization energy a
 So for correlated system such as OSCs, large range of HFX leads to non-physical results. 
 In the next section, we will use the range with small HFX values for the investigation of a less disorder molecular system, MADN. 
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterEstat_qmmm.png}
-    \caption{Scatter plot of electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterEstat_qmmm.pdf}
+    \caption{Scatter plot of BCP electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:Estat_qmmm_BCP}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterEdip_qmmm.png}
-    \caption{Scatter plot of polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \includegraphics[width=0.95\textwidth]{figs/BCP_HFX/scatterEdip_qmmm.pdf}
+    \caption{Scatter plot of BCP polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:Edip_qmmm_BCP}
 \end{figure}
 
 \section{Results on MADN}
 MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene) is another type of OSC. 
 The ToFs with and without energy disorder for HFX = 0.0, 0.05, 0.10, 0.15, 0.20, 0.25 are shown in 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{c c c }
     \hline
         HFX & ToF [s] & ToF(no $E$) [s] \\
     \hline
         0.00 &  $6.41 \times 10^{-9}$ & $1.88 \times 10^{-10}$ \\
-        0.05 & $ 6.37 \times 10^{-9}$ (estimate) & $2.63 \times 10^{-10}$ \\
-        0.10 & $ 1.74 \times 10^{-8}$ (estimate) & $3.31 \times 10^{-10} $ \\
+        0.05 & $ 7.86 \times 10^{-9}$ & $4.07 \times 10^{-10}$  \\
+        0.10 & $ 1.56 \times 10^{-8}$ & $3.97 \times 10^{-10} $  \\
         0.15 & $ 3.03 \times 10^{-8}$ & $3.96 \times 10^{-10} $ \\
-        0.20 & $ 2.61 \times 10^{-8}$ (estimate) & $7.06 \times 10^{-10}$ \\
+        0.20 & $ 2.05 \times 10^{-8}$ & $4.48 \times 10^{-10}$  \\
         0.25 & $ 9.54 \times 10^{-8}$ & $7.24 \times 10^{-10}$ \\
     \hline
     \end{tabular}
@@ -380,14 +399,169 @@ The ToFs with and without energy disorder for HFX = 0.0, 0.05, 0.10, 0.15, 0.20,
     \label{tab:ToF_MADN_HFX}
 \end{table}
 
+%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{figs/MADN_HFX/fig_autogen.pdf}
+    \caption{(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters.}
+    \label{fig:autogen_MADN}
+\end{figure}
+% 
+As HFX increase from 0 to 0.25, the ToF with and without energy disorder increase eventually by a factor of 10. 
+The dipole moment of the neutral state molecule, isotropic polarizability, and reorganization energies are shown in Fig.\ref{fig:autogen_MADN}. The dipole moment decrease as HFX increase as shown by Fig.\ref{fig:autogen_MADN}(a). At HFX=0.25, there is a relatively sharp decrease. The dipole moment decreases as the HFX increase, this HFX effect on dipole moment is different that of the BCP molecule, which has the dipole moment increases as the HFX increases.
+
+Fig.\ref{fig:autogen_MADN}(b) shows that the isotropic polarizability for n,e,h state MADN molecule decrease linearly as HFX increase from 0 to 0.25. 
+So the molecules are getting more difficult to be polarized. 
+Accordingly, the reorganization energy also increases as HFX increases as shown by Fig.\ref{fig:autogen_MADN}(c). This increase is nonlinear compared to the linear increase of BCP reorganization energy in the range HFX=0.05 to 0.25. 
+
+
+All the sites energies are relatively close with varying HFX as revealed by the similar energy disorder $\sigma(E)$. The scatter plot of site energies compared to that of PBE0 are shown in Fig.\ref{fig:E_qmmm_MADN}. The scatter plots of the electrostatic energy and polarization energy are also close for different HFX, as shown in Fig. \ref{fig:Estat_qmmm_MADN} and \ref{fig:Edip_qmmm_MADN}. All of those close energies leads to the close ToF shown in Table \ref{tab:ToF_MADN_HFX}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterE_qmmm.pdf}
+    \caption{Scatter plot of site energy of MADN molecules calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \label{fig:E_qmmm_MADN}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterEstat_qmmm.pdf}
+    \caption{Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \label{fig:Estat_qmmm_MADN}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterEdip_qmmm.pdf}
+    \caption{Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+    \label{fig:Edip_qmmm_MADN}
+\end{figure}
+ 
+\section{Diffusive Charge velocity Estimation}
+The following table shows the diffusive charge velocity, calculated using the ToF setting and steady state setting. For ToF setting, we investigate the situations where the charge transport direction is along the X-axis, Y-axis and Z-axis. 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+     &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & $7.87 \times 10^{-9}$ & 0.32 & 0 & $4.07 \times 10^{-10}$ & $3.00 \times 10^{-10}$ & 0 \\
+    0.15 & $3.03 \times 10^{-8}$ & 0.38 & 0 & $3.96 \times 10^{-10}$ & $4.67 \times 10^{-10}$ & 0 \\
+    0.25 & $9.54 \times 10^{-8}$ & 0.026 & 0 & $7.24 \times 10^{-10}$ & $7.63 \times 10^{-10}$ & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Diffusive $\tau_X$ comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 1.0 & $2.2 \times 10^{-8}$ & 0 & 19 & 24 & 0 \\
+    0.15 & 0.26 & $1.8 \times 10^{-8}$ & 0 & 20 & 15 & 0 \\
+    0.25 & 0.083 & $2.7 \times 10^{-7}$ & 0 & 11 & 9.4 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Diffusive ToF velocity $v_\text{ToF,X}=\frac{L_X}{\tau_X}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 0.44 & $5.8 \times 10^{-8}$ & 0 & 17 & 24 & 0 \\
+    0.15 & 0.057& $1.0 \times 10^{-7}$  & 0 & 17 & 15 & 0 \\
+    0.25 & 0.041 & $2.8 \times 10^{-7}$ & 0 & 10 & 9.5 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Diffusive ToF velocity $v_\text{ToF,Y}=\frac{L_Y}{\tau_Y}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 2.0 & $5.6 \times 10^{-7}$ & 0 & 19 & 24 & 0 \\
+    0.15 & 2.6 & $1.2 \times 10^{-6}$ & 0 & 19 & 15 & 0 \\
+    0.25 & 1.0 & $5.4 \times 10^{-6}$ & 0 & 10 & 9.4 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Diffusive ToF velocity $v_\text{ToF,Z}=\frac{L_Z}{\tau_Z}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{c c c c c c c}
+    \toprule
+        &
+        \multicolumn{3}{c}{ with energy $E$} &
+        \multicolumn{3}{c}{all $E=0$}  \\
+    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
+    \cmidrule(r){1-7}
+    0.05 & 0.10 & $1.5 \times 10^{-7}$ & 0 & 3.8 & 2.4 & 0 \\
+    0.15 & 0.031 & $1.5 \times 10^{-8}$ & 0 & 13 & 0.58 & 0 \\
+    0.25 & 0.0043 & $3.6 \times 10^{-7}$ & 0 & 4.0 & 1.07 & 0 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Steady state diffusive velocity $v_\text{SS}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The ToF is estimated from electronic structure ($E$, $\lambda$ and $\log_{10}(J^2)$) data obtained using different HFX. Each HFX gives an electronic structure. 
+For the BCP systems:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figs/BCP_HFX/fig_mle_BCP_withE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled BCP system using PBE0 functional when (a) the molecule site energy $E$ are sampled from a normal distribution $E \sim N(E_\text{ave},E^2_\text{std})$, (b) the reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$, (c) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (d) Both $E$, $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    \label{fig:mle_BCP_withE}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{figs/BCP_HFX/fig_mle_BCP_noE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled BCP system using PBE0 functional. All molecule energies are set to be zero.  
+    The plots are for the situation: (a) The reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$. (b) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (c) Both $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    \label{fig:mle_BCP_noE}
+\end{figure}
+
+For the MADN system:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figs/MADN_HFX/fig_mle_MADN_withE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional when (a) the molecule site energy $E$ are sampled from a normal distribution $E \sim N(E_\text{ave},E^2_\text{std})$, (b) the reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$, (c) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (d) Both $E$, $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    \label{fig:mle_MADN_withE}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.99\textwidth]{figs/MADN_HFX/fig_mle_MADN_noE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional. All molecule energies are set to be zero.  
+    The plots are for the situation: (a) The reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$. (b) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (c) Both $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    \label{fig:mle_MADN_noE}
+\end{figure}
 
 
 \bibliographystyle{unsrt}
 \bibliography{references}
-
-
-
-
 
 \begin{comment}
 \textbf{Point 1:} To investigate the effect of different functionals $f^\text{DFT}$ on electronic structures, we compare the energies $E_i$ and couplings $J_{i,j}$ for all molecule indices $i,j$. Scatter plots in Figures \ref{fig:scatterE} and \ref{fig:scatterJ} illustrate these comparisons.
