@@ -55,49 +55,68 @@ From a broad perspective, this model contains uncertainties due to the limitatio
 
 To explain in detail those uncertainties, the first-principle multiscale model is briefly reviewed. 
 Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is too complex to solve due to complexity, so Density Functional Theory (DFT) appears as a manageable way to model electrons.
-DFT has its own challenges that introduce uncertainties into the first-principle multiscale model. 
-{\huge Here}
+DFT has its own challenges in achieving multiscale modeling.
 
-A commonly used model for theoretical investigation of organic semiconductors is the first-principle multiscale model, which contains uncertainties in terms of the comprehensiveness of the theory, the mo
+The first challenge relates to the Born-Oppenheimer approximation in quantum
+mechanics, which simplifies the problem by separating the electronic and nuclear
+coordinates. As a result, the time evolution of the atomic coordinates can be modeled by solving the Newton's equation using empirical force field to approximate the potential energy surfaces (need citation). 
 
-Random walks in random environments (RWRE) are widely used to model physical processes, incorporating the varying levels of disorder and environmental factors that influence movement. 
-These disorders and environmental factors can introduce a level of uncertainty that significantly impacts the overall rates of the random walk, ultimately affecting the quantities of interest one aims to obtain.
+The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time. To address this challenge, state localization is used and the electron's wavefunction becomes localized in space around the nuclei. As a result, the charge dynamic is modeled as a continuous time random walk (CTRW) process, with transition rates between the molecules determined by their electronic structures, namely, the molecule energy, reorganization energy and coupling elements which will be explained in the methodology section. 
 
+In brief summary, the multiscale model can be summarized in Fig. \ref{fig:MSM}.
+The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates. Then DFT is used to attain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
 
-A notable example of RWRE is charge transport in organic semiconductors (OSCs), characterized by an amorphous mesoscopic structure due to spatially disordered molecular arrangements. 
-This structural disorder translates into electronic structure disorder, including energy disorder and coupling element disorder, leading to the modeling of charge transport processes as continuous time random walks (CTRWs) on a graph. 
-Specifically, the molecules can be represented as nodes in a graph, the transition rates between them (edge weights) correspond to the transition rates between the molecules, and the charge carriers become the random walkers. The details of specifying the graph will be introduced in the Section 2. The uncertainty from electronic structure disorder and environmental factors is reflected in these transition rates.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figs/MSM.png}
+    \caption{The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{i,j}$ and coupling element $J_{i,j}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
+    \label{fig:MSM}
+\end{figure}
 
-While the transition rates in those CTRWs can be calculated in a first-principle multiscale approach, but it involves some level of approximations. 
-Since the charge transport in OSC involves electrons, quantum mechanics and Schr\"odinger equation are essential in providing a time-series behavior of the charge dynamics. 
-But due to the complexity of Schr\"odinger Equation, one alternative theory is the density functional theory (DFT). 
-DFT faces two main challenges: it is computationally impractical for entire OSC devices and the exchange-correlation potential lacks an explicit formula.
+In overcoming the challenges and achieving the multiscale model, uncertainties are introduced. 
 
-The first challenge is mitigated by approximating electron dynamics as transition processes between localized states which contain most of the molecular electron, with transition rates calculated using the temperature-activated bi-molecular Marcus rate. 
-The second challenge is addressed by employing DFT functionals to approximate the exchange-correlation potential. 
-Despite benchmark results on molecular energy calculations with various DFT functionals and extensive literature on charge transport in multiscale models of OSCs, there is a lack of quantitative studies on how DFT functionals affect charge transport processes, and the influence of uncertainty in electronic structure properties.
+While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces (need citation) and model the atomic coordinates using Newton’s equations, the atomic coordinates are not exactly the same as that modeled by the many-electron schr\"{o}dinger equation.
+So the atomic coordinates, that is the molecule structures contain uncertainty which ultimately affects the charge dynamics. 
+This is one source of uncertainty that have not been investigated.
+But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
 
-Several challenges arise in this investigation. The high dimensionality of CTRWs (due to the large number of molecules, typically around 1000) makes uncertainty quantification numerically challenging. Secondly, simulating CTRWs is also computationally demanding due to convergence issues. Additionally, the exact DFT exchange-correlation functional and the distribution of transition rates for specific molecules are unknown.
+Secondly, state localization is not exactly a time dependent DFT process. 
+But for amorphous OSCs, model noise from state localization is negligible and we do not consider the uncertainty brought by state localization.
 
+Lastly, the exchange-correlation functional in DFT do not have explicit formula and common practice is to use empirical functional, whose suitability is usually unknown for most molecules.
 
-One of the main quantities of interest to characterize the charge transport in OSC is charge mobility. Using this as the quantity of interest,
-the goal of this work is to investigate how the DFT functionals affect the electronic structures and charge mobility. The uncertainty due to the environmental factors that cause a change in the molecules' position is not considered in this work, although this topic deserves intensive studies.
-We want to focus on the following questions: 
+The charge dynamics is determined by CTRW transition rates, which depend on the electronic structures.
+Since DFT is used to calculate the molecular electronic structures, the unknown exchange-correlation functional in DFT will bring uncertainties to the multiscale model. 
+The effect of the uncertainty from the DFT exchange-correlation functional on the multiscale model is not yet explored in literatures. 
+The goal of this work is to quantify the uncertainty effect of the DFT exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model. 
+
+To perform this goal of uncertainty quantification, a first step is to choose a QoI. A quantity commonly seen in OSC investigation is the charge mobility, which is the distance traveled by the charge carrier divided by the time period. 
+The charge mobility is calculated in a \textit{time-of-flight} (ToF) setting. 
+As shown in Fig.\ref{fig:MSM}(d), charge carriers are injected into one electrode called \textit{Source} and they are collected by another electrode at the opposite end called \textit{Sink}. 
+Knowing the length of the sample $L$ and the time-of-flight $\tau$, the diffusive velocity is calculated as $v_\text{ToF}=\frac{L}{\tau}$.
+
+Most literature report the charge mobility in a steady state setting, where no electrodes are used and the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
+Over a long time period, the charge occupation on each molecule $\pi_i$ reach equilibrium, and the steady state diffusive velocity is calculated via:
+\begin{equation}
+    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} \vec{r}_{ij} = \mathbb{E}f(M_{\infty})
+\end{equation} 
+Specifically, the focus will be placed on following questions: 
 \begin{itemize}
-    \item How do DFT functionals change the reorganization energy, distribution of molecule energies and coupling elements? 
+    \item How do DFT functionals change the electronic structures: reorganization energy, distribution of molecule energies and coupling elements? 
     \item How do DFT functionals change the charge mobility?
-    \item Which electronic structure (among energy, coupling element and reorganization energy) has the most impact on the uncertainty of charge mobility?
+    \item Which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the charge mobility distribution?
     \item Can we estimate the range of the quantity of interest, given a confidence level?
 \end{itemize}
 
-Charge mobility, in the presence of an external electric field, can be calculated as $\mu = \frac{\vec{v} \cdot \vec{F}}{|\vec{F}|^2}$, where $\vec{v}$ is the average drift-diffusive velocity of the charge carrier(s). Without an electric field, $\vec{v}$ is the purely diffusive velocity. In electronic devices, velocity is obtained from time-of-flight (ToF) experiments, where charge carriers are injected into the cathode and collected at the anode. The ToF, denoted as $\tau$, is the period from injection to detection of at least one charge carrier. The velocity is given by $|\vec{v}| = \frac{L}{\tau}$, where $L$ is the sample length, usually aligned with the electric field direction if present.
 
-For multiscale modeled OSCs, ToF calculations involve setting some molecules as \textit{Source} and some as \textit{Sink}. The key quantity for characterizing charge transport, especially for uncertainty quantification, is ToF, as the sample length $L$ is fixed and constant.
+Calculation of $v_\text{ToF}$ or $v_\text{SS}$ commonly use kinetic Monte Carlo (KMC) to obtain multiple realizations of full charge dynamic trajectories 
+or numerically solving the master equation. 
+However, those two commonly used methods are not suitable for quantifying the uncertainty effect of multiscale model charge dynamics for the following reasons. 
 
-Most literature on charge transport in multiscale modeled OSCs reports steady-state charge mobility, using periodic boundary conditions to simulate CTRWs on an infinitely repeating molecular graph, typically via kinetic Monte Carlo simulations. However, this method faces challenges, particularly convergence issues, which complicate the accurate calculation of quantities with a desired confidence level.
+Firstly, KMC produces random variables whose expectation is the charge mobility. The prior knowledge of the random variable distribution as well as the required KMC samples to achieve converged expectation is unknown. So this method itself pose further challenge for our uncertainty quantification. 
+Secondly, the numerical solution of the master equation has stability and convergence issue, that is, a small integration time step is required to achieve stability and a long computational time to achieve convergence result. These aspects add additional difficulty for uncertainty quantification. 
 
-Therefore, this work focuses on characterizing charge mobility based on ToF, specifically diffusive ToF with a single charge carrier, calculated from the hitting time of a continuous time Markov chain. This approach excludes the effects of external electric fields, clarifying the sensitivity from DFT functional to electronic structures and ToF mobility. 
-Furthermore, considering only one charge carrier aligns with the low carrier density in electronic devices and avoids the computational complexity of simulating multiple charge carriers, which can obscure important low-energy molecules in uncertainty quantification.
+{\huge Here}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiscale Model}
