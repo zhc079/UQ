@@ -112,7 +112,7 @@ Similarly, the steady state occupation $\pi_i$ will be calculated as the null-sp
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiscale Model}
-The multiscale model results in the charge dynamics becoming CTRW. When there in one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
+The multiscale model results in the charge dynamics being modeled by CTRW. When there is one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
 %
 \begin{equation}
     \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi R_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - R_{ij})^2}{4R_{ij} k_\text{B}T}\right) ,
@@ -343,9 +343,12 @@ The coupling element obtained with different HFX for each molecular pair compare
 The distribution of $\log_{10} J^2$ has a range of -14 to -2, and for all HFX values, the distribution has a peak at around -5. 
 For large values $\log_{10} J^2 < -5$ the coupling element remains consistent across HFX values from 0 to 0.25, while for large values $\log_{10} J^2 > -5$, the calculated coupling elements for a specific molecular pair can have large variation due to HFX values. 
 
-In charge transport network, $J^2$ undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J^2$ are usually observed for molecular pairs with small center-of-mass distance. And the charge dynamics is more dominated by those large $\log_{10} J^2$ compared to the small $\log_{10} J^2$. 
+In charge transport network, $J^2$ is undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J^2$ are usually observed for molecular pairs with small center-of-mass distance. 
+When the center-of-mass distance is very large, the $\log_{10} J^2$ is small and some of those small $\log_{10} J^2$ are sensitive to $\alpha$. 
 
-To determine the range of $\log_{10} J^2$ that are significant for the charge dynamics, a percolation algorithm is performed with procedure as:
+However, the charge dynamics is dominated by large $\log_{10} J^2$ which are found between molecule pair having large center-of-mass. As the center-of-mass distance increases, $\log_{10} J^2$ becomes small and negligible for the charge dynamics.
+
+To determine the range of $\log_{10} J^2$ that are significant for the charge dynamics, a percolation algorithm is performed. This algorithm aims to find the largest size of subgraphs after removing the edges whose coupling elements are below a critical value. The procedure is as follows:
 \begin{enumerate}
     \item A critical value $J_c$ is chosen,
     \item In graph $\mathbf{G}$ remove all the edges with $J^2 < J_c^2$
@@ -358,7 +361,7 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
     \caption{The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$. The molecular systems obtained by different HFX are colored according to the legend.}
     \label{fig:J_percolate}
 \end{figure}
-Figure \ref{fig:J_percolate} shows the dependence of $\max({N_\text{sub}})$ on the critical value $J_c$. When $\log_{10} J_c^2 < -4.5$, $\max({N_\text{sub}})$ is 1000, meaning that removing all the edges with $J^2 < 3.1 \times 10^{-5}$ the 1000 vertexes still form a connected graph. 
+After performing percolation algorithm, Figure \ref{fig:J_percolate} shows the dependence of $\max({N_\text{sub}})$ on the critical value $J_c$. When $\log_{10} J_c^2 < -4.5$, $\max({N_\text{sub}})$ is 1000, meaning that removing all the edges with $J^2 < 3.1 \times 10^{-5}$ the 1000 vertexes still form a connected graph. 
 But when removing the edges with $J^2 < 3.1 \times 10^{-4}$ ( corresponding to $J_c > -3.5$), the maximum size subgraph is 600, and it quickly decreases as $J_c$ increases, showing a phase transition. 
 So the dominated coupling elements are those with $\log_{10} J_c^2 > -4.5$. 
 And the variation in small $J$ due to HFX has less impact on the charge dynamics. 
@@ -366,7 +369,7 @@ And the variation in small $J$ due to HFX has less impact on the charge dynamics
 In this section we answer the question of how does HF level change the electronic structures and 
 how does HF level change the charge mobility. 
 In the next section, uncertainty quantification via Monte Carlo method and sensitivity analysis is perform to answer which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the charge mobility distribution. 
-And further estimate the range of the quantity of interest, given a confidence level.
+And further we estimate the range of the quantity of interest, given a confidence level.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{ToF Distribution and Sensitivity Analysis}
@@ -375,18 +378,19 @@ The previous section shows that different HFX affect the calculated ToF. In this
 \subsection{ToF Distribution}
 The ToF is calculated from electronic structure ($E$, $\lambda$ and $\log_{10}(J^2)$) data, that is, ToF is a function with the input of all electronic structure parameters:
 \begin{equation}
-    \tau = g(x_1,x_2,\cdots, x_N) \; 
+    \tau = g(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \}) \;
 \end{equation}
-where the parameters $(x_1,x_2,\cdots, x_N)$ represents $(E_i, J_{ij}, \lambda)$ for all $i,j=1,2,\cdots,N$ and $J_{ij}>0$. 
+where $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
+$\{J_{ij}|i,j=1,2,\cdots,N \}$ is the ordered set whose elements are the coupling elements. 
 
-Since the exchange-correlation functional is not known and each molecule has a slightly different structure compared to the optimized structure, each parameter $(x_1,x_2,\cdots, x_N)$ has uncertain. 
-To estimate the uncertainty, we consider the maximum amount of uncertainties according to the obtained $(E_i, J_{ij}, \lambda)$ with the six different HFX.
-To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation being the HFX sample mean and standard deviation, respectively.
+Since the exchange-correlation functional is not known and each molecule has a slightly different structure compared to the optimized structure, each parameter has uncertain. 
+To estimate the uncertainty, we consider the maximum amount of uncertainties according to the obtained $(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$ with the six different HFX.
+To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are the HFX sample mean and standard deviation, respectively.
 
 Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
 \begin{enumerate}
-\item For all $i=1,2,\cdots, N$, sample a realization $(x_1,x_2,\cdots, x_N)$ where each parameter $x_i \in (x_1,x_2,\cdots, x_N)$ has the normal distribution $x_i \in \mathcal{N}(\bar{x}_i, \sigma_{x_i})$. 
-\item Calculate ToF using the sampled data set $(x_1,x_2,\cdots, x_N)$. 
+\item For all $i,j=1,2,\cdots, N$, sample a realization $(\lambda, \{E_i \}, \{J_{ij} \})$ where each parameter has the normal distribution: $\lambda_i \in \mathcal{N}(\bar{\lambda}_i, \sigma_{\lambda_i})$, $E_i \in \mathcal{N}(\bar{E}_i, \sigma_{E_i})$, $J_{ij} \in \mathcal{N}(\bar{J}_{ij}, \sigma_{J_{ij}})$. 
+\item Calculate ToF using the sampled data set $(\lambda, \{E_i \}, \{J_{ij} \})$. 
 \item Repeat step 1 and 2 for $N_\text{MC} = 50000$ times to obtain ToFs. Plot the distribution of the ToFs.
 \item Fit the distribution of $log_{10}(\text{ToF})$ to Gamma distribution.
 \end{enumerate}
@@ -397,6 +401,23 @@ From equation \ref{eq:hitting_time}, the ToF can be considered as the some combi
 When the parameters $E, J_{ij}, \lambda_{ij}$ are normally distributed random variables, the calculated ToF shows that variables $E,\lambda_{ij}$ has a larger influence than $J_{ij}$. 
 The Marcus rate uses $E,\lambda_{ij}$ in the exponential form. If $\Delta E$ is normally distributed, then $log_{10}(\omega_{i}^{-1})$ is Gamma distributed. 
 Since $E$ has greater influence to ToF than $\lambda_{ij}, J_{ij}$ and to be consistent, Gamma distribution is used to fit the Monte Carlo sampled ToF in all the investigated cases.
+
+Sampling the molecule energy as a normal distribution $E_i \sim \mathcal{N}(\bar{E}_i, \sigma_{E_i})$ will potentially destroy the energy correlation, especially for correlated systems, resulting a shift in the ToF calculation.
+But we will show that making the molecule energy uncorrelated in the MADN system will not cause such a shift in ToF. 
+To do so, let $\{E_1, E_2, \cdots, E_N\}^{\alpha}$ be an ordered set with elements being the energy calculated using a specific $\alpha$ value. 
+Then the order of the energies are randomly shuffled so that they are no longer correlated, and denote it as $\{E_1, E_2, \cdots, E_N\}^{\alpha}_{\text{shuffle}}$. The ToF calculated using the shuffled energy is $ \tau_{\text{sh}} = \tau(\{E_1, E_2, \cdots, E_N\}^{\alpha}_{\text{shuffle}}) $.
+%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figs/MADN_HFX/ToFx_shuffle.pdf}
+    \caption{Distribution of $\tau_{\text{sh}}$ calculated using shuffle energies. Each distribution are a sample of 10000 $\tau_{\text{shuffle}}$. The position of the solid circle indicates the ToF calculated from the specific $\alpha$ value, and the position of the solid square indicates the average $\tau_{\text{shuffle}}$ over the 10000 samples.}
+    \label{fig:ToF_shuffle_MADN}
+\end{figure}
+%
+After such shuffling energy and ToF calculation for 10000 times, the distribution of $\tau_{\text{sh}}$ are shown in Fig.\ref{fig:ToF_shuffle_MADN}. 
+For the chosen $\alpha=0.05, 0.15, 0.25$, the $\tau_{\text{sh}}$ does not overall shift to smaller or large values, and the averaged $\tau_{\text{sh}}$ is close to the ToF obtained without energy shuffle.
+So making the energy uncorrelated will not shift the ToF to smaller or larger values.
+This enables represent the parameter uncertainties in $\lambda, \{E_i\}, \{ J_{ij}\}$ using the normal distribution without shift the ToF.
 
 To understand which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, we study the following distribution of ToF:
 \begin{enumerate}
@@ -420,6 +441,8 @@ The ToF distribution and Gamma fitted results for the MADN systems with energy d
     \label{fig:mle_MADN_withE}
 \end{figure}
 %
+
+The 90\% confidence interval of each distribution and the fitted Gamma distribution is summarized in table 
 
 When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}
 %
