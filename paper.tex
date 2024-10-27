@@ -28,12 +28,16 @@
 
 \begin{document}
 \linenumbers
-\title{Uncertain Effects of DFT Functionals on Charge Dynamic of Organic Semiconductor }
+\title{Uncertainty Quantification in Multiscale Model }
 \author{authors}
 \date{\today}
 \maketitle
 \begin{abstract}
+    This work quantifies uncertainties in a multiscale model for charge dynamics in organic semiconductors (OSCs). A first-principle multiscale model integrates classical molecular dynamics (MD), density functional theory (DFT), and continuous-time random walk (CTRW) processes to allow the simulation of charge transport in OSCs. The model brings inherent uncertainties arising from the empirical approximations and numerical simulations. Our work particularly focusing on quantifying the uncertainty in DFT exchange-correlation functional.
 
+    By investigating the effects of varying Hartree-Fock (HF) levels within DFT functionals, we analyze the impact on electronic structures such as reorganization energy, molecule energy distribution, and coupling elements. The primary goal is to assess the robustness of predicting the quantity of interest (QoI), that is time-of-flight and charge mobility, under these uncertainties.
+    
+    Monte Carlo simulations and sensitivity analysis are employed to estimate the range and confidence levels of the predicted charge mobility. As shown by Sobol indices, the QoI is most sensitive to molecule energy, then reorganization energy and least sensitive to coupling elements.  
 \end{abstract}
 
 \section{Background}
@@ -56,12 +60,12 @@ coordinates. As a result, the time evolution of the atomic coordinates can be mo
 
 The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time. To address this challenge, state localization is used and the electron's wavefunction becomes localized in space around the nuclei. As a result, the charge dynamic is modeled as a continuous time random walk (CTRW) process, with transition rates between the molecules determined by their electronic structures, namely, the molecule energy, reorganization energy and coupling elements which will be explained in the methodology section. 
 
-In brief summary, the multiscale model can be summarized in Fig. \ref{fig:MSM}.
-The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates. Then DFT is used to attain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
+In brief summary, the multiscale model can be summarized in Fig. \ref{fig:MSM} using MADN, a type of OSC as an example.
+The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates of all molecules. Then DFT is used to attain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/MSM.png}
+    \includegraphics[width=0.99\textwidth]{figs/MSM.pdf}
     \caption{The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{ij}$ and coupling element $J_{ij}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
     \label{fig:MSM}
 \end{figure}
@@ -73,144 +77,89 @@ This is one source of uncertainty that have not been investigated.
 But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
 Secondly, state localization is not exactly a time dependent DFT process. 
 But for amorphous OSCs used in this work, model noise from state localization is negligible and we do not consider the uncertainty brought by state localization.
-Lastly, the exchange-correlation potential in DFT do not have explicit formula and common practice is to use empirical functional, whose suitability is usually unknown for most molecules.
+Lastly, the exact functional for the exchange-correlation energy is unknown so approximations like the Local Density Approximation (LDA) or the Generalized Gradient Approximation (GGA) are used, resulting in exchange-correlation functional in practice. 
+The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose accuracy is usually unknown for new synthesized molecules. 
+As an advancement to improve accuracy, Hybrid-DFT incorporates a portion of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HF exchange functional. 
 
 The charge dynamics is determined by CTRW transition rates, which depend on the electronic structures.
-Since DFT is used to calculate the molecular electronic structures, the unknown exchange-correlation functional in DFT will bring uncertainties to the multiscale model. 
-In particular, different DFT functionals contain varying levels of Hartree Fock (HF) to represent the exchange-correlation potential. 
-The effect of the uncertainty from the DFT exchange-correlation functional on the multiscale model is not yet explored in literatures. 
-The goal of this work is to quantify the uncertainty effect of the DFT exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by the HF level. 
+Since DFT is used to calculate the molecular electronic structures, the unknown exchange-correlation functional will bring uncertainties to the multiscale model. 
+In particular, different hybrid-DFT functionals contain varying levels of Hartree Fock (HF) to represent the exchange-correlation potential. 
+The effect of the uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
+The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HF exchange functional. 
 
 To perform this goal of uncertainty quantification, a first step is to choose a QoI. A quantity commonly seen in OSC investigation is the charge mobility, which is the distance traveled by the charge carrier divided by the time period. 
 The charge mobility is calculated in a \textit{time-of-flight} (ToF) setting. 
 As shown in Fig.\ref{fig:MSM}(d), charge carriers are injected into one electrode called \textit{Source} and they are collected by another electrode at the opposite end called \textit{Sink}. 
 Knowing the length of the sample $L$ and the time-of-flight $\tau$, the diffusive velocity is calculated as $v_\text{ToF}=\frac{L}{\tau}$.
+When electric field $\vec{F}$ is used to drift the charge transport, the charge mobility is calculated as $\mu_\text{ToF}=\frac{\vec{v}_\text{ToF} \vec{F}}{|\vec{F}|^2}$. 
 
-Most literature report the charge mobility in a steady state setting, where no electrodes are used and the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
-Over a long time period, the charge occupation on each molecule $\pi_i$ reach equilibrium, and the steady state diffusive velocity is calculated via:
-\begin{equation}
-    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} \vec{r}_{ij} = \mathbb{E}f(M_{\infty})
-\end{equation} 
+Some literatures also report the charge mobility in a steady state setting, where no electrodes are used and the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
+Over a long time period, the charge occupation on each molecule $\pi_i$ reach equilibrium.
+The steady state charge mobility $\mu_\text{SS}$ is calculated as the charge velocity along the direction of the electric field normalized by the steady state charge occupation $\vec{\pi}:\pi_i$. 
+The calculation for $v_\text{ToF}$ and $\mu_\text{SS}$ will be detailed in the method section.
 
-Specifically, the focus will be placed on following questions: 
+To quantify the uncertainty for QoI, the focus of our work will be placed on the following questions: 
 \begin{enumerate}
-    \item How does HF level change the electronic structures: reorganization energy, distribution of molecule energies and coupling elements? 
-    \item How does HF level change the charge mobility?
-    \item Which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the charge mobility distribution?
-    \item Can we estimate the range of the quantity of interest, given a confidence level?
+    \item How does HFX level change the electronic structures: reorganization energy, distribution of molecule energies and coupling elements? 
+    \item How does HFX level change the charge mobility?
+    \item Which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the QoI distribution?
+    \item Can we estimate the range of the QoI, given a confidence level?
 \end{enumerate}
-
-
-Calculation of $v_\text{ToF}$ or $v_\text{SS}$ commonly use kinetic Monte Carlo (KMC) to obtain multiple realizations of full charge dynamic trajectories 
-or numerically solving the master equation. 
-However, those two commonly used methods are not suitable for quantifying the uncertainty effect of multiscale model charge dynamics for the following reasons. 
-Firstly, KMC produces random variables whose expectation is the charge mobility. The prior knowledge of the random variable distribution as well as the required KMC samples to achieve converged expectation is unknown. So this method itself pose further challenge for our uncertainty quantification. 
-Secondly, the numerical solution of the master equation has stability and convergence issue, that is, a small integration time step is required to achieve stability and a long computational time to achieve convergence result. These aspects add additional difficulty for uncertainty quantification. 
-Considering those aspects, the ToF $\tau$ and $v_\text{ToF}$ are obtained via a graph random walk method
-\cite{chen_graph_2024}. Once the $v_\text{ToF}$ is calculated using this method, it is considered to be converged. 
-Similarly, the steady state occupation $\pi_i$ will be calculated as the null-space of the transition matrix. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiscale Model}
 The multiscale model results in the charge dynamics being modeled by CTRW. When there is one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
 %
 \begin{equation}
-    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi R_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - R_{ij})^2}{4R_{ij} k_\text{B}T}\right) ,
+    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
     \label{equ:Marcus}
 \end{equation}
 %
-where $\hbar$ is the reduced Planck constant and $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), the charge of the carrier $q$ (in \unit[]{e}) and the external electric field $\vec{F}$ (in V/m) can be considered the external, environmental parameters of the simulation. The vector $\vec{r}_{ij} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses (COMs) of molecules $i$ and $j$, which is calculated cyclic boundary conditions depending on the boundary condition. The remaining physical, material-specific (or rather transfer-pair-specific) quantities are the reorganization energy $R_{ij}$, the electronic coupling $J_{ij}$, and the energy difference $E_{ij} = E_i - E_j$ (all in \unit[]{eV}). With the information about the molecular COMs and the rates, one can construct the graph $\mathbf{G}=(\mathbf{V}, \mathbf{W})$ on which the CTRW takes place. $\mathbf{V}$ is a set of nodes (molecules) and $\mathbf{W}: \omega_{ij}$ is the adjacency matrix. A rate is only considered between molecules $i$ and $j$ if their closest-contact distance is smaller than $r_\text{cutoff}=\unit[0.5]{nm}$.
+where $\hbar$ is the reduced Planck constant and $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), the charge of the carrier $q$ (in \unit[]{e}) and the external electric field $\vec{F}$ (in V/m) can be considered the external, environmental parameters of the simulation. The vector $\vec{r}_{ij} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses (COMs) of molecules $i$ and $j$, which is calculated cyclic boundary conditions depending on the boundary condition. The remaining physical, material-specific (or rather transfer-pair-specific) quantities are the reorganization energy $\lambda_{ij}$, the electronic coupling $J_{ij}$, and the energy difference $E_{ij} = E_i - E_j$ (all in \unit[]{eV}). With the information about the molecular COMs and the rates, one can construct the graph $\mathbf{G}=(\mathbf{V}, \mathbf{W})$ on which the CTRW takes place. $\mathbf{V}$ is a set of nodes (molecules) and $\mathbf{W}: \omega_{ij}$ is the adjacency matrix. A rate is only considered between molecules $i$ and $j$ if their closest-contact distance is smaller than $r_\text{cutoff}=\unit[0.5]{nm}$.
 
 In the section, the components of the multiscale model will be introduced: molecule dynamics, calculation of reorganization energy, molecule energy, coupling element, $v_\text{SS}$ and $v_\text{ToF}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Molecule Dynamics Simulation}
-In a material system of $N_a$ atoms with mass and position denoted by $m_i$ and $\vec{r}_i$ respectively, molecular dynamics (MD) models the evolution of the atomic coordinate using Newton's second law, which is written in Hamilton equation: 
+The MD in the multiscale model is to use Newton's second law to update the atomic coordinate. Written in Hamilton equation, the equation of motion reads:
 \begin{equation}
     \begin{cases}
-        \frac{d \vec{r}_i}{dt} = \frac{\partial H }{\partial \vec{p}_i} \\
-        \frac{d \vec{p}_i}{dt} = -\frac{\partial H }{\partial \vec{r}_i}
+        \frac{d \vec{r}_i}{dt} = \frac{\partial H^\text{MD} }{\partial \vec{p}_i} \\
+        \frac{d \vec{p}_i}{dt} = -\frac{\partial H^\text{MD} }{\partial \vec{r}_i}
     \end{cases}
     \label{eq:Hamilton}
 \end{equation}
-for $i=1,\cdots,N_a$, where the Hamiltonian $H$ reads:
-\begin{equation}
-    H=\sum\limits_{i} \frac{|\vec{p}_i|^2}{2 m_i} + U(\vec{r}_1,\cdots,\vec{r}_{N_a})
-    \label{eq:Hamilton2}
-\end{equation} 
+for $i=1,\cdots,N_a$. Where $N_a$, $m_i$, $\vec{r}_i$, $\vec{p}_i$ are the atom number, atomic mass,  position vector and momentum, respectively. 
+And the Hamiltonian $H$ reads:
+$H^\text{MD}=\sum\limits_{i} \frac{|\vec{p}_i|^2}{2 m_i} + U(\vec{r}_1,\cdots,\vec{r}_{N_a})$.
 
-In principle the potential energy function $U(\vec{r}_1,\cdots,\vec{r}_{N_a})$ of the system can be obtained from electronic structure models. In practice, it is a very computationally expensive procedure, and without too much loss in precision, MD use empirical potentials that are designed for specific purposes.
-In our work, constant the molecule number $N=1000$, a temperature $T=300$ K and a pressure at 1 atm is used to achieve an NPT ensemble. 
-One of the final BCP morphology is chosen as OSC for charge transport study. 
+In principle the potential energy function $U(\vec{r}_1,\cdots,\vec{r}_{N_a})$ of the system can be obtained from electronic structure models. As mentioned in the introduction, it is a very computationally expensive procedure, and without too much loss in precision, MD use empirical potentials that are designed for specific purposes.
+The MD simulation performed using the GROMACS software package~\cite{berendsen_gromacs_1995}, employing a gromos54a7 type force field obtained via the tool Automated Topology Builder~\cite{stroet_automated_2018}. 
+The procedure of the MD simulation in this work is as followed:...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronic Structure Calculations} 
-%Each molecule is an $N_\text{el}$-electron system, and in quantum mechanics, the probability of finding electrons in space is described by the electron wavefunction $\phi(\vec{r})$.
-Effective single-electronic wave functions $\phi_l (\vec{r})$ and associated energies $\epsilon_l$ for a system with $N_\text{el}$ electrons are determined as solutions to the Kohn--Sham equations~\cite{kohn_self_1965}
+A first essential step in first-principle multiscale model is to determine the single-electronic wave function and the associated energy $\epsilon_l$, which are used to obtain atomic charges, reorganization energy, molecule energy, and coupling elements.
+
+Each electron $l$ in a system with $N_\text{el}$ electrons has a single-electronic wave function $\phi_l (\vec{r})$ and associated energies $\epsilon_l$ determined as solutions to the Kohn--Sham equations~\cite{kohn_self_1965}
 %
 \begin{equation}
-    \left(-\frac{1}{2}\nabla^2_{\vec{r}} + v_\text{ext}(\vec{r}) + v_\text{H}[\rho](\vec{r}) + v_\text{XC}[\rho](\vec{r})\right) \phi_l(\vec{r}) =  \epsilon_l \phi_l (\vec{r}) ,
+    \left(-\frac{1}{2}\nabla^2_{\vec{r}} + v_\text{ext}(\vec{r}) + v_\text{H}[\rho](\vec{r}) + v_\text{XC}[\rho](\vec{r})\right) \phi_l(\vec{r}) = H^\text{KS} \phi_l(\vec{r}) = \epsilon_l \phi_l (\vec{r}) ,
     \label{eq:KS2}
 \end{equation}
 %
-where $v_\text{ext}$ in an external potential (typically from the nuclei), $v_\text{H}[\rho]$ the electrostatic Hartree potential of a classical charge density $\rho(\vec{r})$, and $v_{XC}[\rho]$ the exchange-correlation functional containing explicit quantum-mechanical electron-electron interactions. The charge density is determined from the single-particle wave functions as $\rho(\vec{r})=\sum\limits_{l=1}^{N_\text{el}} \left\vert\phi_l(\vec{r})\right\vert^2$. 
- 
-
+where $v_\text{ext}$ in an external potential (typically from the nuclei), $v_\text{H}[\rho]$ the electrostatic Hartree potential of a classical charge density $\rho(\vec{r})$, and $v_\text{XC}[\rho]$ the exchange-correlation functional containing explicit quantum-mechanical electron-electron interactions. The charge density is determined from the single-particle wave functions as $\rho(\vec{r})=\sum\limits_{l=1}^{N_\text{el}} \left\vert\phi_l(\vec{r})\right\vert^2$. As the Hartree and exchange-correlation potential depend on the thus defined density, solutions to Eq.~\ref{eq:KS2} have to be found self-consistently. This corresponds to finding the ground-state density $\rho_0$ that minimized the total energy of the system
 %
 \begin{equation}
-    U[\rho] = T_s[\rho] + \int \hat{V}_\text{ext}(\vec{r}) \rho(\vec{r}) d \vec{r} + \hat{V}_\text{H}[\rho] + \hat{V}_\text{XC}[\rho]
+    U[\rho] = T_s[\rho] + \int v_\text{ext}(\vec{r}) \rho(\vec{r}) d \vec{r} + E_\text{H}[\rho] + E_\text{XC}[\rho]
     \label{eq:KS_model}
 \end{equation}
 %
-where the electron density is , $T_s[\rho]$ is the kinetic energy depending on $\rho$,  $\hat{V}_\text{ext}$ is the external potential energy,  $\hat{V}_\text{H}[\rho]$ is the Hartree energy accounting for the Coulomb interaction, $\hat{V}_\text{XC}[\rho]$ is the exchange-correlation energy accounting for the difference between classical and quantum effect. The exact form of $\hat{V}_\text{XC}[\rho]$ is not known, in practice, this energy term is approximated by DFT functionals. In our work, different functionals are tested on BCP molecular system to check the effect of different functionals' impact on charge mobility. Different functionals have different ways to represent the exchange-correlation potentials, such as different level of HF exchange potential. 
-Then PBE0 functional is used with varying HF component in the exchange-correlation potentials. 
+where $T_s[\rho]$ is the kinetic energy, $E_\text{H}[\rho]$ and $E_\text{XC}[\rho]$ the Hartree and exchange-correlation energies, respectively. Equations \ref{eq:KS2} and \ref{eq:KS_model} can be solved for different total charge states $x=\text{n,c}$ and corresponding  equilibrium geometries $X=\text{N,C}$, where $\text{n}$ and $\text{N}$ stand for ''neutral'' and $\text{c}$ and $\text{C}$ for ''charged''. The respective total energies will be denoted in the following as $U^\text{xX}$.
 
-In practice, Equation \ref{eq:KS2} is solved iteratively, and the wave function is represented by a linear combination of basis functions call basic sets. 
-In this work, the basic set def2-tzvp \cite{weigend_accurate_2006} is used. The DFT computation is performed by VOTCA \cite{Baumeier2011} which internally calls ORCA software.
+The practical calculations in this work have been performed with the ORCA software~\cite{Neese2012a} using the def2-tzvp~\cite{weigend_accurate_2006} basis set to represent the Kohn--Sham wave functions $\phi_l(\vec{r})$. 
+The correlation potential is represented by PBE0 functional, and the exchange potential is represented by a portion $\alpha$ of (HFX) potential and another portion $(1-\alpha)$ from PBE0 functional. In common practice, $\alpha$ is small and below 0.25. For our uncertain quantification study, $\alpha=0,0.05,0.10,0.15,0.20,0.25$ is chosen for the multiscale model.
 
-
-The internal energy $U_i$ of molecule $i$ depends on the charge states and atomic coordinate (also called geometry) of the molecule. 
-The optimized geometry of a molecule refers to the atomic coordinates that minimize $U_i$.
-Here we use $U_i^\text{xX}$ to denote the internal energy of molecule $i$ at charge state x in the optimized geometry X. Neutral and charge states are represented as x=n and c, respectively. Similarly, optimized neutral molecular geometry and optimized charge molecular geometry are represented by X=N and C, respectively.
-
-The reorganization energy $R_{ij}$ from molecule $i$ to molecule $j$ is given as:
-\begin{equation}
-    R_{ij} = U_i^\text{nC} - U_i^\text{nN} + U_j^\text{cN} - U_j^\text{cC}
-\end{equation}
-where $U_i^\text{nC}$ is the internal energy of the neutral molecule $i$ in optimized geometry of charged molecule, calculated from Equation \ref{eq:KS_model}. 
-And $U_i^\text{nN}$ the internal energy of the neutral molecule $i$ in optimized geometry of neutral molecule. Similarly, $U_j^\text{cN}, U_j^\text{cC}$ are defined in this way.
-When charge carriers are holes, a charged molecule has one electron less compared to a neutral molecule. 
-For the BCP device, we obtain $R_{ij}=0.50$ eV since this is only one type of molecule.
-
-In a single-component system where internal energy difference of molecule $i$ and $j$ is equal, the energy difference $E_{ij}$ is calculated by:
-\begin{equation}
-    E_{ij} = E_i - E_j
-    \label{eq:siteE}
-\end{equation}
-where $E_i = E_i^\text{c} - E_i^\text{n},E_j = E_j^\text{c} - E_j^\text{n}$ are the molecule energies, the superscript represents charge state or neutral state molecule as mentioned above. And $E_i^\text{n} = E_i^\text{n,el} + E_i^\text{n,induce}$ considers the electrostatic energy as well as the energy from the induced dipole moment.
-In multiscale model, $E_i^\text{n} = E_i^\text{n,el} + E_i^\text{n,induce}$ is calculated iteratively from the Thole Model as detailed in \cite{thole_molecular_1981}.
-% instead of using a dielectric constant as been done in the bulk system at macroscopic scale. 
-Specifically, the first step is to calculate the induced dipole at atom $a_i$ by electrostatic field. This induced dipole will change the dipole moment at all other atoms $b_j \neq a_i$. Then repeat this step and recalculate the induced dipole at atom $a_i$, followed by induced dipoles at all other atoms $b_j$. This process is repeated until the induced dipole converge to a fix value. 
-In short summary, the $E_i$ is a function of all individual atoms' charges $q$ and induced dipole $\mu$: $E_i^\text{n,el} + E_i^\text{n,induce} = \sum\limits_{a_i} f(q_{a_i}, \mu_{a_i})$ where $a_i$ goes over all the atoms in the system. 
-The calculation of $E_i^\text{c} = E_i^\text{c,el} + E_i^\text{c,induce}$ uses similar iteratively process as $E_i^\text{n}$.
-The molecule energies and their distribution are shown in the appendix.
-
-%%%%%%%
-The coupling element $J_{ij}$ between molecule $i$ and $j$ is calculated \cite{baumeier_density_2010} using the electron wave function of the molecules obtained from the Kohn-Sham equation: 
-\begin{equation}
-    J_{ij} = \frac{ J^0_{ij}- \frac{1}{2}(e_i+e_j) S_{ij} }{ 1- S_{ij}^2 }
-    \label{equ:JAB}
-\end{equation}
-where $J^0_{ij} = \langle \phi^\text{HOMO}_i | \hat{H} | \phi^\text{HOMO}_j \rangle $, $e_i = \langle \phi^\text{HOMO}_i | \hat{H} | \phi^\text{HOMO}_i \rangle $, $e_j = \langle \phi^\text{HOMO}_j | \hat{H} | \phi^\text{HOMO}_j \rangle $, and $S_{ij}=\langle \phi^\text{HOMO}_i | \phi^\text{HOMO}_j \rangle $ with bra-ket notation.
-For hole-transporting OSCs system such as the BCP used in this work, $\phi^\text{HOMO}_i$ is the HOMO electron wave function of molecule $i$. 
-The Kohn-Sham Hamiltonian is $\hat{H} = -\frac{1}{2}\nabla^2_{\vec{r}} + \hat{V}_\text{ext} + \hat{V}_\text{H}[\rho] + \hat{V}_\text{XC}[\rho]$. 
-A single molecule is called a monomer, and a pair of two molecules is called a dimer.
-
-Denote $\phi^\text{HOMO}_\text{D}$ as the HOMO electron wave function of the dimer,  $J^0_{ij}$ can be calculated via:
-$
-    J^0_{ij} = \mathbf{p}^i \text{diag}(\mathcal{E}) \mathbf{p}^j
-$, 
-where the vector $\mathbf{p}^i = \langle \phi_i^\text{HOMO} | \phi^\text{HOMO}_\text{D} \rangle$ and $\mathbf{p}^j = \langle \phi_j^\text{HOMO} | \phi_\text{D}^\text{HOMO} \rangle$ are called the projections of the monomer orbitals $\phi_i^\text{HOMO}, \phi_j^\text{HOMO}$ onto the dimer orbitals $\phi^\text{HOMO}_\text{D}$. And $\text{diag}(\mathcal{E})$ is the diagonal matrix consisting eigenvalues of the basis function of $\phi_\text{D}^\text{HOMO}$. The molecular coupling element distribution is shown in the appendix.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -253,12 +202,19 @@ To calculate $v_\text{SS}$ the steady state distribution $\pi_i$ is required. In
     (\mathbf{W}-\mathbf{D} )\vec{\pi} = \mathbf{0}
 \end{equation}
 where $\mathbf{D} = \text{diag}(D_i)$ is the out-degree matrix of $\mathbf{W}$.
+
+\begin{equation}
+    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} || \vec{r}_{ij}||_2 = \mathbb{E}f(M_{\infty})
+\end{equation} 
+where $\omega_{ij}$ is the charge transition rate from molecule $i$ to molecule $j$, and $\vec{r}_{ij}=\vec{r}_j - \vec{r}_i$ is the center-of-mass (COM) distance vector. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results on MADN}
 
-In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene). Essential steps in our multiscale model involve calculating the dipole moment $\mu$ and the isotropic polarizability $P_\text{iso}$ for both neutral and charged states in the optimized geometry MADN molecule. These properties are crucial for evaluating molecular energy contributions from electrostatic and polarization effects.
+In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene). 
 
+Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges dipole moment at charge neutral state. 
+To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
 Figure \ref{fig:autogen_MADN} illustrates the dependence of the dipole moment $\mu$, isotropic polarizability $P_\text{iso}$, reorganization energy $\lambda$, and energy disorder $\sigma(E)$ on the Hartree-Fock exchange (HFX) parameter.
 
 %
@@ -346,7 +302,7 @@ For large values $\log_{10} J^2 < -5$ the coupling element remains consistent ac
 In charge transport network, $J^2$ is undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J^2$ are usually observed for molecular pairs with small center-of-mass distance. 
 When the center-of-mass distance is very large, the $\log_{10} J^2$ is small and some of those small $\log_{10} J^2$ are sensitive to $\alpha$. 
 
-However, the charge dynamics is dominated by large $\log_{10} J^2$ which are found between molecule pair having large center-of-mass. As the center-of-mass distance increases, $\log_{10} J^2$ becomes small and negligible for the charge dynamics.
+However, the charge dynamics is dominated by large $\log_{10} J^2$ which are found between molecule pair having small center-of-mass. As the center-of-mass distance increases, $\log_{10} J^2$ becomes small and negligible for the charge dynamics.
 
 To determine the range of $\log_{10} J^2$ that are significant for the charge dynamics, a percolation algorithm is performed. This algorithm aims to find the largest size of subgraphs after removing the edges whose coupling elements are below a critical value. The procedure is as follows:
 \begin{enumerate}
@@ -378,9 +334,11 @@ The previous section shows that different HFX affect the calculated ToF. In this
 \subsection{ToF Distribution}
 The ToF is calculated from electronic structure ($E$, $\lambda$ and $\log_{10}(J^2)$) data, that is, ToF is a function with the input of all electronic structure parameters:
 \begin{equation}
-    \tau = g(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \}) \;
+    %\tau = g(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \}) \;
+    \tau = g(x_1, x_2, \cdots, x_{N_d})
 \end{equation}
-where $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
+The input $(x_1, x_2, \cdots, x_{N_d})$ represents the collection of the parameters $$(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$$  where $N_d$ is the parameter dimension, that is the number of input parameters. 
+And $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
 $\{J_{ij}|i,j=1,2,\cdots,N \}$ is the ordered set whose elements are the coupling elements. 
 
 Since the exchange-correlation functional is not known and each molecule has a slightly different structure compared to the optimized structure, each parameter has uncertain. 
@@ -389,8 +347,8 @@ To achieve this, each parameter can be modeled as a normal distribution with the
 
 Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
 \begin{enumerate}
-\item For all $i,j=1,2,\cdots, N$, sample a realization $(\lambda, \{E_i \}, \{J_{ij} \})$ where each parameter has the normal distribution: $\lambda_i \in \mathcal{N}(\bar{\lambda}_i, \sigma_{\lambda_i})$, $E_i \in \mathcal{N}(\bar{E}_i, \sigma_{E_i})$, $J_{ij} \in \mathcal{N}(\bar{J}_{ij}, \sigma_{J_{ij}})$. 
-\item Calculate ToF using the sampled data set $(\lambda, \{E_i \}, \{J_{ij} \})$. 
+\item For all $i,j=1,2,\cdots, Nd$, obtain a realization $(x_1, x_2, \cdots, x_{N_d})$ where each parameter has the normal distribution, meaning: $\lambda_i \in \mathcal{N}(\bar{\lambda}_i, \sigma_{\lambda_i})$, $E_i \in \mathcal{N}(\bar{E}_i, \sigma_{E_i})$, $J_{ij} \in \mathcal{N}(\bar{J}_{ij}, \sigma_{J_{ij}})$. 
+\item Calculate ToF using the sampled data set $(x_1, x_2, \cdots, x_{Nd})$. 
 \item Repeat step 1 and 2 for $N_\text{MC} = 50000$ times to obtain ToFs. Plot the distribution of the ToFs.
 \item Fit the distribution of $log_{10}(\text{ToF})$ to Gamma distribution.
 \end{enumerate}
@@ -417,14 +375,16 @@ Then the order of the energies are randomly shuffled so that they are no longer 
 After such shuffling energy and ToF calculation for 10000 times, the distribution of $\tau_{\text{sh}}$ are shown in Fig.\ref{fig:ToF_shuffle_MADN}. 
 For the chosen $\alpha=0.05, 0.15, 0.25$, the $\tau_{\text{sh}}$ does not overall shift to smaller or large values, and the averaged $\tau_{\text{sh}}$ is close to the ToF obtained without energy shuffle.
 So making the energy uncorrelated will not shift the ToF to smaller or larger values.
-This enables represent the parameter uncertainties in $\lambda, \{E_i\}, \{ J_{ij}\}$ using the normal distribution without shift the ToF.
+This enables representing the parameter uncertainties in $\lambda, \{E_i\}, \{ J_{ij}\}$ by the normal distribution without shift the ToF.
 
-To understand which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, we study the following distribution of ToF:
+To understand how the uncertainty pass from $E, \lambda, J_{ij}$ to ToF, and 
+which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, 
+firstly we study the following distribution of ToF:
 \begin{enumerate}
-    \item Fixed the $\lambda$ to be the averaged $\bar{\lambda}$, and $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$. Finally obtain and plot $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
-    \item Fixed the $E_i$ to be the average $\bar{E}_i$ and and $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$. Finally obtain and plot $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
-    \item Fixed the $E_i$ to be the average $\bar{E}_i$ and $\lambda$ to be the averaged $\bar{\lambda}$. Then $J_{ij}$ is sampled from the normal distribution $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Finally obtain and plot $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
-    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sample from their normal distribution: $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$, $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$ and $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Then obtain and plot $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
+    \item Fixed the $\lambda$ to be the averaged $\bar{\lambda}$, and $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$. Finally obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
+    \item Fixed all $E_i$ to be the average $\bar{E}_i$ and all $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
+    \item Fixed the $E_i$ to be the average $\bar{E}_i$ and $\lambda$ to be the averaged $\bar{\lambda}$. Then $J_{ij}$ is sampled from the normal distribution $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
+    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sampled from their normal distribution: $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$, $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$ and $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Then obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
 \end{enumerate}
 
 
@@ -433,7 +393,7 @@ The ToF distribution and Gamma fitted results for the MADN systems with energy d
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figs/MADN_HFX/fig_mle_MADN_withE.pdf}
-    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. 
+    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
     (a) $P(\log_{10}(\tau)|E_i \text{ uncertain})$, 
     (b) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
     (c) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
@@ -442,14 +402,14 @@ The ToF distribution and Gamma fitted results for the MADN systems with energy d
 \end{figure}
 %
 
-The 90\% confidence interval of each distribution and the fitted Gamma distribution is summarized in table 
+% The 90\% confidence interval of each distribution and the fitted Gamma distribution is summarized in table 
 
 When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}
 %
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.99\textwidth]{figs/MADN_HFX/fig_mle_MADN_noE.pdf}
-    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. Energy disorder is not consider. 
+    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. Energy disorder is not consider. Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
     (a) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
     (b) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
     (c) $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$. The red star indicates the ToF calculated using the average $\bar{E_i}, \bar{J}_{ij}, \bar{\lambda}$, and the red circles indicate the ToF obtained using different HFX.}
@@ -463,11 +423,28 @@ That is, if ToF is most sensitive to one parameter, the variance in this particu
 
 One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis. The local sensitive analysis is to use the partial derivative $\frac{\partial \tau}{\partial x_i}$. While the global sensitivity analysis can use Sobol's indices. Specifically, to measure the parameter $x_i$'s contribution to $\tau$, including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total effect Sobol's index is calculated as 
 \begin{equation}
-    S_{Ti} = \frac{ \mathbb{E}_{x_{\sim i}}[ \text{Var}_{x_i}(\tau|x_{\sim i}) ] }{ \text{Var}(\tau) }
+    S_{T,i} = \frac{ \mathbb{E}_{x_{\sim i}}[ \text{Var}_{x_i}(\tau|x_{\sim i}) ] }{ \text{Var}(\tau) }
     \label{eq:STi}
 \end{equation}
-
-
+Then the $\lambda$ contribution to the total variance is $S_{T,i=1}$.
+The energy contribution to the total variance is $S_{T,E} = \sum\limits_{i=1}^{N+1} S_{T,i}$ where $N=1000$ is the number of energy parameter, and the coupling element contribution to the total variance is $S_{T,J}=\sum\limits_{i=N+2}^{N_d} S_{T,i}$. 
+Using the quasi Monte Carlo method\cite{sobol_global_2001} with a sample size $N_\text{QMC}=1000$ to calculate $S_{T,i}$, the results are shown in the table \ref{tab:Sobol}.
+%
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c }
+        \toprule
+        parameter & $\lambda$ & $E$ & $\log_{10} J^2$   \\
+        \midrule
+        $S_T$ & 0.097 & 0.95 & 0.018\\
+        \bottomrule
+    \end{tabular}
+        \caption{Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$.}
+        \label{tab:Sobol}
+\end{table}
+%
+The table \ref{tab:Sobol} shows that most of the total variance can be attributed to the energy $E$. In contrast to $E$, the uncertainty in $\log_{10} J^2$ contributes much less compared to $E$, this is consistent to the Fig.\ref{fig:mle_MADN_withE}, where the distribution in Fig.\ref{fig:mle_MADN_withE}(d) resembles the distribution in Fig.\ref{fig:mle_MADN_withE}(a).
+And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances. 
 
 \section{Distribution of Steady State Velocity}
 The distribution of steady state velocity of MADN is shown as Fig.\ref{fig:mle_MADN_withE_SS} and \ref{fig:mle_MADN_noE_SS}. 
@@ -476,7 +453,9 @@ Those distribution shows that the variation in $v_\text{SS}$ distribution is gre
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figs/MADN_HFX/fig_mle_MADN_withE_SS.pdf}
-    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN system using PBE0 functional when (a) the molecule site energy $E$ are sampled from a normal distribution $E \sim N(E_\text{ave},E^2_\text{std})$, (b) the reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$, (c) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (d) Both $E$, $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN system using PBE0 functional.
+    Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
+    (a) the molecule site energy $E$ are sampled from a normal distribution $E \sim N(E_\text{ave},E^2_\text{std})$, (b) the reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$, (c) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (d) Both$E$, $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
     \label{fig:mle_MADN_withE_SS}
 \end{figure}
 
@@ -484,13 +463,28 @@ Those distribution shows that the variation in $v_\text{SS}$ distribution is gre
     \centering
     \includegraphics[width=0.99\textwidth]{figs/MADN_HFX/fig_mle_MADN_noE_SS.pdf}
     \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN system using PBE0 functional. All molecule energies are set to be zero.  
+    Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
     The plots are for the situation: (a) The reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$. (b) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (c) Both $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
     \label{fig:mle_MADN_noE_SS}
 \end{figure}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Comparison of Diffusive Charge Velocity Between BCP and MADN}
+
 In this section we compare the diffusive charge velocity between BCP and MADN. 
+
+The energy in BCP system is correlated, and making the energy uncorrelated by shuffling the molecule energy leads to a shift in ToF, as shown in Fig.\ref{fig:ToF_shuffle_BCP}
+%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figs/BCP_HFX/ToFx_shuffle.pdf}
+    \caption{Distribution of $\tau_{\text{sh}}$ in BCP calculated using shuffle energies. Each distribution are a sample of 10000 $\tau_{\text{shuffle}}$. The position of the solid circle indicates the ToF calculated from the specific $\alpha$ value, and the position of the solid square indicates the average $\tau_{\text{shuffle}}$ over the 10000 samples.}
+    \label{fig:ToF_shuffle_BCP}
+\end{figure}
+%
+This figure shows that the ToF $\tau$ obtained with the specific HFX is always larger than the $\tau_\text{sh}$.
+So there is a shift in ToF when making the energies uncorrelated. 
+
 The following tables show the diffusive charge velocity for BCP and MADN with HFX=0.05, 0.15, 0.25. The situations of using energy disorder and without energy disorder are considered.
 For the ToF setting, we investigate the situations where the charge transport direction is along the X-axis, Y-axis and Z-axis, as shown in Table \ref{tab:compare_Lx}, \ref{tab:compare_Ly}, and \ref{tab:compare_Lz}. 
 
