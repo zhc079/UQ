@@ -1,6 +1,0 @@
-1: plot_scatterE.py
-2: plot_scatterJ.py
-3: plot_DeltaToF_W_KL.py
-4: plot_DeltaToF_W_all.py
-5: kmeansRW.py
-6: kmeansW.py
