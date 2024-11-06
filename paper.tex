@@ -79,13 +79,13 @@ Secondly, state localization is not exactly a time dependent DFT process.
 But for amorphous OSCs used in this work, model noise from state localization is negligible and we do not consider the uncertainty brought by state localization.
 Lastly, the exact functional for the exchange-correlation energy is unknown so approximations like the Local Density Approximation (LDA) or the Generalized Gradient Approximation (GGA) are used, resulting in exchange-correlation functional in practice. 
 The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose accuracy is usually unknown for new synthesized molecules. 
-As an advancement to improve accuracy, Hybrid-DFT incorporates a portion of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HF exchange functional. 
+As an advancement to improve accuracy, Hybrid-DFT incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HF exchange functional. 
 
 The charge dynamics is determined by CTRW transition rates, which depend on the electronic structures.
 Since DFT is used to calculate the molecular electronic structures, the unknown exchange-correlation functional will bring uncertainties to the multiscale model. 
-In particular, different hybrid-DFT functionals contain varying levels of Hartree Fock (HF) to represent the exchange-correlation potential. 
+In particular, different hybrid-DFT functionals contain varying levels of HFX to represent the exchange-correlation potential. 
 The effect of the uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
-The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HF exchange functional. 
+The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HFX.
 
 To perform this goal of uncertainty quantification, a first step is to choose a QoI. A quantity commonly seen in OSC investigation is the charge mobility, which is the distance traveled by the charge carrier divided by the time period. 
 The charge mobility is calculated in a \textit{time-of-flight} (ToF) setting. 
@@ -121,7 +121,8 @@ In the section, the components of the multiscale model will be introduced: molec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Molecule Dynamics Simulation}
-The MD in the multiscale model is to use Newton's second law to update the atomic coordinate. Written in Hamilton equation, the equation of motion reads:
+\begin{comment}
+    The MD in the multiscale model is to use Newton's second law to update the atomic coordinate. Written in Hamilton equation, the equation of motion reads:
 \begin{equation}
     \begin{cases}
         \frac{d \vec{r}_i}{dt} = \frac{\partial H^\text{MD} }{\partial \vec{p}_i} \\
@@ -136,6 +137,7 @@ $H^\text{MD}=\sum\limits_{i} \frac{|\vec{p}_i|^2}{2 m_i} + U(\vec{r}_1,\cdots,\v
 In principle the potential energy function $U(\vec{r}_1,\cdots,\vec{r}_{N_a})$ of the system can be obtained from electronic structure models. As mentioned in the introduction, it is a very computationally expensive procedure, and without too much loss in precision, MD use empirical potentials that are designed for specific purposes.
 The MD simulation performed using the GROMACS software package~\cite{berendsen_gromacs_1995}, employing a gromos54a7 type force field obtained via the tool Automated Topology Builder~\cite{stroet_automated_2018}. 
 The procedure of the MD simulation in this work is as followed:...
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronic Structure Calculations} 
@@ -160,10 +162,10 @@ where $T_s[\rho]$ is the kinetic energy, $E_\text{H}[\rho]$ and $E_\text{XC}[\rh
 The practical calculations in this work have been performed with the ORCA software~\cite{Neese2012a} using the def2-tzvp~\cite{weigend_accurate_2006} basis set to represent the Kohn--Sham wave functions $\phi_l(\vec{r})$. 
 The correlation potential is represented by PBE0 functional, and the exchange potential is represented by a portion $\alpha$ of (HFX) potential and another portion $(1-\alpha)$ from PBE0 functional. In common practice, $\alpha$ is small and below 0.25. For our uncertain quantification study, $\alpha=0,0.05,0.10,0.15,0.20,0.25$ is chosen for the multiscale model.
 
-
+\subsection{Transition Rate Calculation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Time-of-flight Calculation}
+\subsection{Time-of-flight and Steady State Velocity Calculation}
 The multiscale model defines a graph $\mathbf{G}$ with an adjacency matrix $\mathbf{W}$, where the nodes represent molecules and the edge weights $\omega_{ij}$ represent the Marcus rate from molecule $i$ to molecule $j$. 
 The charge dynamics are modeled as a continuous-time random walk on this graph. In the time-of-flight (ToF) model, some vertices serve as \textit{Source} nodes, representing the electrode where charge carriers are injected, and some as \textit{Sink} nodes, where charge carriers are detected and the ToF is recorded.
 
@@ -204,38 +206,41 @@ To calculate $v_\text{SS}$ the steady state distribution $\pi_i$ is required. In
 where $\mathbf{D} = \text{diag}(D_i)$ is the out-degree matrix of $\mathbf{W}$.
 
 \begin{equation}
-    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} || \vec{r}_{ij}||_2 = \mathbb{E}f(M_{\infty})
+    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} || \vec{r}_{ij}||_2
 \end{equation} 
 where $\omega_{ij}$ is the charge transition rate from molecule $i$ to molecule $j$, and $\vec{r}_{ij}=\vec{r}_j - \vec{r}_i$ is the center-of-mass (COM) distance vector. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results on MADN}
 
-In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene). 
+In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene) and study its charge mobility's dependence on HFX. 
 
-Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges dipole moment at charge neutral state. 
+Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges is dipole moment at charge neutral state. 
 To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
-Figure \ref{fig:autogen_MADN} illustrates the dependence of the dipole moment $\mu$, isotropic polarizability $P_\text{iso}$, reorganization energy $\lambda$, and energy disorder $\sigma(E)$ on the Hartree-Fock exchange (HFX) parameter.
+Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
+Figure \ref{fig:autogen_MADN}(c)(d) show 
+The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig .\ref{fig:autogen_MADN}(c)(d).
 
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.80\textwidth]{figs/MADN_HFX/fig_autogen.pdf}
+    \includegraphics[width=0.80\textwidth]{figs/fig_autogen.pdf}
     \caption{(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters (denoted by $\alpha$).}
     \label{fig:autogen_MADN}
 \end{figure}
 % 
 
 
-Figure \ref{fig:autogen_MADN}(a) shows a decrease in the dipole moment with increasing HFX, exhibiting a notable drop at HFX = 0.25. 
-
-Figure \ref{fig:autogen_MADN}(b) demonstrates a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
-
+From Fig. \ref{fig:autogen_MADN}(a) one can notice a mild decrease in the dipole moment with increasing HFX and in Fig. \ref{fig:autogen_MADN}(b) a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
 Figure \ref{fig:autogen_MADN}(c) indicates an increase in reorganization energy $\lambda$ with higher HFX, reflecting greater energy requirements for electronic adjustments during charge transfer. This increase is nonlinear compared to the linear decrease in $P_\text{iso}$.
-
 Figure \ref{fig:autogen_MADN}(d) shows that the energy disorder $\sigma(E)$ for MADN are similar and close to \unit[0.08]{eV} under different HFX values.
 
-The ToF and corresponding diffusive velocity $v_\text{ToF}$ are presented in Table \ref{tab:ToF_MADN_HFX}. For boundary conditions, the \textit{Source} region contains molecules with X-coordinates $0 < r^x_i < 0.5$ nm, and the \textit{Sink} region contains molecules with X-coordinates $8.5 < r^x_i < 9$ nm. We also consider scenarios without energy disorder to model systems where all molecules have uniform energy.
+To calculate the ToF from the electronic structures, the \textit{Source} region contains molecules with X-coordinate $0 < r^x_i < 0.5$ nm, and the \textit{Sink} region contains molecules with X-coordinate $8.5 < r^x_i < 9$ nm. 
+
+The ToF is also calculated without energy disorder, meaning $\Delta E_{ij}=0$ for all $i,j$.
+Table \ref{tab:ToF_MADN_HFX} shows the ToF and corresponding diffusive velocity $v_\text{ToF}$.
+With energy disorder, the ToF increases by a factor of approximately 15 as $\alpha$ increases from 0 to 0.25.  
+While without energy disorder, the increase factor is about 4. This increase in ToF is attributed to the rise in $\lambda$, changes in molecular energies, and variations in coupling elements.
 
 \begin{table}[H]
     \centering
@@ -255,31 +260,53 @@ The ToF and corresponding diffusive velocity $v_\text{ToF}$ are presented in Tab
     \label{tab:ToF_MADN_HFX}
 \end{table}
 
-Table \ref{tab:ToF_MADN_HFX} shows that as HFX increases from 0 to 0.25, the ToF with energy disorder increases by a factor of approximately 15, while without energy disorder, the increase factor is about 4. This increase in ToF is attributed to the rise in $\lambda$, changes in molecular energies, and variations in coupling elements.
+Figure \ref{fig:E_qmmm_MADN} presents a scatter plot comparing the site energies of MADN molecules across different HFX values, using $\alpha$ = 0.25 (PBE0 functional) as a reference. The energies consistently fall within the range of -0.5 to -1.1 eV, with data points clustering near the diagonal line, indicating similar molecular energies regardless of HFX variation.
+To quantify the similarity between two empirical distribution, Wasserstein distance is used.
+Denote the empirical distribution of molecular energy $E$ at $\alpha=0$ to be $P_{E(\alpha=0)}$. 
+The 1-Wasserstein distance between $P_{E(\alpha=0)}$ and $P_{E(\alpha=0.25)}$ is calculated as:
+\begin{equation}
+    W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = (\frac{1}{N} \sum\limits_{i=1}^N | E_{i,\text{order}}(\alpha=0) - E_{i,\text{order}}(\alpha=0.25) |)
+\end{equation}
+where $E_{i,\text{order}}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that such molecule energy on average has difference less than 2\% since the energy has range from -0.5 to -1.1 eV.
 
-Figure \ref{fig:E_qmmm_MADN} presents a scatter plot comparing the site energies of MADN molecules across different HFX values, using HFX = 0.25 (PBE0 functional) as a reference. The energies consistently fall within the range of -0.5 to -1.1 eV, with data points clustering near the diagonal line, indicating similar molecular energies regardless of HFX variation.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c c c}
+    \hline
+ $\alpha'$ & 0 & 0.05 & 0.10 & 0.15 & 0.20 \\
+    \hline
+ $W_1 (P_{E(\alpha')}, P_{E(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
+ $W_1 (P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ &  0.010 & 0.012 & 0.0089 & 0.0070 & 0.0032 \\
+ $W_1 (P_{E^\text{polar}(\alpha')}, P_{E^\text{polar}(\alpha=0.25)})$ &  0.0065 & 0.0043 & 0.0027 & 0.0023 & 0.0031 \\
+ $W_1 (P_{\log_{10}(J_{ij}^2)(\alpha')}, P_{\log_{10}(J_{ij}^2)(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
+    \hline
+    \end{tabular}
+    \caption{The 1-Wasserstein distance between the distributions pair of molecule energy $P_{E(\alpha)}$, electrostatic energy $P_{E^\text{el}(\alpha)}$, polar energy $P_{E^\text{polar}(\alpha)}$ and $P_{\log_{10}(J_{ij}^2)(\alpha)}$. }
+    \label{tab:W2_E}
+\end{table}
+
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterE_qmmm.pdf}
+    \includegraphics[width=0.99\textwidth]{figs/scatterE_qmmm.pdf}
     \caption{Scatter plot of site energy of MADN molecules calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:E_qmmm_MADN}
 \end{figure}
 
 
-Figures \ref{fig:Estat_qmmm_MADN} and \ref{fig:Edip_qmmm_MADN} show that both electrostatic and polarization energies remain consistent across HFX values from 0 to 0.25, further clustering near the diagonal.
-
+Figures \ref{fig:Estat_qmmm_MADN} and \ref{fig:Edip_qmmm_MADN} show that both electrostatic and polarization energies remain consistent close across HFX values from 0 to 0.25, since all the points comparing $E_i(\alpha')$ and $E_i(\alpha=0.25)$ in the scatter plot are close to the diagonal line.
+The 1-Wasserstein distance between the distribution of $E^\text{el}$ calculated by $\alpha'$ and that calculated by $\alpha=0.25$, $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$, is shown at Table \ref{tab:W2_E}. It shows that $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ is at maximum 0.012. The 1-Wasserstein distance between the $E^\text{polar}$ distribution calculated by $\alpha'$ and that calculated by $\alpha=0.25$ is also shown in Table .\ref{tab:W2_E}, with a maximum of 0.006. So the small Wasserstein distances suggest that the using different $\alpha'$ other than $\alpha=0.25$, the data of $E, E^\text{el}, E^\text{polar}$ have not changed significantly.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterEstat_qmmm.pdf}
+    \includegraphics[width=0.99\textwidth]{figs/scatterEstat_qmmm.pdf}
     \caption{Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:Estat_qmmm_MADN}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterEdip_qmmm.pdf}
+    \includegraphics[width=0.99\textwidth]{figs/scatterEdip_qmmm.pdf}
     \caption{Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:Edip_qmmm_MADN}
 \end{figure}
@@ -291,13 +318,13 @@ Each individual molecule has similar polarization energies under different HFX c
 The coupling element obtained with different HFX for each molecular pair compared to that obtained with HFX=0.25 is shown in the scatter plot Fig. \ref{fig:J_MADN}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figs/MADN_HFX/scatterJ_all.pdf}
+    \includegraphics[width=0.95\textwidth]{figs/scatterJ_all.pdf}
     \caption{Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:J_MADN}
 \end{figure}
 
 The distribution of $\log_{10} J^2$ has a range of -14 to -2, and for all HFX values, the distribution has a peak at around -5. 
-For large values $\log_{10} J^2 < -5$ the coupling element remains consistent across HFX values from 0 to 0.25, while for large values $\log_{10} J^2 > -5$, the calculated coupling elements for a specific molecular pair can have large variation due to HFX values. 
+For large values $\log_{10} J^2 < -5$ the coupling element calculated from $\alpha'=0, 0.05, 0.10, 0.15, 0.2$ remains consistently close to that calculated by $\alpha=0.25$. While for small values $\log_{10} J^2 > -5$, the $\alpha'$ calculated coupling elements for a specific molecular pair can have large variation compared to $\log_{10} J^2$ calculated using $\alpha=0.25$.
 
 In charge transport network, $J^2$ is undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J^2$ are usually observed for molecular pairs with small center-of-mass distance. 
 When the center-of-mass distance is very large, the $\log_{10} J^2$ is small and some of those small $\log_{10} J^2$ are sensitive to $\alpha$. 
@@ -313,7 +340,7 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{figs/MADN_HFX/fig_network_all.pdf}
+    \includegraphics[width=0.75\textwidth]{figs/fig_network_all.pdf}
     \caption{The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$. The molecular systems obtained by different HFX are colored according to the legend.}
     \label{fig:J_percolate}
 \end{figure}
@@ -336,6 +363,7 @@ The ToF is calculated from electronic structure ($E$, $\lambda$ and $\log_{10}(J
 \begin{equation}
     %\tau = g(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \}) \;
     \tau = g(x_1, x_2, \cdots, x_{N_d})
+    \label{eq:tau1}
 \end{equation}
 The input $(x_1, x_2, \cdots, x_{N_d})$ represents the collection of the parameters $$(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$$  where $N_d$ is the parameter dimension, that is the number of input parameters. 
 And $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
@@ -343,31 +371,30 @@ $\{J_{ij}|i,j=1,2,\cdots,N \}$ is the ordered set whose elements are the couplin
 
 Since the exchange-correlation functional is not known and each molecule has a slightly different structure compared to the optimized structure, each parameter has uncertain. 
 To estimate the uncertainty, we consider the maximum amount of uncertainties according to the obtained $(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$ with the six different HFX.
-To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are the HFX sample mean and standard deviation, respectively.
+To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are respectively the sample mean and standard deviation obtained by six varying HFXs.
 
 Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
 \begin{enumerate}
-\item For all $i,j=1,2,\cdots, Nd$, obtain a realization $(x_1, x_2, \cdots, x_{N_d})$ where each parameter has the normal distribution, meaning: $\lambda_i \in \mathcal{N}(\bar{\lambda}_i, \sigma_{\lambda_i})$, $E_i \in \mathcal{N}(\bar{E}_i, \sigma_{E_i})$, $J_{ij} \in \mathcal{N}(\bar{J}_{ij}, \sigma_{J_{ij}})$. 
+\item For all $i,j=1,2,\cdots, N_d$, obtain a realization $(x_1, x_2, \cdots, x_{N_d})$ where each parameter has the normal distribution, meaning the corresponding electronic parameters are sampled from the distribution $\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, $E_i \in \mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$, $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. 
 \item Calculate ToF using the sampled data set $(x_1, x_2, \cdots, x_{Nd})$. 
 \item Repeat step 1 and 2 for $N_\text{MC} = 50000$ times to obtain ToFs. Plot the distribution of the ToFs.
-\item Fit the distribution of $log_{10}(\text{ToF})$ to Gamma distribution.
+\item Estimate the 99\% confidence interval around the median.
 \end{enumerate}
 
-The distribution of ToF calculated as the CTMC where transition parameters are varied is unknown, so we attempt to fit the distribution of ToF to Gamma distribution. The reason is as followed.
+%From equation \ref{eq:hitting_time}, the ToF can be considered as the some combination of occupation time in the molecules, which is $log_{10}(\omega_{i}^{-1})$. 
+%When the parameters $E, J_{ij}, \lambda_{ij}$ are normally distributed random variables, the calculated ToF shows that variables $E,\lambda_{ij}$ has a larger influence than $J_{ij}$. 
+%The Marcus rate uses $E,\lambda_{ij}$ in the exponential form. If $\Delta E$ is normally distributed, then $log_{10}(\omega_{i}^{-1})$ is Gamma distributed. 
+%Since $E$ has greater influence to ToF than $\lambda_{ij}, J_{ij}$ and to be consistent, Gamma distribution is used to fit the Monte Carlo sampled ToF in all the investigated cases.
 
-From equation \ref{eq:hitting_time}, the ToF can be considered as the some combination of occupation time in the molecules, which is $log_{10}(\omega_{i}^{-1})$. 
-When the parameters $E, J_{ij}, \lambda_{ij}$ are normally distributed random variables, the calculated ToF shows that variables $E,\lambda_{ij}$ has a larger influence than $J_{ij}$. 
-The Marcus rate uses $E,\lambda_{ij}$ in the exponential form. If $\Delta E$ is normally distributed, then $log_{10}(\omega_{i}^{-1})$ is Gamma distributed. 
-Since $E$ has greater influence to ToF than $\lambda_{ij}, J_{ij}$ and to be consistent, Gamma distribution is used to fit the Monte Carlo sampled ToF in all the investigated cases.
-
-Sampling the molecule energy as a normal distribution $E_i \sim \mathcal{N}(\bar{E}_i, \sigma_{E_i})$ will potentially destroy the energy correlation, especially for correlated systems, resulting a shift in the ToF calculation.
+\begin{comment}
+    Sampling the molecule energy as a normal distribution $E_i \sim \mathcal{N}(\bar{E}_i, \sigma_{E_i})$ will potentially destroy the energy correlation, especially for correlated systems, resulting a shift in the ToF calculation.
 But we will show that making the molecule energy uncorrelated in the MADN system will not cause such a shift in ToF. 
 To do so, let $\{E_1, E_2, \cdots, E_N\}^{\alpha}$ be an ordered set with elements being the energy calculated using a specific $\alpha$ value. 
 Then the order of the energies are randomly shuffled so that they are no longer correlated, and denote it as $\{E_1, E_2, \cdots, E_N\}^{\alpha}_{\text{shuffle}}$. The ToF calculated using the shuffled energy is $ \tau_{\text{sh}} = \tau(\{E_1, E_2, \cdots, E_N\}^{\alpha}_{\text{shuffle}}) $.
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{figs/MADN_HFX/ToFx_shuffle.pdf}
+    \includegraphics[width=\textwidth]{figs/ToFx_shuffle.pdf}
     \caption{Distribution of $\tau_{\text{sh}}$ calculated using shuffle energies. Each distribution are a sample of 10000 $\tau_{\text{shuffle}}$. The position of the solid circle indicates the ToF calculated from the specific $\alpha$ value, and the position of the solid square indicates the average $\tau_{\text{shuffle}}$ over the 10000 samples.}
     \label{fig:ToF_shuffle_MADN}
 \end{figure}
@@ -376,75 +403,107 @@ After such shuffling energy and ToF calculation for 10000 times, the distributio
 For the chosen $\alpha=0.05, 0.15, 0.25$, the $\tau_{\text{sh}}$ does not overall shift to smaller or large values, and the averaged $\tau_{\text{sh}}$ is close to the ToF obtained without energy shuffle.
 So making the energy uncorrelated will not shift the ToF to smaller or larger values.
 This enables representing the parameter uncertainties in $\lambda, \{E_i\}, \{ J_{ij}\}$ by the normal distribution without shift the ToF.
+\end{comment}
 
-To understand how the uncertainty pass from $E, \lambda, J_{ij}$ to ToF, and 
+To understand how the uncertainty pass from $E, \lambda, J_{ij}$ to ToF, the parameter control is used. That is, a set of parameter, such as $E_i$ for all $i=1,2,\cdots,N$ is choose while keeping other parameter fixed, then performed Monte Carlo sampling to obtain ToF distribution and estimate upper and lower confidence bound.
+Then we use Sobol total indices to analyze and quantify 
 which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, 
-firstly we study the following distribution of ToF:
+
+The distribution that we want to obtained during the parameter control are as followed:
 \begin{enumerate}
-    \item Fixed the $\lambda$ to be the averaged $\bar{\lambda}$, and $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$. Finally obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
-    \item Fixed all $E_i$ to be the average $\bar{E}_i$ and all $J_{ij}$ to be the averaged $\bar{J}_{ij}$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
-    \item Fixed the $E_i$ to be the average $\bar{E}_i$ and $\lambda$ to be the averaged $\bar{\lambda}$. Then $J_{ij}$ is sampled from the normal distribution $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
-    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sampled from their normal distribution: $\mathcal{N}(\bar{E}_i, \sigma^2_{E_i})$, $\mathcal{N}(\bar{\lambda}, \sigma^2_{\lambda})$ and $\mathcal{N}(\bar{J}_{ij}, \sigma^2_{J_{ij}})$. Then obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
+    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$, and $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$. Finally obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
+    \item Fixed all $E_i$ to be $\mathbb{E}(E_i)$ and all $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
+    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$ and all $E_i$ to be $\mathbb{E}(E_i)$.     Then $J_{ij}$ is sampled from the normal distribution $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
+    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sampled from their normal distribution:$\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, $E_i \in \mathcal{N}(\mathbb{E}(E), \mathbb{V}(E))$, $\log_{10}J_{ij}^2 \in \mathcal{N}(\mathbb{E}(\log_{10}J_{ij}^2), \mathbb{V}(\log_{10}J_{ij}^2))$. Then obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as the following distribution: 
+    $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
 \end{enumerate}
 
 
-The ToF distribution and Gamma fitted results for the MADN systems with energy disorder is shown in Fig.\ref{fig:mle_MADN_withE}.
+The ToF distribution for the MADN systems with energy disorder is shown in Fig.\ref{fig:mle_MADN_withE}.
+The lower and upper bounds in Fig. \ref{fig:mle_MADN_withE} shows that when only the energies $E_i$ are uncertain, the $\log_{10}(\tau)$ has lower -8.0 and upper bound -6.5. This lower and upper bound is close to that of $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$, meaning that varying the energy alone generates a $\tau$ distribution close to that when $E_i, \lambda, J_{ij}$ are uncertain. 
+
+Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidence interval of -8.0 to -7.4 when $\lambda$ is varied. 
+Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{10}(\tau)$ has a sharp confidence interval of -7.9 to -7.7, suggesting that the variation in $J_{ij}$ leads to relatively small change in $\log_{10}(\tau)$ compared to $E_i$ and $\lambda$.
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{figs/MADN_HFX/fig_mle_MADN_withE.pdf}
-    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
+    \includegraphics[width=0.70\textwidth]{figs/fig_mle_MADN_withE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled MADN system.
+    Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+    The black circles indicate the ToF obtained using varying HFX values.
     (a) $P(\log_{10}(\tau)|E_i \text{ uncertain})$, 
     (b) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
     (c) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
-    (d) $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$. The red star indicates the ToF calculated using the average $\bar{E_i}, \bar{J}_{ij}, \bar{\lambda}$, and the red circles indicate the ToF obtained using different HFX.}
+    (d) $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$. }
     \label{fig:mle_MADN_withE}
 \end{figure}
 %
 
 % The 90\% confidence interval of each distribution and the fitted Gamma distribution is summarized in table 
-
 When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}
+
+Measuring the sensitivity of each electronic parameter to ToF is to measure each electronic parameter's contribution to the variance of ToF. 
+That is, if ToF is most sensitive to one parameter, the variance in this particular parameter will contribute most to the ToF variance. 
+
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.99\textwidth]{figs/MADN_HFX/fig_mle_MADN_noE.pdf}
-    \caption{Distribution of ToFs in the multiscale modeled MADN system using PBE0 functional and varying HFX. Energy disorder is not consider. Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
+    \includegraphics[width=0.99\textwidth]{figs/fig_mle_MADN_noE.pdf}
+    \caption{Distribution of ToFs in the multiscale modeled MADN system.
+    Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+    Energy disorder is not consider. 
+    The black circles indicate the ToF obtained using varying HFX values.
     (a) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
     (b) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
-    (c) $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$. The red star indicates the ToF calculated using the average $\bar{E_i}, \bar{J}_{ij}, \bar{\lambda}$, and the red circles indicate the ToF obtained using different HFX.}
+    (c) $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$. }
     \label{fig:mle_MADN_noE}
 \end{figure}
 %
 
 
-Measuring the sensitivity of each electronic parameter to ToF is to measure each electronic parameter's contribution to the variance of ToF. 
-That is, if ToF is most sensitive to one parameter, the variance in this particular parameter will contribute most to the ToF variance. 
-
-One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis. The local sensitive analysis is to use the partial derivative $\frac{\partial \tau}{\partial x_i}$. While the global sensitivity analysis can use Sobol's indices. Specifically, to measure the parameter $x_i$'s contribution to $\tau$, including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total effect Sobol's index is calculated as 
+One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis. The local sensitive analysis is to use the partial derivative $\frac{\partial \tau}{\partial x_i}$. While the global sensitivity analysis can use Sobol's indices. Given a model of Equation \ref{eq:tau1}, to measure the parameter $x_i$'s contribution to $\tau$ including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total effect Sobol's index is calculated as \cite{saltelli_variance_2010}:
 \begin{equation}
-    S_{T,i} = \frac{ \mathbb{E}_{x_{\sim i}}[ \text{Var}_{x_i}(\tau|x_{\sim i}) ] }{ \text{Var}(\tau) }
+    S_{T,i} = \frac{ \mathbb{E}_{\mathbf{x}_{\sim i}}[ \mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i}) ] }{ \mathbb{V}(\tau) }
     \label{eq:STi}
 \end{equation}
+The details of the notation is as followed: the vector $\mathbf{x}=(x_1, x_2, \cdots, x_{N_d})$, and $\mathbf{x}_{\sim i}$ denotes the vector of all entries but $x_i$. 
+$\mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i})$ means the variance of $\tau$ given a set of $\mathbf{x}_{\sim i}$ taken over $x_i$. And $ \mathbb{E}_{\mathbf{x}_{\sim i}}[\cdot]$ denotes the mean of argument $(\cdot)$ taken over all factors but $x_i$.
+
+
 Then the $\lambda$ contribution to the total variance is $S_{T,i=1}$.
-The energy contribution to the total variance is $S_{T,E} = \sum\limits_{i=1}^{N+1} S_{T,i}$ where $N=1000$ is the number of energy parameter, and the coupling element contribution to the total variance is $S_{T,J}=\sum\limits_{i=N+2}^{N_d} S_{T,i}$. 
+The energy contribution to the total variance is $S_{T,E} = \sum\limits_{i=1}^{N+1} S_{T,i}$ where $N=1000$ is the number of energy parameter, and the coupling element contribution due to variation in $\log_{10}(J_{ij}^2)$ to the total variance is $S_{T,J}=\sum\limits_{i=N+2}^{N_d} S_{T,i}$. 
 Using the quasi Monte Carlo method\cite{sobol_global_2001} with a sample size $N_\text{QMC}=1000$ to calculate $S_{T,i}$, the results are shown in the table \ref{tab:Sobol}.
 %
-\begin{table}[H]
-    \centering
-    \begin{tabular}{c c c c }
-        \toprule
-        parameter & $\lambda$ & $E$ & $\log_{10} J^2$   \\
-        \midrule
-        $S_T$ & 0.097 & 0.95 & 0.018\\
-        \bottomrule
-    \end{tabular}
-        \caption{Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$.}
-        \label{tab:Sobol}
-\end{table}
+%\begin{table}[H]
+%    \centering
+%    \begin{tabular}{c c c c }
+%        \toprule
+%        parameter & $\lambda$ & $E$ & $\log_{10} J^2$   \\
+%        \midrule
+%        $S_T$ & 0.097 & 0.95 & 0.018\\
+%        \bottomrule
+%    \end{tabular}
+%        \caption{Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$.}
+%        \label{tab:Sobol}
+%\end{table}
 %
-The table \ref{tab:Sobol} shows that most of the total variance can be attributed to the energy $E$. In contrast to $E$, the uncertainty in $\log_{10} J^2$ contributes much less compared to $E$, this is consistent to the Fig.\ref{fig:mle_MADN_withE}, where the distribution in Fig.\ref{fig:mle_MADN_withE}(d) resembles the distribution in Fig.\ref{fig:mle_MADN_withE}(a).
-And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances. 
+
+\begin{table}[H]
+    \caption{Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$ when ToF is calculated with energy disorder, and Sobol indices of $\lambda$ and $\log_{10} J^2$ when ToF is calculated without energy disorder.}\label{tab:Sobol}
+    \begin{center}
+      \begin{tabular}{c c c c c c c} \hline
+        &  \multicolumn{3}{c}{\bf Energy Disorder} & &\multicolumn{2}{c}{\bf no Disorder}\\\cline{2-4}  \cline{6-7}
+        parameter  & $\lambda$ & $ E_i$ & $ \log_{10}(J_{ij}^2)$ && $\lambda$ & $ \log_{10}(J_{ij}^2)$ \\ \hline
+        %\multicolumn{6}{c}{\bf GRW for $\mathbf{N_c=1}$}\\
+     $S_T$  & 0.097 & 0.95 & 0.018 && 0.96 & 0.11 \\
+    \hline
+      \end{tabular}
+    \end{center}
+\end{table}
+
+From table \ref{tab:Sobol} one can see that most of the total variance can be attributed to the energy $E$. In contrast to $E$, the uncertainty in $\lambda$ and $\log_{10} J^2$ contributes much less compared to $E$, this is consistent to the Fig.\ref{fig:mle_MADN_withE}, where the distribution in Fig.\ref{fig:mle_MADN_withE}(d) resembles the distribution in Fig.\ref{fig:mle_MADN_withE}(a).
+And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances.
+When there is no energy disorder, the variance in $\lambda$ has the most contribution to the total variance as shown in Table \ref{tab:Sobol}.
 
 \section{Distribution of Steady State Velocity}
 The distribution of steady state velocity of MADN is shown as Fig.\ref{fig:mle_MADN_withE_SS} and \ref{fig:mle_MADN_noE_SS}. 
@@ -452,278 +511,80 @@ Those distribution shows that the variation in $v_\text{SS}$ distribution is gre
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figs/MADN_HFX/fig_mle_MADN_withE_SS.pdf}
-    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN system using PBE0 functional.
+    \includegraphics[width=0.7\textwidth]{figs/fig_mle_MADN_withE_SS.pdf}
+    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN.
     Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
-    (a) the molecule site energy $E$ are sampled from a normal distribution $E \sim N(E_\text{ave},E^2_\text{std})$, (b) the reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$, (c) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (d) Both$E$, $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+    The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
+    (a) $P(\log_{10}(v_\text{SS})|E_i \text{ uncertain})$, 
+    (b) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
+    (c) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
+    (d) $P(\log_{10}(v_\text{SS})|E_i, \lambda, J_{ij} \text{ uncertain})$. }
     \label{fig:mle_MADN_withE_SS}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.99\textwidth]{figs/MADN_HFX/fig_mle_MADN_noE_SS.pdf}
-    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN system using PBE0 functional. All molecule energies are set to be zero.  
+    \includegraphics[width=0.90\textwidth]{figs/fig_mle_MADN_noE_SS.pdf}
+    \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN. All molecule energies are set to be zero.  
     Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
-    The plots are for the situation: (a) The reorganization energy $\lambda$ are sampled from a normal distribution $\lambda \sim N(\lambda_\text{ave},\lambda^2_\text{std})$. (b) the quantity $\log_{10}(J^2)$ are sampled from a normal distribution $\log_{10}(J^2) \sim N(\mathbb{E}[\log_{10}(J^2)], \textbf{Var}[\log_{10}(J^2)] )$. (c) Both $\lambda$ and $\log_{10}(J^2)$ are sampled from the normal distribution. }
+    The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+    The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
+    (a) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
+    (b) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
+    (c) $P(\log_{10}(v_\text{SS})|\lambda, J_{ij} \text{ uncertain})$.  }
     \label{fig:mle_MADN_noE_SS}
 \end{figure}
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Comparison of Diffusive Charge Velocity Between BCP and MADN}
 
-In this section we compare the diffusive charge velocity between BCP and MADN. 
+\section{Charge mobility and PF Behavior}
+In this section, we want to study the dependence of drift mobility on the HFX. The charge mobility is calculated as:
+\begin{equation}
+    \mu = \frac{\vec{v} \vec{F} }{ |\vec{F}|^2}
+    \label{eq:mu}
+\end{equation}
+To consider the charge dynamics along X, Y and Z axis in the ToF setting, the ToF is calculated with different settings of \textit{Source}-\textit{Sink} and $\vec{F}$ combinations.
 
-The energy in BCP system is correlated, and making the energy uncorrelated by shuffling the molecule energy leads to a shift in ToF, as shown in Fig.\ref{fig:ToF_shuffle_BCP}
+\begin{itemize}
+    \item Setting the molecules with $r^x < \min(r^x)+0.5$ as \textit{Source}, and the molecules with $r^x > \max(r^x)-0.5$ as \textit{Sink}, and $\vec{F}^T = (F,0,0)$, denote the calculated the ToF as $\tau_\text{Xmin}$, and the mobility is as $\mu_\text{Xmin} = \frac{L_x }{\tau_\text{Xmin} |\vec{F}|}$.  
+    \item Setting the molecules with $r^x > \max(r^x)-0.5$ as \textit{Source}, and the molecules with $r^x < \min(r^x)+0.5$ as \textit{Sink}, and $\vec{F}^T = (-F,0,0)$, denote the calculated the ToF as $\tau_\text{Xmax}$, and the mobility is as $\mu_\text{Xmax} = \frac{L_x }{\tau_\text{Xmax} |\vec{F}|}$.  
+    \item Setting the molecules with $r^y < \min(r^y)+0.5$ as \textit{Source}, and the molecules with $r^y > \max(r^y)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,F,0)$, denote the calculated the ToF as $\tau_\text{Ymin}$, and the mobility is as $\mu_\text{Ymin} = \frac{L_y }{\tau_\text{Ymin} |\vec{F}|}$. 
+    \item Setting the molecules with $r^y > \max(r^y)-0.5$ as \textit{Source}, and the molecules with $r^y > \max(r^y)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,-F,0)$, denote the calculated the ToF as $\tau_\text{Ymax}$, and the mobility is as $\mu_\text{Ymax} = \frac{L_y }{\tau_\text{Ymax} |\vec{F}|}$. 
+    \item Setting the molecules with $r^z < \min(r^z)+0.5$ as \textit{Source}, and the molecules with $r^z > \max(r^z)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,0,F)$, denote the calculated the ToF as $\tau_\text{Zmin}$, and the mobility is as $\mu_\text{Zmin} = \frac{L_z }{\tau_\text{Zmin} |\vec{F}|}$. 
+    \item Setting the molecules with $r^z > \max(r^z)-0.5$ as \textit{Source}, and the molecules with $r^z > \min(r^z)+0.5$ as \textit{Sink}, and $\vec{F}^T = (0,0,-F)$, denote the calculated the ToF as $\tau_\text{Zmax}$, and the mobility is as $\mu_\text{Zmax} = \frac{L_z }{\tau_\text{Zmax} |\vec{F}|}$. 
+\end{itemize}
+Finally the ToF drift mobility is calculated as:
+\begin{equation}
+    \mu_\text{PF} = \frac{1}{6} (\mu_\text{Xmin}+\mu_\text{Xmax}+\mu_\text{Ymin}+\mu_\text{Ymax}+\mu_\text{Zmin}+\mu_\text{Zmax})
+\end{equation}
+
+When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig.\ref{fig:fig_mle_withE_mu2_ave}.
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{figs/BCP_HFX/ToFx_shuffle.pdf}
-    \caption{Distribution of $\tau_{\text{sh}}$ in BCP calculated using shuffle energies. Each distribution are a sample of 10000 $\tau_{\text{shuffle}}$. The position of the solid circle indicates the ToF calculated from the specific $\alpha$ value, and the position of the solid square indicates the average $\tau_{\text{shuffle}}$ over the 10000 samples.}
-    \label{fig:ToF_shuffle_BCP}
+    \includegraphics[width=1.05\textwidth]{figs/fig_mle_withE_mu2_ave.pdf}
+    \caption{Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
+    Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.}
+    \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
 %
-This figure shows that the ToF $\tau$ obtained with the specific HFX is always larger than the $\tau_\text{sh}$.
-So there is a shift in ToF when making the energies uncorrelated. 
 
-The following tables show the diffusive charge velocity for BCP and MADN with HFX=0.05, 0.15, 0.25. The situations of using energy disorder and without energy disorder are considered.
-For the ToF setting, we investigate the situations where the charge transport direction is along the X-axis, Y-axis and Z-axis, as shown in Table \ref{tab:compare_Lx}, \ref{tab:compare_Ly}, and \ref{tab:compare_Lz}. 
-
-The diffusive velocity calculated using steady state setting is $v_\text{SS}$, and the comparison is shown in Table \ref{tab:compare_SS}.
-\begin{table}[H]
-\centering
-\begin{tabular}{c c c c c c c}
-    \toprule
-     &
-        \multicolumn{3}{c}{ with energy $E$} &
-        \multicolumn{3}{c}{all $E=0$}  \\
-    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
-    \cmidrule(r){1-7}
-    0.05 & $7.87 \times 10^{-9}$ & 0.32 & NA & $4.07 \times 10^{-10}$ & $3.00 \times 10^{-10}$ & NA \\
-    0.15 & $3.03 \times 10^{-8}$ & 0.38 & NA & $3.96 \times 10^{-10}$ & $4.67 \times 10^{-10}$ & NA \\
-    0.25 & $9.54 \times 10^{-8}$ & 0.026 & NA & $7.24 \times 10^{-10}$ & $7.63 \times 10^{-10}$ & NA \\
-    \bottomrule
-    \end{tabular}
-    \caption{Diffusive $\tau_X$ comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. The ratio does not apply because the BCP and MADN has different length $L_x$.}
-    \label{tab:compare}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{c c c c c c c}
-    \toprule
-        &
-        \multicolumn{3}{c}{ with energy $E$} &
-        \multicolumn{3}{c}{all $E=0$}  \\
-    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
-    \cmidrule(r){1-7}
-    0.05 & 1.0 & $2.2 \times 10^{-8}$ & $4.5 \times 10^{7}$ & 19 & 24 & 0.80 \\
-    0.15 & 0.31 & $1.8 \times 10^{-8}$ & $1.7 \times 10^{7}$ & 25 & 15 & 1.7 \\
-    0.25 & 0.083 & $2.7 \times 10^{-7}$ & $3.1 \times 10^{5}$ & 11 & 9.4 & 1.2 \\
-    \bottomrule
-    \end{tabular}
-    \caption{Diffusive ToF velocity $v_\text{ToF,X}=\frac{L_X}{\tau_X}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
-    \label{tab:compare_Lx}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{c c c c c c c}
-    \toprule
-        &
-        \multicolumn{3}{c}{ with energy $E$} &
-        \multicolumn{3}{c}{all $E=0$}  \\
-    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
-    \cmidrule(r){1-7}
-    0.05 & 0.44 & $5.8 \times 10^{-8}$ & $7.6 \times 10^{6}$ & 17 & 24 & 0.71 \\
-    0.15 & 0.057& $1.0 \times 10^{-7}$  & $5.7 \times 10^{5}$ & 17 & 15 & 1.1 \\
-    0.25 & 0.041 & $2.8 \times 10^{-7}$ & $1.4 \times 10^{5}$ & 10 & 9.5 & 1.0 \\
-    \bottomrule
-    \end{tabular}
-    \caption{Diffusive ToF velocity $v_\text{ToF,Y}=\frac{L_Y}{\tau_Y}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
-    \label{tab:compare_Ly}
-\end{table}
-
-\begin{table}[H]
-\centering
-\begin{tabular}{c c c c c c c}
-    \toprule
-        &
-        \multicolumn{3}{c}{ with energy $E$} &
-        \multicolumn{3}{c}{all $E=0$}  \\
-    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
-    \cmidrule(r){1-7}
-    0.05 & 2.0 & $5.6 \times 10^{-7}$ & $3.4 \times 10^{6}$ & 19 & 24 & 0.80 \\
-    0.15 & 2.6 & $1.2 \times 10^{-6}$ & $2.2 \times 10^{6}$ & 19 & 15 & 1.3 \\
-    0.25 & 1.0 & $5.4 \times 10^{-6}$ & $1.0 \times 10^{6}$ & 10 & 9.4 & 1.1 \\
-    \bottomrule
-    \end{tabular}
-    \caption{Diffusive ToF velocity $v_\text{ToF,Z}=\frac{L_Z}{\tau_Z}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
-    \label{tab:compare_Lz}
-\end{table}
-
-\begin{table}[htbp]
-\centering
-\begin{tabular}{c c c c c c c}
-    \toprule
-        &
-        \multicolumn{3}{c}{ with energy $E$} &
-        \multicolumn{3}{c}{all $E=0$}  \\
-    HFX & MADN & BCP & ratio & MADN & BCP & ratio  \\
-    \cmidrule(r){1-7}
-    0.05 & 0.10 & $1.5 \times 10^{-7}$ & $6.7 \times 10^{5}$ & 3.8 & 2.4 & 1.6 \\
-    0.15 & 0.031 & $1.5 \times 10^{-8}$ & $2.1 \times 10^{6}$ & 13 & 0.58 & 22 \\
-    0.25 & 0.0043 & $3.6 \times 10^{-7}$ & $1.2 \times 10^{4}$ & 4.0 & 1.07 & 3.7 \\
-    \bottomrule
-    \end{tabular}
-    \caption{Steady state diffusive velocity $v_\text{SS}$ [m/s] comparison between multiscale modeled BCP and MADN molecular system with PBE0 functional. }
-    \label{tab:compare_SS}
-\end{table}
-
+The ToF depends on the electric field through the Marcus rate. 
+Poole and Frenkel predicted the electric-field dependence of charge mobility as $\mu_\text{PF}(F)=\mu_0 \exp (\beta \sqrt{|\vec{F}|})$.
+So it is common to plot the mobility $\mu_\text{PF}$ against $\sqrt{|\vec{F}|}$ in a so-called Poole–Frenkel plot.
+which is shown in Fig. \ref{fig:PF_plot_ave} for specifie HFX values. The 99\% confidence interval obtained via MC sampled in shown in the green shadow. 
+%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/fig_PF_plot_ave.pdf}
+    \caption{Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole–Frenkel plots obtained with specific HFX value, and the green shadow indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
+    \label{fig:PF_plot_ave}
+\end{figure}
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \bibliographystyle{unsrt}
 \bibliography{references}
-
-\begin{comment}
-\textbf{Point 1:} To investigate the effect of different functionals $f^\text{DFT}$ on electronic structures, we compare the energies $E_i$ and couplings $J_{ij}$ for all molecule indices $i,j$. Scatter plots in Figures \ref{fig:scatterE} and \ref{fig:scatterJ} illustrate these comparisons.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/scatterE_all.pdf}
-    \caption{Energy heat maps: $X$-axis shows energies of BCP molecules obtained using PBE0, while the $Y$-axis shows energies from a different functional $f'$.}
-    \label{fig:scatterE}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.95\textwidth]{figs/scatterJ_all.pdf}
-    \caption{Scatter heat maps of $\log_{10}(J^2)$: $X$-axis shows $\log_{10}(J^2)$ of BCP molecules obtained using PBE0, while the $Y$-axis shows $\log_{10}(J^2)$ from a different functional $f'$.}
-    \label{fig:scatterJ}
-\end{figure}
-
-\textbf{Point 2:} Both $E_i$ and $J_{ij}$ are distributions. To quantify the impact of these distributions on $\Delta$ToF, we plot the Wasserstein distance versus $\Delta$ToF. Figure \ref{fig:distance_ToF} shows that different functionals generate similar energy sets, but $\Delta$ToF is not correlated with energy distribution distance.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/DeltaToF_W_KL_E.pdf}
-    \caption{Left: scatter plot of $W_1(P_f,P_{f'})$ vs. $\Delta$ToF. Right: scatter plot of $KL(P_f(E),P_{f'}(E))$ vs. $\Delta$ToF.}
-    \label{fig:distance_ToF}
-\end{figure}
-
-\textbf{Point 3:} We then examine other rate-related parameter distributions, calculating the Wasserstein distance and plotting against $\Delta$ToF. Figure \ref{fig:d_WD_tof} reveals that only the rate $P_f(\omega)$ has a large Wasserstein distance when varying $f^\text{DFT}$; other parameters show similar distributions.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{figs/DeltaToF_W_all.pdf}
-    \caption{Scatter plots of (a): $W_1(P_f(\Delta E),P_{f'}(\Delta E))$, (b): $W_1(P_f(\exp(\Delta E)),P_{f'}(\exp(\Delta E)))$, (c): $W_1(P_f(\exp \frac{-(\Delta E - \lambda)^2}{4 k_B T \lambda}),P_{f'}(\exp \frac{-(\Delta E - \lambda)^2}{4 k_B T \lambda}))$, and (d): $W_1 (P_f(\omega), P_{f'}(\omega) )$ vs. $\Delta$ToF.}
-    \label{fig:d_WD_tof}
-\end{figure}
-
-
-\textbf{Point4:} Although $f^\text{DFT}$ affects $P_f(\omega)$, but we further notice that $\Delta$ToF is not correlated to its Wasserstein distance. 
-So we hypothesize that the connectivity of the graph changed due to different $f^\text{DFT}$. The connectivity of the graph is quantified by the second eigenvector of the graph Laplacian, so we make the figure to investigate the correlation between the $\Delta$ToF and the graph connectivity. 
-Figure .\ref{fig:d_eig_tof} shows the ratio of $f^\text{DFT}$ and the second eigenvalue ratio between the graph Laplacian. These two quantities look correlated, and we calculate the Spearman rank coefficient, which is shown in Table.\ref{tab:spearman}.
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{c c c}
-    \hline
-        Data Set & Spearman Rank Coefficient & $p$-value \\ 
-        \hline
-        $\frac{\lambda_{2,L_W}(f)}{\lambda_{2,L_W}(f')}$ vs $\frac{\text{ToF}(f)}{\text{ToF}(f')}$ & -0.57 & 4.6e-5 \\
-        $\frac{\lambda_{2,L_\text{rw}}(f)}{\lambda_{2,L_\text{rw}}(f')}$ vs $\frac{\text{ToF}(f)}{\text{ToF}(f')}$ & -0.38 & 9.4e-3 \\ 
-    \hline
-    \end{tabular}
-    \caption{Spearman rank coefficients for the relationship between $\frac{\lambda_2(f)}{\lambda_2(f')}$ and $\frac{\text{ToF}(f)}{\text{ToF}(f')}$}
-    \label{tab:spearman}
-\end{table}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.6\textwidth]{figs/ratio_tof_2ndEigval.pdf}
-    \caption{Scatter plot of $\frac{\lambda_{2}(f)}{\lambda_{2}(f')}$ vs. $\frac{\text{ToF}(f)}{\text{ToF}(f')}$}
-    \label{fig:d_eig_tof}
-\end{figure}
-
-
-\textbf{Point5:} The eigenvalue comes in pair with the eigenvector, so we further investigated the corresponding second eigenvector element distributions, as shown in Fig.\ref{fig:2ndVecLW}. 
-To our surprise, node 66 has very different second eigenvector entries, so we performed K-means partitioning on those second eigenvector elements.
-
-\textbf{Point6:} After partitioning, we notice that the partition cost function is correlated to $\Delta$ToF.
-This correlation shows that the $\Delta$ToF correlated to the connectivity of the graph, althouth the electronic structures and rate-related parameters are similar. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figs/fig_2ndVecLw.png}
-    \caption{Scatter plot of the eigen vector entries $\Vec{v}_i$ of $L_W$ for various $f$ indicated by the legend and point color. 
-    The numbers are node index. The dash rectangular indicates the 3-means clusters that are detected as clusters by the Kmeans Lloyd's algorithm. }
-    \label{fig:2ndVecLW}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figs/fig_2ndVecRW.png}
-    \caption{Scatter plot of the eigen vector entries $\Vec{v}_i$ of $L_{rw}$ for various $f$ indicated by the legend and point color. 
-    The numbers are node index. The dash rectangular indicates the 3-means clusters that are detected as clusters by the Kmeans Lloyd's algorithm.  }
-    \label{fig:2ndVecRW}
-\end{figure}
-
-
-Figure \ref{fig:fig_Z_ToF} shows scatter plots of K-means clustering partition cost $Z_{2c}, Z_{3c}$ versus ToF. For the normal Laplacian $L_w$, $Z_{2c}$ is not correlated with the ToF, but $Z_{3c}$ is. For the Random-walk Laplacian, both $Z_{2c}$ and $Z_{3c}$ show a strong correlation with ToF. Thus, the clustering cost function indicates the speed of charge dynamics as measured by ToF.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/fig_Z_ToF.pdf}
-    \caption{Scatter plot of $Z$ vs $\text{ToF}$. (a): K-means partition of the second eigenvector of $L_W$ for $K=2$ and $K=3$ (b) K-means partition of the second eigenvector of $L_{RW}$ for $K=2$ and $K=3$}
-    \label{fig:fig_Z_ToF}
-\end{figure} 
-
-
-\textbf{Point7:} Now that the ToF has a large range, we want to know which ToF to trust.  And for application purposes, a very important message is to know what the range of ToF will give a 90\% confidence level. 
-
-Since we do not really know the exchange-correlation potential, we assume that for each molecule, the uncertainty in its energy $E_i$ is represented by a normal distribution $E_i \in N(\bar{E_i},\sigma(E_i))$. Normal distribution is used because the normal distribution encodes the maximum amount of uncertainty over the real numbers out of all possible probability distributions with the same variance. 
-So the normal distribution inserts the least amount of prior knowledge into our model. 
-So we experiment: 
-
-\textbf{Point8:} For each molecule energy $E_i$, we use maximum likelihood estimation to obtain the $N(\bar{E_i},\sigma(E_i))$. Then use sample a set of $E_i$ and calculate the ToF, with $\lambda,J_{ij}$ fixed at the average values. 
-Repeat the $E_i$ sampling and ToF calculation for 100000 times, and plot ToF distribution. This process is called the Monte Carlo sampling. 
-
-Similarly, for $\lambda,J_{ij}$, we perform the Monte Carlo sampling as been done for $E_i$. The resulting ToF is shown in Fig.\ref{fig:ToFs}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{figs/fig_mle.png}
-    \caption{(a)The ToF distribution for 100000 samples where each $E_i$ is drawn from $N(\bar{E}_i,\sigma(E_i))$. The red curve is fitted to a gamma distribution. (b)The ToF distribution for 100000 samples where each $\lambda$ is drawn from $N(\bar{\lambda},\sigma(\lambda))$.(c)The ToF distribution for 100000 samples when each $J_{ij}$ is drawn from $N(\bar{J_{ij}},\sigma(J_{ij}))$.}
-    \label{fig:ToFs}
-\end{figure} 
-
-This figure shows that ToF is more sensitive to change in $E_i$ and least sensitive to $J_{ij}$, even though from the scatter plots Fig.\ref{fig:scatterJ} the $J_{ij}$ has a very large magnitude deviation. 
-
-The dataset of $\log_{10}(\text{ToF})$ can be well-fitted to a Gamma distribution. 
-The statistical calculation has results:
-\begin{itemize}
-    \item When $E_i \in N(\bar{E_i},\sigma(E_i))$, the $\log_{10}(\text{ToF})$ has mean -1.73 and a standard deviation of 0.73.
-    \item When $\lambda \in N(\bar{\lambda},\sigma(\lambda))$, the $\log_{10}(\text{ToF})$ has mean -1.91 and a standard deviation of 0.34.
-    \item When $J_{ij} \in N(\bar{J_{ij}},\sigma(J_{ij}))$, the $\log_{10}(\text{ToF})$ has mean -2.92 and a standard deviation of 0.08.
-\end{itemize}
-
-When we use $E_i \in N(\bar{E_i},\sigma(E_i))$, $\lambda \in N(\bar{\lambda},\sigma(\lambda))$, $J_{ij} \in N(\bar{J_{ij}},\sigma(J_{ij}))$ at the same to perform the Monte Carlo sampling of ToF calculation, the ToF is shown in Fig.\ref{fig:ToFs2}. the $\log_{10}(\text{ToF})$ has mean -2.72 and a standard deviation of 0.80. To obtain a 90\% confidence level, then $-3.93 < \log_{10}(\text{ToF}) < -1.30$.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{figs/fig_mle2.png}
-    \caption{The ToF distribution for 100000 samples where each $E_i$ is drawn from $N(\bar{E}_i,\sigma(E_i))$, $\lambda$ is drawn from $N(\bar{\lambda},\sigma(\lambda))$, and each $J_{ij}$ is drawn from $N(\bar{J_{ij}},\sigma(J_{ij}))$. The red curve is fitted to a gamma distribution.}
-    \label{fig:ToFs2}
-\end{figure} 
-
-\section{Uncertainty in ToF}
-Now we need to answer which ToF is accurate. 
-Using the multiscale model to determine the ToF is a function $f: \mathbb{R}^d \rightarrow \mathbb{R}^+$, which maps the parameter vector $$\vec{x} = [ E_1,E_2,\cdots,E_N, R_1,R_2,\cdots,R_N,J_1,J_2,\cdots,J_{N_\text{pair}} ]$$ to a real value $\tau \in \mathbb{R}^+$.
-
-Due to noise and approximation in the multiscale model, each element in $\vec{x}$ can be considered as an exact value plus an error term, for example $$E_1 = \hat{E}_1 + \epsilon_{E_1} $$
-There is no prior knowledge about this error terms. 
-Since the normal distribution inserts the least amount of prior knowledge into a model and encodes the maximum amount of uncertainty, we want to quantify the uncertainty when those error terms are normally distributed. 
-\end{comment}
 
 
 \end{document}
