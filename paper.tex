@@ -42,26 +42,35 @@
 
 \section{Background}
 
-Theoretical model and computer simulation for understanding a physical system must contain some uncertainties in predicting the system features. 
-For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, etc.
+Theoretical model and computer simulation for understanding a physical system usually contain some uncertainties in predicting the system features. 
+For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, the simulation use noisy quantities, etc.
 Nevertheless, those uncertainties should not affect the validity of the model or the accuracy for the predicting system in terms of some quantities of interest (QoI). 
 Here the terminology "uncertainties" refers to the impossibility of getting a deterministic QoI, and excludes theoretical or numerical errors. 
+The amount of uncertainty in the QoI plays an important role in determining the usefulness of the model. 
+So quantifying the uncertainty is a key factor for telling if the model is quanlitatively or quantitatively accurate. 
 
-In this work, an investigated model containing uncertainties is the first-principle multiscale model for charge dynamics in organic semiconductors (OSCs).
-From a broad perspective, this model contains uncertainties due to the limitation of the model, the randomness nature of the QoI, and the limitation of the numerical simulations.
+In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, tthey are mechanically flexible and comes with controllable charge transport properties. 
+This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
+Conducting these optimization processes through experimental methods is financially demanding. In contrast, computational approaches such as the multiscale model provides insightful guidance for such investigation. So robustness of the computational model is paramount to promote OSC optimization.
 
+Like every other models, the multiscale model contains uncertainties due to certain approximation in modeling perspective, the randomness nature of the physical quantities, and the limitation of the numerical simulations, only to name a few.
 To explain in detail those uncertainties, the first-principle multiscale model is briefly reviewed. 
-Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is too complex to solve due to complexity, so Density Functional Theory (DFT) appears as a manageable way to model electrons.
-DFT has its own challenges in achieving multiscale modeling.
 
+Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is impossible to solve due to its complexity, so Density Functional Theory (DFT) appears as a manageable way to model electrons.
+DFT has its own challenges in achieving multiscale modeling.
 The first challenge relates to the Born-Oppenheimer approximation in quantum
 mechanics, which simplifies the problem by separating the electronic and nuclear
 coordinates. As a result, the time evolution of the atomic coordinates can be modeled in molecular dynamics (MD) by solving the Newton's equation using empirical force field to approximate the potential energy surfaces (need citation). 
 
-The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time. To address this challenge, state localization is used and the electron's wavefunction becomes localized in space around the nuclei. As a result, the charge dynamic is modeled as a continuous time random walk (CTRW) process, with transition rates between the molecules determined by their electronic structures, namely, the molecule energy, reorganization energy and coupling elements which will be explained in the methodology section. 
+The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time. 
+But due to fact that OSCs have disordered and amorphous structure and the quantum states of each molecule is confined to a limited region, the charge dynamic can be well-approxmiated as a jumping process between molecules, which is a continuous time random walk (CTRW) process.
+The transition rates between the molecules can be calculated from quantum chemical calculations and related to the electronic structures parameters including the molecule energy, reorganization energy and coupling elements which will be explained in the methodology section. 
 
-In brief summary, the multiscale model can be summarized in Fig. \ref{fig:MSM} using MADN, a type of OSC as an example.
-The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates of all molecules. Then DFT is used to attain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
+Until this point, the molecular system is modeled as graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$ where $\mathbf{V}$ is the set of nodes and $\mathbf{W}: \omega_{ij}$ is the adjacency matrix. Each node represents one molecule, the weighted and directed edge $\omega_{ij}$ represents the transition rates from node $i$ to node $j$ calculated from quantum chemical methods. 
+As will be shown in the method section, $\omega_{ij}$ determines the QoIs whose quantities we want to quantify.
+
+Figure \ref{fig:MSM} summarized the multiscale model as mentioned above using MADN, a type of OSC as an example. 
+The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates of all molecules. Then DFT is used to obtain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
 
 \begin{figure}[h]
     \centering
@@ -70,35 +79,36 @@ The process includes: Firstly, classical Molecular Dynamics is used to generate 
     \label{fig:MSM}
 \end{figure}
 
-In overcoming the challenges and achieving the multiscale model, uncertainties are introduced. 
-While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces (need citation) and model the atomic coordinates using Newton’s equations, the atomic coordinates are not exactly the same as that modeled by the many-electron schr\"{o}dinger equation.
+In achieving the multiscale model, uncertainties are introduced. 
+While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces (need citation) and model the atomic coordinates using Newton’s equations, the force field is not exactly the same as the potential for DFT. 
 So the atomic coordinates, that is the molecule structures contain uncertainty which ultimately affects the charge dynamics. 
-This is one source of uncertainty that have not been investigated.
-But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
-Secondly, state localization is not exactly a time dependent DFT process. 
-But for amorphous OSCs used in this work, model noise from state localization is negligible and we do not consider the uncertainty brought by state localization.
-Lastly, the exact functional for the exchange-correlation energy is unknown so approximations like the Local Density Approximation (LDA) or the Generalized Gradient Approximation (GGA) are used, resulting in exchange-correlation functional in practice. 
-The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose accuracy is usually unknown for new synthesized molecules. 
-As an advancement to improve accuracy, Hybrid-DFT incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HF exchange functional. 
+This is one source of uncertainty that have not been investigated. But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
+Secondly, charge jumping between the state localization is not exactly a time dependent DFT process. 
+However, the amorphous OSCs used in this work has strong disorder, so the model noise from state localization is negligible and we do not consider the uncertainty originated from this perspective.
+Lastly, the source of uncertain that this work focus on comes from the approximation for the exchange-correlation energy in DFT. 
+There is no exact formula for the exchange-correlation functional, so in practical approximations are developed and tested to guarantee the robustness of DFT method. 
+The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose suitability is usually unknown for new synthesized molecules. 
+As an advancement to improve accuracy, Hybrid-DFT incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HFX.
 
-The charge dynamics is determined by CTRW transition rates, which depend on the electronic structures.
-Since DFT is used to calculate the molecular electronic structures, the unknown exchange-correlation functional will bring uncertainties to the multiscale model. 
-In particular, different hybrid-DFT functionals contain varying levels of HFX to represent the exchange-correlation potential. 
-The effect of the uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
+Looking back into the CTRW of the charge transport, the transition rates depend on the electronic structures parameters which rely on the validity of the exchange-correlation functional from the modeling perspectives.
+So the approximations in exchange-correlation functional will bring uncertainties to the multiscale model. 
+In particular, different hybrid-DFT functionals containing varying HFX levels will generate different output from the multiscale model mentioned aboved. 
+The effect of such uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
 The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HFX.
 
-To perform this goal of uncertainty quantification, a first step is to choose a QoI. A quantity commonly seen in OSC investigation is the charge mobility, which is the distance traveled by the charge carrier divided by the time period. 
-The charge mobility is calculated in a \textit{time-of-flight} (ToF) setting. 
+A QoI need be chosen to perform this goal of uncertainty quantification. 
+The figure of merit in OSC investigation is the charge mobility, which quantitatively describe how fast charges move in an OSC. 
+The charge mobility is commonly measured in a \textit{time-of-flight} (ToF) setting. 
 As shown in Fig.\ref{fig:MSM}(d), charge carriers are injected into one electrode called \textit{Source} and they are collected by another electrode at the opposite end called \textit{Sink}. 
 Knowing the length of the sample $L$ and the time-of-flight $\tau$, the diffusive velocity is calculated as $v_\text{ToF}=\frac{L}{\tau}$.
-When electric field $\vec{F}$ is used to drift the charge transport, the charge mobility is calculated as $\mu_\text{ToF}=\frac{\vec{v}_\text{ToF} \vec{F}}{|\vec{F}|^2}$. 
+When electric field $\vec{F}$ is used and the charge dynamics undergo a field-drifted transport, the charge mobility is calculated as $\mu_\text{ToF}=\frac{\vec{v}_\text{ToF} \vec{F}}{|\vec{F}|^2}$. 
 
-Some literatures also report the charge mobility in a steady state setting, where no electrodes are used and the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
-Over a long time period, the charge occupation on each molecule $\pi_i$ reach equilibrium.
-The steady state charge mobility $\mu_\text{SS}$ is calculated as the charge velocity along the direction of the electric field normalized by the steady state charge occupation $\vec{\pi}:\pi_i$. 
+Some literatures also report a steady state setting for investigation of charge mobility. In such condition, there is no \textit{Source}-\textit{Sink} boundary condition. Instead, the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
+Over a long time period, the charge occupation on each molecule $\pi_i$ reach an equilibrium, allowing a steady state distribution to be obtained.
+The steady state charge velocity $v_\text{SS}$ is calculated as the charge velocity along the direction of the electric field normalized by the steady state charge occupation $\vec{\pi}:\pi_i$. 
 The calculation for $v_\text{ToF}$ and $\mu_\text{SS}$ will be detailed in the method section.
 
-To quantify the uncertainty for QoI, the focus of our work will be placed on the following questions: 
+To quantify the uncertainty for QoI, the focus of our work will be placed on answering the following questions: 
 \begin{enumerate}
     \item How does HFX level change the electronic structures: reorganization energy, distribution of molecule energies and coupling elements? 
     \item How does HFX level change the charge mobility?
@@ -106,9 +116,16 @@ To quantify the uncertainty for QoI, the focus of our work will be placed on the
     \item Can we estimate the range of the QoI, given a confidence level?
 \end{enumerate}
 
+The rest of the paper is organized as follows. Section 2 will outline the multiscale model in OSCs. This includes the electronic structure calculation centering on Kohn-Sham equation, the calucation of molecule energy, reorganization energy and coupling elements. The details of the molecule dynamics to obtain the MADN system will be listed.
+Then section 3 present the multiscale modeling results with the chose HFX values. In section 4, the Monte Carlo sampling method is utilized to estimate the ToF distribution and $v_\text{SS}$ distribution, followed by the sensitivity analysis on the parameters. 
+Section 5 shows calculated Poole-Frankel behavior of the MADN with varying HFX values. The confidence interval of the Poole-Frankel plot is estimated. Section 6 concludes the paper. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiscale Model}
-The multiscale model results in the charge dynamics being modeled by CTRW. When there is one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
+As mentioned in the introduction, the multiscale model maps a structural morphology into graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$. In our context, the graph properties, that is the entries in $\mathbf{W}$, depends on the HFX values. 
+
+{\Huge Here}
+
+When there is one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
 %
 \begin{equation}
     \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
@@ -141,7 +158,7 @@ The procedure of the MD simulation in this work is as followed:...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronic Structure Calculations} 
-A first essential step in first-principle multiscale model is to determine the single-electronic wave function and the associated energy $\epsilon_l$, which are used to obtain atomic charges, reorganization energy, molecule energy, and coupling elements.
+Starting from an atomic morphology, a first step in first-principle multiscale model is to determine the single-electronic wave function and the associated energy $\epsilon_l$, which are used to obtain atomic charges, reorganization energy, molecule energy, and coupling elements.
 
 Each electron $l$ in a system with $N_\text{el}$ electrons has a single-electronic wave function $\phi_l (\vec{r})$ and associated energies $\epsilon_l$ determined as solutions to the Kohn--Sham equations~\cite{kohn_self_1965}
 %
@@ -216,20 +233,21 @@ where $\omega_{ij}$ is the charge transition rate from molecule $i$ to molecule 
 In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene) and study its charge mobility's dependence on HFX. 
 
 Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges is dipole moment at charge neutral state. 
-To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
-Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
-Figure \ref{fig:autogen_MADN}(c)(d) show 
-The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig .\ref{fig:autogen_MADN}(c)(d).
+
 
 %
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.80\textwidth]{figs/fig_autogen.pdf}
+    \includegraphics[width=0.75\textwidth]{figs/fig_autogen.pdf}
     \caption{(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters (denoted by $\alpha$).}
     \label{fig:autogen_MADN}
 \end{figure}
 % 
 
+To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
+Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
+Figure \ref{fig:autogen_MADN}(c)(d) show 
+The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig .\ref{fig:autogen_MADN}(c)(d).
 
 From Fig. \ref{fig:autogen_MADN}(a) one can notice a mild decrease in the dipole moment with increasing HFX and in Fig. \ref{fig:autogen_MADN}(b) a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
 Figure \ref{fig:autogen_MADN}(c) indicates an increase in reorganization energy $\lambda$ with higher HFX, reflecting greater energy requirements for electronic adjustments during charge transfer. This increase is nonlinear compared to the linear decrease in $P_\text{iso}$.
@@ -323,7 +341,7 @@ The coupling element obtained with different HFX for each molecular pair compare
     \label{fig:J_MADN}
 \end{figure}
 
-The distribution of $\log_{10} J^2$ has a range of -14 to -2, and for all HFX values, the distribution has a peak at around -5. 
+The distribution of the majority $\log_{10} J^2$ has a range of -14 to -2 while only a few $\log_{10} J^2$ has low value below -15. For all HFX values, the distribution has a peak at around -5. 
 For large values $\log_{10} J^2 < -5$ the coupling element calculated from $\alpha'=0, 0.05, 0.10, 0.15, 0.2$ remains consistently close to that calculated by $\alpha=0.25$. While for small values $\log_{10} J^2 > -5$, the $\alpha'$ calculated coupling elements for a specific molecular pair can have large variation compared to $\log_{10} J^2$ calculated using $\alpha=0.25$.
 
 In charge transport network, $J^2$ is undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J^2$ are usually observed for molecular pairs with small center-of-mass distance. 
