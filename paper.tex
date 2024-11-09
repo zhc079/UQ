@@ -117,27 +117,37 @@ To quantify the uncertainty for QoI, the focus of our work will be placed on ans
 \end{enumerate}
 
 The rest of the paper is organized as follows. Section 2 will outline the multiscale model in OSCs. This includes the electronic structure calculation centering on Kohn-Sham equation, the calucation of molecule energy, reorganization energy and coupling elements. The details of the molecule dynamics to obtain the MADN system will be listed.
-Then section 3 present the multiscale modeling results with the chose HFX values. In section 4, the Monte Carlo sampling method is utilized to estimate the ToF distribution and $v_\text{SS}$ distribution, followed by the sensitivity analysis on the parameters. 
+Then section 3 present the multiscale modeling results with the chosen HFX values. In section 4, the Monte Carlo sampling method is utilized to estimate the ToF distribution and $v_\text{SS}$ distribution, followed by the sensitivity analysis on the parameters. 
 Section 5 shows calculated Poole-Frankel behavior of the MADN with varying HFX values. The confidence interval of the Poole-Frankel plot is estimated. Section 6 concludes the paper. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Multiscale Model}
-As mentioned in the introduction, the multiscale model maps a structural morphology into graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$. In our context, the graph properties, that is the entries in $\mathbf{W}$, depends on the HFX values. 
+As mentioned in the introduction, the multiscale model maps a structural morphology into a graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$. In our context, the graph properties, that is the entries $\omega_{ij}$ in the adjacency matrix $\mathbf{W}$, only depends on the HFX values since other modeling parameters are kept consistent. 
 
-{\Huge Here}
-
-When there is one charge carrier, each state in CTRW corresponds to the charge occupation in each molecule. The transition rates between the state, that is the rate for charge transfer rates between two molecules $i$ and $j$ is calculated as the Marcus rate:
+Those transition rates charge transfer rates from molecules $i$ to $j$ is calculated as the bi-molecular transition rates:
 %
 \begin{equation}
     \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
     \label{equ:Marcus}
 \end{equation}
 %
-where $\hbar$ is the reduced Planck constant and $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), the charge of the carrier $q$ (in \unit[]{e}) and the external electric field $\vec{F}$ (in V/m) can be considered the external, environmental parameters of the simulation. The vector $\vec{r}_{ij} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses (COMs) of molecules $i$ and $j$, which is calculated cyclic boundary conditions depending on the boundary condition. The remaining physical, material-specific (or rather transfer-pair-specific) quantities are the reorganization energy $\lambda_{ij}$, the electronic coupling $J_{ij}$, and the energy difference $E_{ij} = E_i - E_j$ (all in \unit[]{eV}). With the information about the molecular COMs and the rates, one can construct the graph $\mathbf{G}=(\mathbf{V}, \mathbf{W})$ on which the CTRW takes place. $\mathbf{V}$ is a set of nodes (molecules) and $\mathbf{W}: \omega_{ij}$ is the adjacency matrix. A rate is only considered between molecules $i$ and $j$ if their closest-contact distance is smaller than $r_\text{cutoff}=\unit[0.5]{nm}$.
+where $\hbar$ is the reduced Planck constant and $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), the charge of the carrier $q$ (in \unit[]{e}) and the external electric field $\vec{F}$ (in V/m) can be considered the external, environmental parameters of the simulation. The vector $\vec{r}_{ij} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses (COMs) of molecules $i$ and $j$, which is calculated using cyclic boundary conditions. 
+The remaining physical, material-specific (or rather transfer-pair-specific) quantities are the reorganization energy $\lambda_{ij}$, the electronic coupling $J_{ij}$, and the energy difference $E_{ij} = E_i - E_j$ (all in \unit[]{eV}). 
+In our model, two nodes $i,j$ form a connection of the corresponding molecules $i,j$ have their closest-contact distance smaller than $r_\text{cutoff}=\unit[0.5]{nm}$.
 
-In the section, the components of the multiscale model will be introduced: molecule dynamics, calculation of reorganization energy, molecule energy, coupling element, $v_\text{SS}$ and $v_\text{ToF}$.
+The rest of this section will introduce the following: the molecular dynamics used to obtain the coordinates $r^x_{i},r^y_{i},r^z_{i}$, the calculation of node-specific quantities $\lambda$, $E_i$ and $J_{ij}$, as well as the calculation of ToF $\tau$ and steady state velocity $v_\text{SS}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Molecule Dynamics Simulation}
+\subsection{Molecular Dynamics}
+The OSC morphology, that is the spacial coordinate of all the atoms, are generated by molecule dynamics. The GROMACS software package~\cite{berendsen_gromacs_1995} is utilized to implement atomistic molecular dynamics simulations of bulk amorphous MADN with the empirical force field obtained via Automated Topology Builder~\cite{stroet_automated_2018}.
+
+The MADN system starts with 1000 MADN molecules randomly placed in a cubic cell with a large enougth side length to allow a low density. Periodic boundary conditions are applied throughout in all three spatial directions. After energy minimization, the system is simulated for \unit[1]{ns} (?) in a $NpT$ ensemble, keeping a constant temperature of \unit[300]{K} and constant pressure of \unit[1]{bar} using the V-rescale thermostat~\cite{bussi_canonical_2007} with the coupling time constant \unit[0.1]{ps} and the Parrinello-Rahman barostat~\cite{parrinello_polymorphic_1981} with a time constant for pressure coupling \unit[2]{ps}. 
+The equation of motion for updating the atomic coordinates is implemented by leap-frog algorithm~\cite{van_gunsteren_leap-frog_1988} with a time step of \unit[1]{fs}. 
+
+Following this, simulated annealing is applied to relax the MADN.  
+The temperature is increased to \unit[800]{K}, well above the glass transition temperature during a period of \unit[0.5]{ns}. 
+This temperature is maintained for \unit[1]{ns} before cooling back down to \unit[300]{K} during a period of \unit[0.5]{ns}.
+Such heating-cooling cycle is repeated three times. After this simulated annealing, a production run is conducted for \unit[2]{ns} using the $NpT$ ensemble. The final configuration of MADN is chosen for the further steps in the multiscale model, whose configuration is a cubic box with a length of \unit[9.0]{nm} and a density of $\unit[1.08]{g/cm^3}$. 
+
 \begin{comment}
     The MD in the multiscale model is to use Newton's second law to update the atomic coordinate. Written in Hamilton equation, the equation of motion reads:
 \begin{equation}
@@ -158,6 +168,7 @@ The procedure of the MD simulation in this work is as followed:...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Electronic Structure Calculations} 
+\label{sec:es}
 Starting from an atomic morphology, a first step in first-principle multiscale model is to determine the single-electronic wave function and the associated energy $\epsilon_l$, which are used to obtain atomic charges, reorganization energy, molecule energy, and coupling elements.
 
 Each electron $l$ in a system with $N_\text{el}$ electrons has a single-electronic wave function $\phi_l (\vec{r})$ and associated energies $\epsilon_l$ determined as solutions to the Kohn--Sham equations~\cite{kohn_self_1965}
@@ -174,23 +185,68 @@ where $v_\text{ext}$ in an external potential (typically from the nuclei), $v_\t
     \label{eq:KS_model}
 \end{equation}
 %
-where $T_s[\rho]$ is the kinetic energy, $E_\text{H}[\rho]$ and $E_\text{XC}[\rho]$ the Hartree and exchange-correlation energies, respectively. Equations \ref{eq:KS2} and \ref{eq:KS_model} can be solved for different total charge states $x=\text{n,c}$ and corresponding  equilibrium geometries $X=\text{N,C}$, where $\text{n}$ and $\text{N}$ stand for ''neutral'' and $\text{c}$ and $\text{C}$ for ''charged''. The respective total energies will be denoted in the following as $U^\text{xX}$.
+where $T_s[\rho]$ is the kinetic energy, $E_\text{H}[\rho]$ and $E_\text{XC}[\rho]$ the Hartree and exchange-correlation energies, respectively. 
 
 The practical calculations in this work have been performed with the ORCA software~\cite{Neese2012a} using the def2-tzvp~\cite{weigend_accurate_2006} basis set to represent the Kohn--Sham wave functions $\phi_l(\vec{r})$. 
 The correlation potential is represented by PBE0 functional, and the exchange potential is represented by a portion $\alpha$ of (HFX) potential and another portion $(1-\alpha)$ from PBE0 functional. In common practice, $\alpha$ is small and below 0.25. For our uncertain quantification study, $\alpha=0,0.05,0.10,0.15,0.20,0.25$ is chosen for the multiscale model.
 
 \subsection{Transition Rate Calculation}
+Electronic structure calculation via Equation \ref{eq:KS2} and \ref{eq:KS_model} are performed for different combinations of molecular charge states $x=$ n,c and the corresponding equilibrium geometries $X=$ N,C. The notion n and N stand for "neutral", and the notion c and C stand for "charged". 
+Following this, the total energy will be denoted as $U^\text{xX}$, dropping of the explicit functional dependency on the density $\rho$. 
+The reorganization energy $\lambda$ accounts for the energy change caused by the geometry variation during the charge transport, and is linked to the total energy via:
+%
+\begin{equation}
+    \lambda_{ij} = U_i^\text{nC} - U_i^\text{nN} + U_j^\text{cN} - U_j^\text{cC}
+    \label{eq:lambda}
+\end{equation}
+%
+In this work, the OSC only has one type of molecule, and $\lambda_{ij}$ of all molecular pairs are equal. So the subscript is left out and denoted as $\lambda$.
+
+The molecule energy $E_i = E_i^\text{c} - E_i^\text{n}$ is the difference between the total energies of the system in which molecule $i$ is carrying a charge or not, corresponding to the ionization potential in case of hole transport and the negative of the electron affinity in case of electron transport. 
+
+These total energies in turn consist of different contributions associated with different physical mechanism, i.e.,
+%
+\begin{equation}
+E_i^x = U_i^{xX} + E_i^{x,\text{el}} + E_i^{x,\text{polar}},
+\label{eq:Es}
+\end{equation}
+%
+where $U_i^{xX}$ is the internal energy from single molecules as above.
+Both $E_i^{x,\text{el}}$ and $E_i^{x,\text{polar}}$ are contributions arising from intermolecular interactions: $E_i^{x,\text{el}}$ is the electrostatic energy due to the surrounding molecules and $E_i^{x,\text{polar}}$ is the polarization energy. 
+These contributions are calculated with a microelectrostatic model using parametrized point charge representations\cite{https://doi.org/10.1002/jcc.540110311}
+
+In the multiscale model, $E_i^{x,\text{el}}$ is evaluated with a \unit[4]{nm} cutoff distance:
+\begin{equation}
+    E_i^{x,\text{el}} = \frac{1}{4 \pi \epsilon_0} \sum\limits_{a_i} \sum\limits_{b_k,k \neq i} \frac{(q^c_{a_i} - q^n_{b_i})q^n_{b_k}}{ r_{a_i b_k}} 
+\end{equation}
+where $\epsilon_0$ is the vacuum permittivity, $a_i, b_k$ denotes the atoms in molecule $i,k$, $q^{n(c)}_{a_i}$ are the partial charge of atom $a$ when molecule $i$ is in state x. And $r_{a_i b_k} = |r_{a_i} - r_{b_k}|$ is the distance between atoms $a_i$ and $b_k$, which should be within \unit[4]{nm} due to the cutoff setting. 
+For the purpose of quantifying uncertainty in HFX, the long-range electrostatic interactions are not considered. 
+
+The polarization effects are determined self-consistently to consider the response of the molecules to the associated fields~\cite{thole_molecular_1981}.
+Polarization effects are considered in a region of \unit[4.0]{nm} around each individual molecule. Practical calculations of the site energies are performed using the VOTCA software~\cite{Baumeier2011,doi:10.1021/acs.jctc.8b00617,10.1063/1.5144277,Baumeier2024}.
+
+
+The coupling element $J_{ij}$ between molecule $i$ and $j$ describe the coupling strength between two localized states. In the case of hole transport, the relevant orbitals are highest-occupied molecular orbital (HOMO) of the isolated molecules (monomers) $\phi^\text{HOMO}_i(\vec{r})$ and $\phi^\text{HOMO}_j(\vec{r})$, 
+leading to the calculation of $J_{ij}$ is implemented using the Dimer-Projection Method~\cite{baumeier_density_2010}. Specifically, the coupling element is determined as:
+Specifically, the coupling element is determined as: 
+%
+\begin{equation}
+    J_{ij} = \frac{ J^0_{ij}- \frac{1}{2}(e_i+e_j) S_{ij} }{ 1- S_{ij}^2 }
+    \label{equ:JAB}
+\end{equation}
+%
+where $J^0_{ij} = \langle \phi^\text{HOMO}_i | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_j \rangle $, $e_i = \langle \phi^\text{HOMO}_i | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_i \rangle $, $e_j = \langle \phi^\text{HOMO}_j | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_j \rangle $, and $S_{ij}=\langle \phi^\text{HOMO}_i | \phi^\text{HOMO}_j \rangle $ with bra-ket notation. 
+and $H^\text{KS}_\text{D}$ is the Hamiltonian of the dimer (see Eq.~\ref{eq:KS2}). 
+As the Hamiltonian of the dimer is diagonal in its eigenbasis $\left\{ \phi_\text{D}(\vec{r})\right\}$ with eigenvalues $\left\{ \epsilon_D\right\}$, so $H^\text{KS}_\text{D} = \text{diag}(\epsilon_D)$, $J^0_{ij}$ can be calculated as $J^0_{ij} = \mathbf{p}_i^\text{T} \text{diag}(\epsilon_\text{D}) \mathbf{p}_j$,  where the vector $\mathbf{p}_i = \langle \phi_i^\text{HOMO} | \phi^\text{HOMO}_\text{D} \rangle$ and $\mathbf{p}_j = \langle \phi_j^\text{HOMO} | \phi_\text{D}^\text{HOMO} \rangle$ are the projections of the monomer orbitals $\phi_i^\text{HOMO}, \phi_j^\text{HOMO}$ onto the dimer orbitals $\phi^\text{HOMO}_\text{D}$. Similarly, $e_{i(j)} = \mathbf{p}_{i(j)}^\text{T} \mathbf{p}_{i(j)}$ and $S_{ij} =  \mathbf{p}_i^\text{T} \mathbf{p}_j$. All  of these operations are performed in the basis set representation of the Kohn--Sham wave functions (see Sec.~\ref{sec:es}) as implemented in VOTCA.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Time-of-flight and Steady State Velocity Calculation}
-The multiscale model defines a graph $\mathbf{G}$ with an adjacency matrix $\mathbf{W}$, where the nodes represent molecules and the edge weights $\omega_{ij}$ represent the Marcus rate from molecule $i$ to molecule $j$. 
+Following the graph $\mathbf{G}$ from the multiscale model,
 The charge dynamics are modeled as a continuous-time random walk on this graph. In the time-of-flight (ToF) model, some vertices serve as \textit{Source} nodes, representing the electrode where charge carriers are injected, and some as \textit{Sink} nodes, where charge carriers are detected and the ToF is recorded.
-
 In CTRW the ToF is calculated as the expected hitting time of a continuous time Markov chain.
-
 For a system with $N$ molecules and one charge carriers, there are $N$ possible occupation states. A state is called the Source state if one of the Source molecule is occupied, and a Sink state is the one when one of the Sink molecule is occupied.
 
-The transition rates between the states defines the adjacency matrix $\mathbf{W}:\omega_{ij}$.
+The transition rates between the states define the adjacency matrix $\mathbf{W}:\omega_{ij}$.
 According to such connectivity between the molecules, the transition rates $\mathbf{W}_{ij}$ from state $i$ to $j$ is:
 \begin{equation}\label{eq:transition_rates}
 	\mathbf{W}_{ij} =
