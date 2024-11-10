@@ -334,14 +334,16 @@ While without energy disorder, the increase factor is about 4. This increase in 
     \label{tab:ToF_MADN_HFX}
 \end{table}
 
-Figure \ref{fig:E_qmmm_MADN} presents a scatter plot comparing the site energies of MADN molecules across different HFX values, using $\alpha$ = 0.25 (PBE0 functional) as a reference. The energies consistently fall within the range of -0.5 to -1.1 eV, with data points clustering near the diagonal line, indicating similar molecular energies regardless of HFX variation.
-To quantify the similarity between two empirical distribution, Wasserstein distance is used.
+Figure \ref{fig:E_qmmm_MADN} presents a scatter plot comparing the site energies of MADN molecules across different HFX values, using $\alpha$ = 0.25 (PBE0 functional) as a reference for which the calculated molecule energy has a range from -1.12 to -0.63 \unit[]{eV}. The range of molecule energy for the other five HFX are: from -1.17 to -0.60 \unit[]{eV} for $\alpha=0$, from -1.11 to -0.59 \unit[]{eV} for $\alpha=0.05$, from -1.07 to -0.63 \unit[]{eV} for $\alpha=0.10$, from -1.13 to -0.61 \unit[]{eV} for $\alpha=0.15$, and from -1.16 to -0.60 \unit[]{eV} for $\alpha=0.20$.
+
+The bright-yellow color in all plots of Fig. \ref{fig:E_qmmm_MADN} indicates that most data points are clustering near the diagonal line, so the molecular energies calculated by different HFX are very close.
+To quantify the similarity between two empirical distribution, Wasserstein distance~\cite{villani_optimal_2009} is used.
 Denote the empirical distribution of molecular energy $E$ at $\alpha=0$ to be $P_{E(\alpha=0)}$. 
 The 1-Wasserstein distance between $P_{E(\alpha=0)}$ and $P_{E(\alpha=0.25)}$ is calculated as:
 \begin{equation}
-    W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = (\frac{1}{N} \sum\limits_{i=1}^N | E_{i,\text{order}}(\alpha=0) - E_{i,\text{order}}(\alpha=0.25) |)
+    W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = (\frac{1}{N} \sum\limits_{i=1}^N | E_{(i)}(\alpha=0) - E_{(i)}(\alpha=0.25) |)
 \end{equation}
-where $E_{i,\text{order}}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that such molecule energy on average has difference less than 2\% since the energy has range from -0.5 to -1.1 eV.
+where $E_{(i)}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that the molecular energy distributions are very similar. 
 
 \begin{table}[H]
     \centering
@@ -367,9 +369,30 @@ where $E_{i,\text{order}}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$.
     \label{fig:E_qmmm_MADN}
 \end{figure}
 
+To further estimate the energy variation due to HFX, one can look at the molecule that has maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ for all molecule index $i=1,2,\cdots,N$. 
+This quantity provides information of the amount of the largest variation one can expect in $E_i(\alpha)$. Index the molecule that has maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ to be $i'$. 
+If molecule $i'$ energy is the lowest one among the $N$ molecules, then a further lowering in the energy of molecule $i'$ may lead to large change in ToF, since low energy potentially lead to a trap in the charge transport dynamics. 
+%
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c c c c}
+    \hline
+ $\alpha'$ & $\max(|E_i(\alpha=0.25) - E_i(\alpha')|)$  & $E_{i'}(\alpha=0.25)$ & $E_{i'}(\alpha')$ \\
+    \hline
+ 0 & 0.13 &  -1.07 & -0.94 \\
+ 0.05 & 0.12 & -0.82 & -0.94 \\
+ 0.10 & 0.13 & -1.07 & -0.94 \\
+ 0.15 & 0.15 & -0.84 & -0.69 \\
+ 0.20 & 0.12 & -1.70 & -0.82 \\
+    \hline
+    \end{tabular}
+    \caption{ In the tested $\alpha'$ values, the second column shows the maximum of $E_i(\alpha=0.25) - E_i(\alpha')$ for all molecules. Denoting the index of the molecule which has maximum $E_i(\alpha=0.25) - E_i(\alpha')$ for the chosen $\alpha'$ case, the third column shows the energy of molecule $i'$ calculated by $\alpha=0.25$. The fourth column shows the molecule energy $E_{i'}(\alpha')$ calculated by $\alpha'$. All the energies are in unit \unit[]{eV}.}
+    \label{tab:maxEi}
+\end{table}
+%
+Table \ref{tab:maxEi} shows that depending on $\alpha'$, the maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ is 0.12 to 0.15, which is considerable small compared to the range of molecular energy. 
+The energy of molecule $i'$ shown in Table \ref{tab:maxEi} indicates that the $i'$ molecule energy is not the lowest one in the system. So the maximum energy variation quantified by $\max(|E_i(\alpha=0.25) - E_i(\alpha')|)$ is not likely to results in large change in ToF due to trapping effects. 
 
-Figures \ref{fig:Estat_qmmm_MADN} and \ref{fig:Edip_qmmm_MADN} show that both electrostatic and polarization energies remain consistent close across HFX values from 0 to 0.25, since all the points comparing $E_i(\alpha')$ and $E_i(\alpha=0.25)$ in the scatter plot are close to the diagonal line.
-The 1-Wasserstein distance between the distribution of $E^\text{el}$ calculated by $\alpha'$ and that calculated by $\alpha=0.25$, $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$, is shown at Table \ref{tab:W2_E}. It shows that $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ is at maximum 0.012. The 1-Wasserstein distance between the $E^\text{polar}$ distribution calculated by $\alpha'$ and that calculated by $\alpha=0.25$ is also shown in Table .\ref{tab:W2_E}, with a maximum of 0.006. So the small Wasserstein distances suggest that the using different $\alpha'$ other than $\alpha=0.25$, the data of $E, E^\text{el}, E^\text{polar}$ have not changed significantly.
 
 \begin{figure}[H]
     \centering
@@ -377,6 +400,9 @@ The 1-Wasserstein distance between the distribution of $E^\text{el}$ calculated 
     \caption{Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
     \label{fig:Estat_qmmm_MADN}
 \end{figure}
+
+Figures \ref{fig:Estat_qmmm_MADN} and \ref{fig:Edip_qmmm_MADN} show that both electrostatic and polarization energies remain consistent close across HFX values from 0 to 0.25, since all the points comparing $E_i(\alpha')$ and $E_i(\alpha=0.25)$ in the scatter plot are close to the diagonal line.
+The 1-Wasserstein distance between the distribution of $E^\text{el}$ calculated by $\alpha'$ and that calculated by $\alpha=0.25$, $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$, is shown at Table \ref{tab:W2_E}. It shows that $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ is at maximum 0.012. The 1-Wasserstein distance between the $E^\text{polar}$ distribution calculated by $\alpha'$ and that calculated by $\alpha=0.25$ is also shown in Table .\ref{tab:W2_E}, with a maximum of 0.006. So the small Wasserstein distances suggest that the using different $\alpha'$ other than $\alpha=0.25$, the data of $E, E^\text{el}, E^\text{polar}$ have not changed significantly.
 
 \begin{figure}[H]
     \centering
@@ -443,9 +469,9 @@ The input $(x_1, x_2, \cdots, x_{N_d})$ represents the collection of the paramet
 And $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
 $\{J_{ij}|i,j=1,2,\cdots,N \}$ is the ordered set whose elements are the coupling elements. 
 
-Since the exchange-correlation functional is not known and each molecule has a slightly different structure compared to the optimized structure, each parameter has uncertain. 
-To estimate the uncertainty, we consider the maximum amount of uncertainties according to the obtained $(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$ with the six different HFX.
-To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are respectively the sample mean and standard deviation obtained by six varying HFXs.
+Each parameter has uncertainty caused by the exchange-correlation functional in the multiscale model.
+To estimate the uncertainty which is unknown, we consider the maximum amount of uncertainties according to the obtained $(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$ with the six different HFX.
+To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are respectively the sample mean and standard deviation obtained by six different HFXs.
 
 Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
 \begin{enumerate}
@@ -654,6 +680,8 @@ which is shown in Fig. \ref{fig:PF_plot_ave} for specifie HFX values. The 99\% c
     \label{fig:PF_plot_ave}
 \end{figure}
 %
+
+\section{Conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
