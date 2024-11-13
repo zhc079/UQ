@@ -1,1 +1,0 @@
-{"rule":"THREE_NN","sentence":"^\\QThe neutral state BCP molecule dipole moment, isotropic polarizability, The Fig.\\E$"}
