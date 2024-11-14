@@ -514,17 +514,17 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
 \begin{table}[H]
   \caption{\label{tab:ToF_J} The ToF along a distance $L_x = 8$ [nm] of the MADN system as a function of the HFX. The molecular connections with coupling element $\log_{10} J^2_{ij} < 5$ are deleted.}
   \centering
-  \begin{tabular}{c c }
+  \begin{tabular}{c c c c }
   \hline
   \hline
-      $\alpha$ & ToF [s]  \\
+      $\alpha$ & & & ToF [s]  \\
   \hline
-      0.00 &  $7.5 \times 10^{-9}$ \\
-      0.05 & $ 8.1 \times 10^{-9}$ \\
-      0.10 & $ 1.6 \times 10^{-8}$ \\
-      0.15 & $ 3.1 \times 10^{-8}$ \\
-      0.20 & $ 2.5 \times 10^{-8}$ \\
-      0.25 & $ 9.7 \times 10^{-8}$ \\
+      0.00 & & &  $7.5 \times 10^{-9}$ \\
+      0.05 & & & $ 8.1 \times 10^{-9}$ \\
+      0.10 & & & $ 1.6 \times 10^{-8}$ \\
+      0.15 & & & $ 3.1 \times 10^{-8}$ \\
+      0.20 & & & $ 2.5 \times 10^{-8}$ \\
+      0.25 & & & $ 9.7 \times 10^{-8}$ \\
   \hline
   \hline
   \end{tabular}
@@ -738,10 +738,17 @@ When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distri
     \centering
     \includegraphics[width=0.45\textwidth]{figs/fig_mle_withE_mu2_ave.pdf}
     \caption{Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
-    Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.}
+    Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \times 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \times 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \times 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \times 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \times 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \times 10^7 \unit{V/m}$.}
     \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
 %
+
+When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig. \ref{fig:fig_mle_withE_mu2_ave}. The ToF depends on the electric field through the Marcus rate. As the electric increase from $|\vec{F}|=4 \times 10^7 \unit{V/m}$
+$|\vec{F}|=9 \times 10^7 \unit{V/m}$, the
+range of the 90\% confidence interval where $\log_{10} \mu_\text{PF}$ lies
+estimated from the MC sample decrease from -1.1 to 0.69.
+So the electric field results in a narrower range
+of $\mu_\text{PF}$ distribution, making the results more trustable.
 
 The ToF depends on the electric field through the Marcus rate. 
 Poole and Frenkel predicted the electric-field dependence of charge mobility as $\mu_\text{PF}(F)=\mu_0 \exp (\beta \sqrt{|\vec{F}|})$.
