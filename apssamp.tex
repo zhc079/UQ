@@ -111,8 +111,8 @@ Here the terminology "uncertainties" refers to the impossibility of getting a de
 The amount of uncertainty in the QoI plays an important role in determining the usefulness of the model. 
 So quantifying the uncertainty is a key factor for telling if the model is quanlitatively or quantitatively accurate. 
 
-In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties. 
-This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
+In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
+This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level\cite{bronstein_role_2020, bredas_organic_2002}, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
 Conducting these optimization processes through experimental methods is financially demanding. In contrast, computational approaches such as the multiscale model provides insightful guidance for such investigation. So robustness of the computational model is paramount to promote OSC optimization.
 
 Like every other models, the multiscale model contains uncertainties due to certain approximation in modeling perspective, the randomness nature of the physical quantities, and the limitation of the numerical simulations, only to name a few.
@@ -125,13 +125,13 @@ To explain in detail those uncertainties, the first-principle multiscale model i
   \label{fig:MSM}
 \end{figure*}
 
-Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is impossible to solve due to its complexity, so Density Functional Theory (DFT) appears as a manageable way to model electrons.
+Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is impossible to solve due to its complexity, so Density Functional Theory (DFT) \cite{kohn_selfconsistent_1965,jones_density_2015, hammesschiffer_conundrum_2017} appears as a manageable way to model electrons.
 DFT has its own challenges in achieving multiscale modeling.
-The first challenge relates to the Born-Oppenheimer approximation in quantum
+The first challenge relates to the Born-Oppenheimer approximation \cite{born_zur_1927} in quantum
 mechanics, which simplifies the problem by separating the electronic and nuclear
-coordinates. As a result, the time evolution of the atomic coordinates can be modeled in molecular dynamics (MD) by solving the Newton's equation using empirical force field to approximate the potential energy surfaces (need citation). 
+coordinates. As a result, the time evolution of the atomic coordinates can be modeled in molecular dynamics (MD) by solving the Newton's equation using empirical force field to approximate the potential energy surfaces~\cite{rapaport_art_2004}. 
 
-The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time. 
+The next challenge is the infeasibility of solving the DFT equations for the entire system even at a fixed time~\cite{hammesschiffer_conundrum_2017}. 
 But due to fact that OSCs have disordered and amorphous structure and the quantum states of each molecule is confined to a limited region, the charge dynamic can be well-approxmiated as a jumping process between molecules, which is a continuous time random walk (CTRW) process.
 The transition rates between the molecules can be calculated from quantum chemical calculations and related to the electronic structures parameters including the molecule energy, reorganization energy and coupling elements which will be explained in the methodology section. 
 
@@ -144,18 +144,18 @@ The process includes: Firstly, classical Molecular Dynamics is used to generate 
 
 
 In achieving the multiscale model, uncertainties are introduced. 
-While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces (need citation) and model the atomic coordinates using Newton’s equations, the force field is not exactly the same as the potential for DFT. 
+While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces and model the atomic coordinates using Newton’s equations, the force field is not exactly the same as the potential for DFT~\cite{izvekov_effective_2004}. 
 So the atomic coordinates, that is the molecule structures contain uncertainty which ultimately affects the charge dynamics. 
 This is one source of uncertainty that have not been investigated. But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
 Secondly, charge jumping between the state localization is not exactly a time dependent DFT process. 
 However, the amorphous OSCs used in this work has strong disorder, so the model noise from state localization is negligible and we do not consider the uncertainty originated from this perspective.
 Lastly, the source of uncertain that this work focus on comes from the approximation for the exchange-correlation energy in DFT. 
-There is no exact formula for the exchange-correlation functional, so in practical approximations are developed and tested to guarantee the robustness of DFT method. 
+There is no exact formula for the exchange-correlation functional, so in practical approximations are developed and tested to guarantee the robustness of DFT method~\cite{gunnarsson_exchange_1976, bilc_hybrid_2008, lee_development_1988}. 
 The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose suitability is usually unknown for new synthesized molecules. 
-As an advancement to improve accuracy, Hybrid-DFT incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HFX.
+As an advancement to improve accuracy, Hybrid-DFT \cite{marques_densitybased_2011,perdew_rationale_1996} incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HFX~\cite{adamo_toward_1999}.
 
 Looking back into the CTRW of the charge transport, the transition rates depend on the electronic structures parameters which rely on the validity of the exchange-correlation functional from the modeling perspectives.
-So the approximations in exchange-correlation functional will bring uncertainties to the multiscale model. 
+So the approximations in exchange-correlation functional will bring uncertainties to the multiscale model~\cite{medvedev_density_2017}. 
 In particular, different hybrid-DFT functionals containing varying HFX levels will generate different output from the multiscale model mentioned aboved. 
 The effect of such uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
 The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HFX.
