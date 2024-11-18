@@ -20,7 +20,7 @@
 %
 \documentclass[%
  reprint,
-%superscriptaddress,
+superscriptaddress,
 %groupedaddress,
 %unsortedaddress,
 %runinaddress,
@@ -33,11 +33,11 @@
  amsmath,amssymb,
  aps,
 %pra,
-%prb,
+prb,
 %rmp,
 %prstab,
 %prstper,
-%floatfix,
+floatfix
 ]{revtex4-2}
 
 \usepackage{graphicx}% Include figure files
@@ -45,13 +45,13 @@
 \usepackage{bm}% bold math
 %%%%%%%%%%%%%%%%%%%%%%%%%package by Zhong
 \usepackage{units}
-\usepackage{lineno}
-\usepackage{float}
-\usepackage{amsmath}  % improve math presentation
-\usepackage{amsfonts}
-\usepackage{verbatim}
+%\usepackage{lineno}
+%\usepackage{float}
+%\usepackage{amsmath}  % improve math presentation
+%\usepackage{amsfonts}
+%\usepackage{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\usepackage{hyperref}% add hypertext capabilities
+\usepackage{hyperref}% add hypertext capabilities
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
 
@@ -65,13 +65,13 @@
 
 \begin{document}
 
-\preprint{APS/123-QED}
 
-\title{Uncertainty Quantification in Multiscale Model}% Force line breaks with \\
-% \thanks{A footnote to the article title}%
+\title{Uncertainty Quantification in Multiscale Model}
 
-\author{Zhongquan Chen, Baumeier Bj\"orn, Pim van der Hoorn}
- \altaffiliation{Department of Mathematics and Computer Science \& Institute for Complex Molecular Systems, Eindhoven University of Technology},
+\author{Zhongquan Chen}
+\author{Pim van der Hoorn}
+\author{Bj\"orn Baumeier}
+\affiliation{Department of Mathematics and Computer Science \& Institute for Complex Molecular Systems, Eindhoven University of Technology}
 %Lines break automatically or can be forced with \\
 
 % \collaboration{MUSO Collaboration}%\noaffiliation
@@ -87,13 +87,6 @@
   By investigating the effects of varying Hartree-Fock (HF) levels within DFT functionals, we analyze the impact on electronic structures such as reorganization energy, molecule energy distribution, and coupling elements. The primary goal is to assess the robustness of predicting the quantity of interest (QoI), that is time-of-flight and charge mobility, under these uncertainties.
   
   Monte Carlo simulations and sensitivity analysis are employed to estimate the range and confidence levels of the predicted charge mobility. As shown by Sobol indices, the QoI is most sensitive to molecule energy, then reorganization energy and least sensitive to coupling elements.  
-\begin{description}
-\item[Usage]
-Secondary publications and information retrieval purposes.
-\item[Structure]
-You may use the \texttt{description} environment to structure your abstract;
-use the optional argument of the \verb+\item+ command to give the category of each item. 
-\end{description}
 \end{abstract}
 
 %\keywords{Suggested keywords}%Use showkeys class option if keyword
@@ -102,7 +95,7 @@ use the optional argument of the \verb+\item+ command to give the category of ea
 
 %\tableofcontents
 
-\section{Background}
+\section{Introduction}
 
 Theoretical model and computer simulation for understanding a physical system usually contain some uncertainties in predicting the system features. 
 For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, the simulation use noisy quantities, etc~\cite{sarkar_uncertainty_2017,oconnor_quantifying_2024, chernatynskiy_uncertainty_2013, suleimenova_tutorial_2021,coveney_reliability_2021, coveney_when_2021}.
@@ -511,7 +504,7 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
   \label{fig:J_percolate}
 \end{figure}
 
-\begin{table}[H]
+\begin{table}[t]
   \caption{\label{tab:ToF_J} The ToF along a distance $L_x = 8$ [nm] of the MADN system as a function of the HFX. The molecular connections with coupling element $\log_{10} J^2_{ij} < 5$ are deleted.}
   \centering
   \begin{tabular}{c c c c }
@@ -612,7 +605,7 @@ Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidenc
 Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{10}(\tau)$ has a narrow confidence interval of -7.9 to -7.7, suggesting that the variation in $J_{ij}$ leads to relatively small change in $\log_{10}(\tau)$ compared to $E_i$ and $\lambda$.
 
 %
-\begin{figure}[H]
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE.pdf}
   \caption{Distribution of ToFs in the multiscale modeled MADN system.
@@ -774,7 +767,7 @@ the electronic structure parameters are uncertain, and a useful range of velocit
 % whether or not they are actually referenced in the text. This is appropriate
 % for the sample file to show the different styles of references, but authors
 % most likely will not want to use it.
-\nocite{*}
+%\nocite{*}
 
 \bibliography{apssamp}% Produces the bibliography via BibTeX.
 
