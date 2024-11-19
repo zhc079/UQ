@@ -356,7 +356,7 @@ While without energy disorder, the increase factor is about 4. This increase in 
 
 \begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
 \caption{\label{tab:ToF_MADN_HFX}%
-The ToF and diffusive velocity calculated by ToF along a distance $L_x = 8$ [nm] with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit \unit[]{s} and $v_\text{ToF}$ in unit \unit[]{m/s}.
+The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.
 }
 \begin{ruledtabular}
   \begin{tabular}{c c c c c}
@@ -432,21 +432,21 @@ Denote the empirical distribution of molecular energy $E$ at $\alpha=0$ to be $P
 The 1-Wasserstein distance between $P_{E(\alpha=0)}$ and $P_{E(\alpha=0.25)}$ is calculated as:
 \begin{eqnarray}
     && W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = \nonumber \\
-    && (\frac{1}{N} \sum\limits_{i=1}^N | E_{(i)}(\alpha=0) - E_{(i)}(\alpha=0.25) |)
+    && \frac{1}{N} \sum\limits_{i=1}^N | E_{(i)}(\alpha=0) - E_{(i)}(\alpha=0.25) |
 \end{eqnarray}
 where $E_{(i)}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that the molecular energy distributions are very similar. 
 
 
 To further estimate the energy variation due to HFX, one can look at the molecule that has maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ for all molecule index $i=1,2,\cdots,N$. 
 This quantity provides information of the amount of the largest variation one can expect in $E_i(\alpha)$. Index the molecule that has maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ to be $i'$. 
-If molecule $i'$ energy is the lowest one among the $N$ molecules, then a further lowering in the energy of molecule $i'$ may lead to large change in ToF, since low energy potentially lead to a trap in the charge transport dynamics. 
+If molecule $i'$ energy is the lowest one among the $N$ molecules, then a further change (such as lowering) in the energy of molecule $i'$ may lead to large change in ToF, since low energy potentially lead to a trap in the charge transport dynamics and significantly affects the mobility. 
 
-Table \ref{tab:maxEi} shows that depending on $\alpha'$, the maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ is 0.12 to 0.15, which is considerable small compared to the range of molecular energy and the magnitude of the energy disorder, which is around 0.08 as shown in Table \ref{tab:ToF_MADN_HFX}. 
+Table \ref{tab:maxEi} shows that depending on $\alpha'$, the maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ is 0.12 to 0.15, which is considerable small compared to the range of molecular energy and the magnitude of the energy disorder, which is around 0.08 as shown in Fig. \ref{fig:autogen_MADN}. 
 The energy of molecule $i'$ shown in Table \ref{tab:maxEi} indicates that the $i'$ molecule energy is not the lowest one in the system. So the maximum energy variation quantified by $\max(|E_i(\alpha=0.25) - E_i(\alpha')|)$ is not likely to results in large change in ToF due to trapping effects. 
 %
 \begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
 \caption{\label{tab:maxEi}%
-In the tested $\alpha'$ values, the second column shows the maximum of $E_i(\alpha=0.25) - E_i(\alpha')$ for all molecules. Denoting the index of the molecule which has maximum $E_i(\alpha=0.25) - E_i(\alpha')$ for the chosen $\alpha'$ case, the third column shows the energy of molecule $i'$ calculated by $\alpha=0.25$. The fourth column shows the molecule energy $E_{i'}(\alpha')$ calculated by $\alpha'$. All the energies are in unit \unit[]{eV}.
+In the tested $\alpha'$ values, the second column shows the maximum of $E_i(\alpha=0.25) - E_i(\alpha')$ for all molecules. Denoting $i'$ as the index of the molecule which has maximum $E_i(\alpha=0.25) - E_i(\alpha')$ for the chosen $\alpha'$, the third column shows the energy of molecule $i'$ calculated by $\alpha=0.25$. The fourth column shows the molecule energy $E_{i'}(\alpha')$ calculated by $\alpha'$. All the energies are in unit $\unit[]{eV}$.
 }
 \begin{ruledtabular}
   \begin{tabular}{c c c c}
@@ -505,7 +505,7 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
 \end{figure}
 
 \begin{table}[t]
-  \caption{\label{tab:ToF_J} The ToF along a distance $L_x = 8$ [nm] of the MADN system as a function of the HFX. The molecular connections with coupling element $\log_{10} J^2_{ij} < 5$ are deleted.}
+  \caption{\label{tab:ToF_J} The ToF along a distance $L_x = 9 \unit[]{nm}$  of the MADN system as a function of the HFX. The molecular connections with coupling element $\log_{10} J^2_{ij} < 5$ are deleted.}
   \centering
   \begin{tabular}{c c c c }
   \hline
