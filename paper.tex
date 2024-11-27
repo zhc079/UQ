@@ -1,23 +1,3 @@
-% ****** Start of file apssamp.tex ******
-%
-%   This file is part of the APS files in the REVTeX 4.2 distribution.
-%   Version 4.2a of REVTeX, December 2014
-%
-%   Copyright (c) 2014 The American Physical Society.
-%
-%   See the REVTeX 4 README file for restrictions and more information.
-%
-% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
-% as well as the rest of the prerequisites for REVTeX 4.2
-%
-% See the REVTeX 4 README file
-% It also requires running BibTeX. The commands are as follows:
-%
-%  1)  latex apssamp.tex
-%  2)  bibtex apssamp
-%  3)  latex apssamp.tex
-%  4)  latex apssamp.tex
-%
 \documentclass[%
  reprint,
 superscriptaddress,
@@ -52,34 +32,21 @@ floatfix
 %\usepackage{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{hyperref}% add hypertext capabilities
-%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
-%\linenumbers\relax % Commence numbering lines
+\usepackage{xcolor}
 
-%\usepackage[showframe,%Uncomment any one of the following lines to test 
-%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
-%%text={7in,10in},centering,
-%%margin=1.5in,
-%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
-%%height=10in,a5paper,hmargin={3cm,0.8in},
-%]{geometry}
+\newcommand{\bjoern}[2]{{\color{blue}{{\bf #1} #2}}}
 
 \begin{document}
 
 
-\title{Uncertainty Quantification in Multiscale Model}
+\title{Uncertainty Quantification in Multiscale Model\bjoern{Needs}{new title}}
 
 \author{Zhongquan Chen}
 \author{Pim van der Hoorn}
 \author{Bj\"orn Baumeier}
 \affiliation{Department of Mathematics and Computer Science \& Institute for Complex Molecular Systems, Eindhoven University of Technology}
-%Lines break automatically or can be forced with \\
 
-% \collaboration{MUSO Collaboration}%\noaffiliation
-
-%\collaboration{CLEO Collaboration}%\noaffiliation
-
-\date{\today}% It is always \today, today,
-             %  but any date may be explicitly specified
+\date{\today}
 
 \begin{abstract}
   This work quantifies uncertainties in a multiscale model for charge dynamics in organic semiconductors (OSCs). A first-principle multiscale model integrates classical molecular dynamics (MD), density functional theory (DFT), quantum mechanical calculation and continuous-time random walk (CTRW) processes to allow the simulation of charge transport in OSCs. The model brings inherent uncertainties arising from the empirical approximations and numerical simulations. Our work particularly focusing on quantifying the uncertainty in DFT exchange-correlation functional.
@@ -97,7 +64,7 @@ floatfix
 %\tableofcontents
 
 \section{Introduction}
-
+\bjoern{UQ in general}{}
 Theoretical model and computer simulation for understanding a physical system usually contain some uncertainties in predicting the system features. 
 For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, the simulation use noisy quantities, etc~\cite{sarkar_uncertainty_2017,oconnor_quantifying_2024, chernatynskiy_uncertainty_2013, suleimenova_tutorial_2021,coveney_reliability_2021, coveney_when_2021}.
 Nevertheless, those uncertainties should not affect the validity of the model or the accuracy for the predicting system in terms of some quantities of interest (QoI). 
@@ -105,17 +72,17 @@ Here the terminology "uncertainties" refers to the impossibility of getting a de
 The amount of uncertainty in the QoI plays an important role in determining the usefulness of the model. 
 So quantifying the uncertainty is a key factor for telling if the model is quanlitatively or quantitatively accurate. 
 
-In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
+\bjoern{Intro OSCs}{}In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
 This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level\cite{bronstein_role_2020, bredas_organic_2002}, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
 Conducting these optimization processes through experimental methods is financially demanding. In contrast, computational approaches such as the multiscale model provides insightful guidance for such investigation. So robustness of the computational model is paramount to promote OSC optimization.
 
-Like every other models, the multiscale model contains uncertainties due to certain approximation in modeling perspective, the randomness nature of the physical quantities, and the limitation of the numerical simulations, only to name a few.
+\bjoern{Idea of the Multiscale Model}{}Like every other models, the multiscale model contains uncertainties due to certain approximation in modeling perspective, the randomness nature of the physical quantities, and the limitation of the numerical simulations, only to name a few.
 To explain in detail those uncertainties, the first-principle multiscale model is briefly reviewed. 
 
-\begin{figure*}
+\begin{figure*}[tbp]
   \centering
-  \includegraphics[width=0.9\textwidth]{figs/MSM.pdf}
-  \caption{The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{ij}$ and coupling element $J_{ij}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
+  \includegraphics[width=\linewidth]{figs/MSM2.pdf}
+  \caption{\bjoern{TODO Bjoern}{Rewrite caption}The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{ij}$ and coupling element $J_{ij}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
   \label{fig:MSM}
 \end{figure*}
 
@@ -136,14 +103,15 @@ As will be shown in the method section, $\omega_{ij}$ determines the QoIs whose 
 Figure \ref{fig:MSM} summarized the multiscale model as mentioned above using MADN, a type of OSC as an example. 
 The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates of all molecules. Then DFT is used to obtain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
 
-
+\bjoern{Uncertainties in the MSM}{way too verbose}
 In achieving the multiscale model, uncertainties are introduced. 
 While Born-Oppenheimer approximation allows for the use of force field to approximate the potential energy surfaces and model the atomic coordinates using Newton’s equations, the force field is not exactly the same as the potential for DFT~\cite{izvekov_effective_2004}. 
 So the atomic coordinates, that is the molecule structures contain uncertainty which ultimately affects the charge dynamics. 
 This is one source of uncertainty that have not been investigated. But in our investigation, a fixed molecule structure is used and we do not consider this source of uncertainty. 
 Secondly, charge jumping between the state localization is not exactly a time dependent DFT process. 
 However, the amorphous OSCs used in this work has strong disorder, so the model noise from state localization is negligible and we do not consider the uncertainty originated from this perspective.
-Lastly, the source of uncertain that this work focus on comes from the approximation for the exchange-correlation energy in DFT. 
+
+\bjoern{Focus on functional dependence}{should talk about the sensitivity of the functional first, then say that looking at HFX is a 'single-parameter' study.} Lastly, the source of uncertain that this work focus on comes from the approximation for the exchange-correlation energy in DFT. 
 There is no exact formula for the exchange-correlation functional, so in practical approximations are developed and tested to guarantee the robustness of DFT method~\cite{gunnarsson_exchange_1976, bilc_hybrid_2008, lee_development_1988}. 
 The accuracy of DFT depends heavily on the choice of the exchange-correlation functional whose suitability is usually unknown for new synthesized molecules. 
 As an advancement to improve accuracy, Hybrid-DFT \cite{marques_densitybased_2011,perdew_rationale_1996} incorporates a portion $\alpha$ of exact HF exchange functional (HFX) from Hartree-Fock (HF) theory into the exchange-correlation functional, particularly for systems where DFT falls short. For example, the PBE0 functional has a portion of 0.25 HFX~\cite{adamo_toward_1999}.
@@ -154,19 +122,19 @@ In particular, different hybrid-DFT functionals containing varying HFX levels wi
 The effect of such uncertainty from the electronic structure level on the multiscale model is not yet explored in literatures. 
 The goal of this work is to quantify the uncertainty effect of the exchange-correlation functional on the charge dynamics in OSCs and to study the robustness of the multiscale model, with a particular focus on the uncertainty represented by different portional of HFX.
 
-A QoI need be chosen to perform this goal of uncertainty quantification. 
+\bjoern{Definition of a QoI}{is ToF (mobility)} A QoI need be chosen to perform this goal of uncertainty quantification. 
 The figure of merit in OSC investigation is the charge mobility, which quantitatively describe how fast charges move in an OSC. 
 The charge mobility is commonly measured in a \textit{time-of-flight} (ToF) setting. 
 As shown in Fig.\ref{fig:MSM}(d), charge carriers are injected into one electrode called \textit{Source} and they are collected by another electrode at the opposite end called \textit{Sink}. 
 Knowing the length of the sample $L$ and the time-of-flight $\tau$, the diffusive velocity is calculated as $v_\text{ToF}=\frac{L}{\tau}$.
 When electric field $\vec{F}$ is used and the charge dynamics undergo a field-drifted transport, the charge mobility is calculated as $\mu_\text{ToF}=\frac{\vec{v}_\text{ToF} \vec{F}}{|\vec{F}|^2}$. 
 
-Some literatures also report a steady state setting for investigation of charge mobility. In such condition, there is no \textit{Source}-\textit{Sink} boundary condition. Instead, the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
-Over a long time period, the charge occupation on each molecule $\pi_i$ reach an equilibrium, allowing a steady state distribution to be obtained.
-The steady state charge velocity $v_\text{SS}$ is calculated as the charge velocity along the direction of the electric field normalized by the steady state charge occupation $\vec{\pi}:\pi_i$. 
-The calculation for $v_\text{ToF}$ and $\mu_\text{SS}$ will be detailed in the method section.
+%Some literatures also report a steady state setting for investigation of charge mobility. In such condition, there is no \textit{Source}-\textit{Sink} boundary condition. Instead, the molecular system is infinitely repeated in all three dimensions by periodic boundary conditions. 
+%Over a long time period, the charge occupation on each molecule $\pi_i$ reach an equilibrium, allowing a steady state distribution to be obtained.
+%The steady state charge velocity $v_\text{SS}$ is calculated as the charge velocity along the direction of the electric field normalized by the steady state charge occupation $\vec{\pi}:\pi_i$. 
+%The calculation for $v_\text{ToF}$ and $\mu_\text{SS}$ will be detailed in the method section.
 
-To quantify the uncertainty for QoI, the focus of our work will be placed on answering the following questions: 
+\bjoern{Rephrase}{!}To quantify the uncertainty for QoI, the focus of our work will be placed on answering the following questions: 
 \begin{enumerate}
     \item How does HFX level change the electronic structures: reorganization energy, distribution of molecule energies and coupling elements? 
     \item How does HFX level change the charge mobility?
@@ -174,10 +142,10 @@ To quantify the uncertainty for QoI, the focus of our work will be placed on ans
     \item Can we estimate the range of the QoI, given a confidence level?
 \end{enumerate}
 
-The rest of the paper is organized as follows. Section 2 will outline the multiscale model in OSCs. This includes the electronic structure calculation centering on Kohn-Sham equation, the calucation of molecule energy, reorganization energy and coupling elements. The details of the molecule dynamics to obtain the MADN system will be listed.
+\bjoern{Update}{later} The rest of the paper is organized as follows. Section 2 will outline the multiscale model in OSCs. This includes the electronic structure calculation centering on Kohn-Sham equation, the calucation of molecule energy, reorganization energy and coupling elements. The details of the molecule dynamics to obtain the MADN system will be listed.
 Then section 3 present the multiscale modeling results with the chosen HFX values. In section 4, the Monte Carlo sampling method is utilized to estimate the ToF distribution and $v_\text{SS}$ distribution, followed by the sensitivity analysis on the parameters. 
 Section 5 shows calculated Poole-Frankel behavior of the MADN with varying HFX values. The confidence interval of the Poole-Frankel plot is estimated. Section 6 concludes the paper. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Multiscale Model}
 As mentioned in the introduction, the multiscale model maps a structural morphology into a graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$. In our context, the graph properties, that is the entries $\omega_{ij}$ in the adjacency matrix $\mathbf{W}$, only depends on the HFX values since other modeling parameters are kept consistent. 
 
@@ -256,9 +224,11 @@ Both $E_i^{x,\text{el}}$ and $E_i^{x,\text{polar}}$ are contributions arising fr
 These contributions are calculated with a microelectrostatic model using parametrized point charge representations\cite{https://doi.org/10.1002/jcc.540110311}
 
 In the multiscale model, $E_i^{x,\text{el}}$ is evaluated with a \unit[4]{nm} cutoff distance:
+%
 \begin{equation}
     E_i^{x,\text{el}} = \frac{1}{4 \pi \epsilon_0} \sum\limits_{a_i} \sum\limits_{b_k,k \neq i} \frac{(q^c_{a_i} - q^n_{b_i})q^n_{b_k}}{ r_{a_i b_k}} 
 \end{equation}
+%
 where $\epsilon_0$ is the vacuum permittivity, $a_i, b_k$ denotes the atoms in molecule $i,k$, $q^{n(c)}_{a_i}$ are the partial charge of atom $a$ when molecule $i$ is in state x. And $r_{a_i b_k} = |r_{a_i} - r_{b_k}|$ is the distance between atoms $a_i$ and $b_k$, which should be within \unit[4]{nm} due to the cutoff setting. 
 For the purpose of quantifying uncertainty in HFX, the long-range electrostatic interactions are not considered. 
 
@@ -278,7 +248,7 @@ Specifically, the coupling element is determined as:
 where $J^0_{ij} = \langle \phi^\text{HOMO}_i | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_j \rangle $, $e_i = \langle \phi^\text{HOMO}_i | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_i \rangle $, $e_j = \langle \phi^\text{HOMO}_j | \hat{H}^\text{KS}_\text{D} | \phi^\text{HOMO}_j \rangle $, and $S_{ij}=\langle \phi^\text{HOMO}_i | \phi^\text{HOMO}_j \rangle $ with bra-ket notation. 
 and $H^\text{KS}_\text{D}$ is the Hamiltonian of the dimer (see Eq.~\ref{eq:KS2}). 
 As the Hamiltonian of the dimer is diagonal in its eigenbasis $\left\{ \phi_\text{D}(\vec{r})\right\}$ with eigenvalues $\left\{ \epsilon_D\right\}$, so $H^\text{KS}_\text{D} = \text{diag}(\epsilon_D)$, $J^0_{ij}$ can be calculated as $J^0_{ij} = \mathbf{p}_i^\text{T} \text{diag}(\epsilon_\text{D}) \mathbf{p}_j$,  where the vector $\mathbf{p}_i = \langle \phi_i^\text{HOMO} | \phi^\text{HOMO}_\text{D} \rangle$ and $\mathbf{p}_j = \langle \phi_j^\text{HOMO} | \phi_\text{D}^\text{HOMO} \rangle$ are the projections of the monomer orbitals $\phi_i^\text{HOMO}, \phi_j^\text{HOMO}$ onto the dimer orbitals $\phi^\text{HOMO}_\text{D}$. Similarly, $e_{i(j)} = \mathbf{p}_{i(j)}^\text{T} \mathbf{p}_{i(j)}$ and $S_{ij} =  \mathbf{p}_i^\text{T} \mathbf{p}_j$. All  of these operations are performed in the basis set representation of the Kohn--Sham wave functions (see Sec.~\ref{sec:es}) as implemented in VOTCA.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Time-of-flight and Steady State Velocity Calculation}
 Following the graph $\mathbf{G}$ from the multiscale model,
 The charge dynamics are modeled as a continuous-time random walk on this graph. In the time-of-flight (ToF) model, some vertices serve as \textit{Source} nodes, representing the electrode where charge carriers are injected, and some as \textit{Sink} nodes, where charge carriers are detected and the ToF is recorded.
@@ -287,7 +257,9 @@ For a system with $N$ molecules and one charge carriers, there are $N$ possible 
 
 The transition rates between the states define the adjacency matrix $\mathbf{W}:\omega_{ij}$.
 According to such connectivity between the molecules, the transition rates $\mathbf{W}_{ij}$ from state $i$ to $j$ is:
-\begin{equation}\label{eq:transition_rates}
+%
+\begin{equation}
+  \label{eq:transition_rates}
 	\mathbf{W}_{ij} =
 	\begin{cases}
 	     0			&  i \text{ is not connected to } j,\\
@@ -297,30 +269,34 @@ According to such connectivity between the molecules, the transition rates $\mat
 
 Then the transition probability from state $i$ to $j$ is $p_{ij} = \mathbf{W}_{ij}/D_i$ where $D_i := \sum_{j} \mathbf{W}_{ij}$.
 And the expected time from state $i$ to reach the Sink state $\tau_i$ is calculated via: 
-\begin{equation}\label{eq:hitting_time}
+%
+\begin{equation}
+  \label{eq:hitting_time}
 	\tau_i = \begin{cases}
 		\frac{1}{D_i} + \sum_{j \ne i} p_{ij} \tau_{j} &\text{if $i$ is not a sink state},\\
 		0 &\text{else.} 
 	\end{cases}
 \end{equation} 
 
-To account for all possible starting nodes of the carriers, all Source states must be considered. The random walk process can be modeled as a parallel electric network of capacitors \cite{doyle_random_1984}. Accordingly, the ToF is evaluated using the harmonic mean:
+To account for all possible starting nodes of the carriers, all Source states must be considered. The random walk process can be modeled as a parallel electric network of capacitors~\cite{doyle_random_1984}. Accordingly, the ToF is evaluated using the harmonic mean:
+%
 \begin{equation} 
-\tau = N_\text{source} \left[\sum_{i \in \text{Source}} (\tau_i)^{-1}\right]^{-1},
-\label{eq:ToF}
+  \tau = N_\text{source} \left[\sum_{i \in \text{Source}} (\tau_i)^{-1}\right]^{-1},
+  \label{eq:ToF}
 \end{equation}
+%
 where $N_\text{source}$ is the number of Source states.
 
-To calculate $v_\text{SS}$ the steady state distribution $\pi_i$ is required. In continuous time Markov chain, the steady state distribution vector $\vec{\pi}: \pi_i$ is the null-space of $\mathbf{W}-\mathbf{D}$:
-\begin{equation}
-    (\mathbf{W}-\mathbf{D} )\vec{\pi} = \mathbf{0}
-\end{equation}
-where $\mathbf{D} = \text{diag}(D_i)$ is the out-degree matrix of $\mathbf{W}$.
+%To calculate $v_\text{SS}$ the steady state distribution $\pi_i$ is required. In continuous time Markov chain, the steady state distribution vector $\vec{\pi}: \pi_i$ is the null-space of $\mathbf{W}-\mathbf{D}$:
+%\begin{equation}
+%    (\mathbf{W}-\mathbf{D} )\vec{\pi} = \mathbf{0}
+%\end{equation}
+%where $\mathbf{D} = \text{diag}(D_i)$ is the out-degree matrix of $\mathbf{W}$.
 
-\begin{equation}
-    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} || \vec{r}_{ij}||_2
-\end{equation} 
-where $\omega_{ij}$ is the charge transition rate from molecule $i$ to molecule $j$, and $\vec{r}_{ij}=\vec{r}_j - \vec{r}_i$ is the center-of-mass (COM) distance vector. 
+%\begin{equation}
+%    v_\text{SS} = \sum_i \pi_i \sum_j \omega_{ij} || \vec{r}_{ij}||_2
+%\end{equation} 
+%where $\omega_{ij}$ is the charge transition rate from molecule $i$ to molecule $j$, and $\vec{r}_{ij}=\vec{r}_j - \vec{r}_i$ is the center-of-mass (COM) distance vector. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results on MADN}
@@ -330,23 +306,22 @@ In this study, we investigate the hole-transporting organic semiconductor MADN (
 Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges is dipole moment at charge neutral state. 
 
 
-%
-\begin{figure}
+\begin{figure}[tbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/fig_autogen.pdf}
-    \caption{(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters (denoted by $\alpha$).}
+    \includegraphics[width=\linewidth]{figs/fig_autogen.pdf}
+    \caption{\bjoern{TODO Zhong:}{The labels (a), (b), (c),(d) should be bigger and places at slightly to the left from the individual panels, which includes the y axis labels; panel (b): these atomic units can be abbreviated a.u. and you should also use [a.u.] and not round brackets; pane (d) is missing a ); I would also like to use $\alpha_{HF}$ throughout the paper; change $\mu$ to $d$.}(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters (denoted by $\alpha$).}
     \label{fig:autogen_MADN}
 \end{figure}
-% 
+
 
 To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
 Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
 Figure \ref{fig:autogen_MADN}(c)(d) show 
-The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig .\ref{fig:autogen_MADN}(c)(d).
+The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig.~\ref{fig:autogen_MADN}(c)(d).
 
-From Fig. \ref{fig:autogen_MADN}(a) one can notice a mild decrease in the dipole moment with increasing HFX and in Fig. \ref{fig:autogen_MADN}(b) a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
-Figure \ref{fig:autogen_MADN}(c) indicates an increase in reorganization energy $\lambda$ with higher HFX, reflecting greater energy requirements for electronic adjustments during charge transfer. This increase is nonlinear compared to the linear decrease in $P_\text{iso}$.
-Figure \ref{fig:autogen_MADN}(d) shows that the energy disorder $\sigma(E)$ for MADN are similar and close to \unit[0.08]{eV} under different HFX values.
+From Fig.~\ref{fig:autogen_MADN}(a) one can notice a mild decrease in the dipole moment with increasing HFX and in Fig.~\ref{fig:autogen_MADN}(b) a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
+Figure~\ref{fig:autogen_MADN}(c) indicates an increase in reorganization energy $\lambda$ with higher HFX, reflecting greater energy requirements for electronic adjustments during charge transfer. This increase is nonlinear compared to the linear decrease in $P_\text{iso}$.
+Figure~\ref{fig:autogen_MADN}(d) shows that the energy disorder $\sigma(E)$ for MADN are similar and close to \unit[0.08]{eV} under different HFX values.
 
 To calculate the ToF from the electronic structures, the \textit{Source} region contains molecules with X-coordinate $0 < r^x_i < 0.5$ nm, and the \textit{Sink} region contains molecules with X-coordinate $8.5 < r^x_i < 9$ nm. 
 
@@ -394,28 +369,28 @@ The 1-Wasserstein distance between the distributions pair of molecule energy $P_
 \begin{figure*}
   \centering
   \includegraphics[width=0.80\textwidth]{figs/scatterE_qmmm.pdf}
-  \caption{Scatter plot of site energy of MADN molecules calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of site energy of MADN molecules calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
   \label{fig:E_qmmm_MADN}
 \end{figure*}
 
 \begin{figure*}
   \centering
   \includegraphics[width=0.80\textwidth]{figs/scatterEstat_qmmm.pdf}
-  \caption{Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
   \label{fig:Estat_qmmm_MADN}
 \end{figure*}
 
 \begin{figure*}
   \centering
   \includegraphics[width=0.80\textwidth]{figs/scatterEdip_qmmm.pdf}
-  \caption{Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
   \label{fig:Edip_qmmm_MADN}
 \end{figure*}
 
 \begin{figure*}
   \centering
   \includegraphics[width=0.80\textwidth]{figs/scatterJ_all.pdf}
-  \caption{Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$; it should be $\log_{10}(J^2/(\unit[]{eV})^2)$; make sure the 10 of $\log_{10}$ is not touching $J$.} Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
   \label{fig:J_MADN}
 \end{figure*}
 
@@ -501,7 +476,7 @@ To determine the range of $\log_{10} J^2$ that are significant for the charge dy
 \begin{figure}[btp]
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_network_all.pdf}
-  \caption{The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$. The molecular systems obtained by different HFX are colored according to the legend.}
+  \caption{\bjoern{TODO Zhong:}{same comments regarding the $\log_{10}$ as above; replace $\alpha$ with $\alpha_\text{HF}$.}The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$. The molecular systems obtained by different HFX are colored according to the legend.}
   \label{fig:J_percolate}
 \end{figure}
 
@@ -571,7 +546,7 @@ which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF,
 \begin{figure}
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE.pdf}
-  \caption{Distribution of ToFs in the multiscale modeled MADN system.
+  \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\tau/\unit[]{s})$.}Distribution of ToFs in the multiscale modeled MADN system.
   Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
   The black circles indicate the ToF obtained using varying HFX values.
   (a) $P(\log_{10}(\tau)|E_i \text{ uncertain})$, 
@@ -609,7 +584,7 @@ Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{1
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE.pdf}
-  \caption{Distribution of ToFs in the multiscale modeled MADN system.
+  \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\tau/\unit[]{s})$.}Distribution of ToFs in the multiscale modeled MADN system.
   Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
   Energy disorder is not consider. 
   The black circles indicate the ToF obtained using varying HFX values.
@@ -662,46 +637,47 @@ When there is no energy disorder, the variance in $\lambda$ has the most contrib
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-\begin{figure}
-  \centering
-  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE_SS.pdf}
-  \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN.
-  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
-  The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
-  The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
-  (a) $P(\log_{10}(v_\text{SS})|E_i \text{ uncertain})$, 
-  (b) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
-  (c) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
-  (d) $P(\log_{10}(v_\text{SS})|E_i, \lambda, J_{ij} \text{ uncertain})$. }
-  \label{fig:mle_MADN_withE_SS}
-\end{figure}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE_SS.pdf}
+%  \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN.
+%  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
+%  The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+%  The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
+%  (a) $P(\log_{10}(v_\text{SS})|E_i \text{ uncertain})$, 
+%  (b) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
+%  (c) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
+%  (d) $P(\log_{10}(v_\text{SS})|E_i, \lambda, J_{ij} \text{ uncertain})$. }
+%  \label{fig:mle_MADN_withE_SS}
+%\end{figure}
 %
 %
-\begin{figure}
-  \centering
-  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE_SS.pdf}
-  \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN. All molecule energies are set to be zero.  
-  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
-  The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
-  The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
-  (a) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
-  (b) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
-  (c) $P(\log_{10}(v_\text{SS})|\lambda, J_{ij} \text{ uncertain})$.  }
-  \label{fig:mle_MADN_noE_SS}
-\end{figure}
-%
-\section{Distribution of Steady State Velocity}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE_SS.pdf}
+%  \caption{Distribution of steady state velocity $v_\text{SS}$ in the multiscale modeled MADN. All molecule energies are set to be zero.  
+%  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution.
+%  The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+%  The black circles indicate the $v_\text{SS}$ obtained using varying HFX values.
+%  (a) $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$, 
+%  (b) $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$, 
+%  (c) $P(\log_{10}(v_\text{SS})|\lambda, J_{ij} \text{ uncertain})$.  }
+%  \label{fig:mle_MADN_noE_SS}
+%\end{figure}
 
-The distribution of steady state velocity of MADN is shown as Fig.\ref{fig:mle_MADN_withE_SS} and \ref{fig:mle_MADN_noE_SS}. 
-From the confidence interval, $P(\log_{10}(v_\text{SS})|E_i \text{ uncertain})$ has a range of -2.6 to -0.9, and the confidence interval $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$ has a range from -1.7 to -1.1. The width of those confidence intervals is very close to the confidence interval of distributions $P(\log_{10}(\tau)|E_i \text{ uncertain})$ and $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, respectively.
-However, $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ has a range from -1.6 to 1.3, spanning 3 orders of magnitude. This is  much larger than $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$ as shown in Fig .\ref{fig:mle_MADN_withE}.  
-The large confidence interval in $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ shows that $v_{ss}$ is very sensitive to the change in $J_{ij}$. Combining all the uncertainty effects in $E_i, \lambda, J_{ij}$, the confidence interval of $P(\log_{10}(v_\text{SS})|E_i, \lambda, J_{ij} \text{ uncertain})$ is from -2.5 to 1.3, covering 4 orders of magnitude.  
 
-When energy disorder is not considered, the $v_\text{SS}$ distribution $P(\log_{10}(v_\text{SS})|\lambda, J_{ij} \text{ uncertain})$ has a confidence interval from 0.3 to 3.5, spanning 3 orders of magnitude. This interval is close to the range of $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ when only $J_{ij}$ is uncertain. 
-In contrast, the interval of $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$ is from 0.6 to 1.2, whose width is much smaller than that of $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$.
+%\section{Distribution of Steady State Velocity}
 
-These result suggests that compared to the ToF $\tau$, the quantity $v_\text{SS}$ is significantly affected by uncertainties in $J_{ij}$, so $v_\text{SS}$ is less robust when the parameters $E_i, \lambda, J_{ij}$ contains uncertainty at the same time. 
-In the next section, the Poole–Frenkel behavior, that is the dependence of charge mobility on the electric field will be study using the ToF setting. 
+%The distribution of steady state velocity of MADN is shown as Fig.\ref{fig:mle_MADN_withE_SS} and \ref{fig:mle_MADN_noE_SS}. 
+%From the confidence interval, $P(\log_{10}(v_\text{SS})|E_i \text{ uncertain})$ has a range of -2.6 to -0.9, and the confidence interval $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$ has a range from -1.7 to -1.1. The width of those confidence intervals is very close to the confidence interval of distributions $P(\log_{10}(\tau)|E_i \text{ uncertain})$ and $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, respectively.
+%However, $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ has a range from -1.6 to 1.3, spanning 3 orders of magnitude. This is  much larger than $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$ as shown in Fig .\ref{fig:mle_MADN_withE}.  
+%The large confidence interval in $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ shows that $v_{ss}$ is very sensitive to the change in $J_{ij}$. Combining all the uncertainty effects in $E_i, \lambda, J_{ij}$, the confidence interval of $P(\log_{10}(v_\text{SS})|E_i, \lambda, J_{ij} \text{ uncertain})$ is from -2.5 to 1.3, covering 4 orders of magnitude.  
+
+%When energy disorder is not considered, the $v_\text{SS}$ distribution $P(\log_{10}(v_\text{SS})|\lambda, J_{ij} \text{ uncertain})$ has a confidence interval from 0.3 to 3.5, spanning 3 orders of magnitude. This interval is close to the range of $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$ when only $J_{ij}$ is uncertain. 
+%In contrast, the interval of $P(\log_{10}(v_\text{SS})|\lambda \text{ uncertain})$ is from 0.6 to 1.2, whose width is much smaller than that of $P(\log_{10}(v_\text{SS})|J_{ij} \text{ uncertain})$.
+
+%These result suggests that compared to the ToF $\tau$, the quantity $v_\text{SS}$ is significantly affected by uncertainties in $J_{ij}$, so $v_\text{SS}$ is less robust when the parameters $E_i, \lambda, J_{ij}$ contains uncertainty at the same time. 
+%In the next section, the Poole–Frenkel behavior, that is the dependence of charge mobility on the electric field will be study using the ToF setting. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Charge mobility and PF Behavior}
@@ -731,7 +707,7 @@ When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distri
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{figs/fig_mle_withE_mu2_ave.pdf}
-    \caption{Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
+    \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\mu/(\unit[]{cm^2(Vs)^{-1}}))$; there should be no PF label at $\mu$.} Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
     Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \times 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \times 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \times 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \times 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \times 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \times 10^7 \unit{V/m}$.}
     \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
@@ -753,7 +729,7 @@ This interval suggests that if the uncertainties from the parameters are represe
 \begin{figure}[tbp]
     \centering
     \includegraphics[width=0.45\textwidth]{figs/fig_PF_plot_ave.pdf}
-    \caption{Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole–Frenkel plots obtained with specific HFX value, and the green shadow indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
+    \caption{\bjoern{TODO Zhong:}{remove PF label; avoid the large white space at the right; make data plot symbols a little bigger and lines a little thicker.}Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole–Frenkel plots obtained with specific HFX value, and the green shadow indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
     \label{fig:PF_plot_ave}
 \end{figure}
 
