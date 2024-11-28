@@ -63,7 +63,7 @@ floatfix
 
 \section{Introduction}
 
-\bjoern{Intro OSCs}{}In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
+\bjoern{Intro OSCs}{to adjust}In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
 This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level\cite{bronstein_role_2020, bredas_organic_2002}, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
 Conducting these optimization processes through experimental methods is financially demanding. In contrast, computational approaches such as the multiscale model provides insightful guidance for such investigation. So robustness of the computational model is paramount to promote OSC optimization.
 
@@ -155,7 +155,7 @@ As mentioned in the introduction, the multiscale model maps a structural morphol
 Those transition rates charge transfer rates from molecules $i$ to $j$ is calculated as the bi-molecular transition rates:
 %
 \begin{equation}
-    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
+    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(\Delta E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
     \label{equ:Marcus}
 \end{equation}
 %
@@ -252,7 +252,7 @@ where $J^0_{ij} = \langle \phi^\text{HOMO}_i | \hat{H}^\text{KS}_\text{D} | \phi
 and $H^\text{KS}_\text{D}$ is the Hamiltonian of the dimer (see Eq.~\ref{eq:KS2}). 
 As the Hamiltonian of the dimer is diagonal in its eigenbasis $\left\{ \phi_\text{D}(\vec{r})\right\}$ with eigenvalues $\left\{ \epsilon_D\right\}$, so $H^\text{KS}_\text{D} = \text{diag}(\epsilon_D)$, $J^0_{ij}$ can be calculated as $J^0_{ij} = \mathbf{p}_i^\text{T} \text{diag}(\epsilon_\text{D}) \mathbf{p}_j$,  where the vector $\mathbf{p}_i = \langle \phi_i^\text{HOMO} | \phi^\text{HOMO}_\text{D} \rangle$ and $\mathbf{p}_j = \langle \phi_j^\text{HOMO} | \phi_\text{D}^\text{HOMO} \rangle$ are the projections of the monomer orbitals $\phi_i^\text{HOMO}, \phi_j^\text{HOMO}$ onto the dimer orbitals $\phi^\text{HOMO}_\text{D}$. Similarly, $e_{i(j)} = \mathbf{p}_{i(j)}^\text{T} \mathbf{p}_{i(j)}$ and $S_{ij} =  \mathbf{p}_i^\text{T} \mathbf{p}_j$. All  of these operations are performed in the basis set representation of the Kohn--Sham wave functions (see Sec.~\ref{sec:es}) as implemented in VOTCA.
 
-\subsection{Time-of-flight and Steady State Velocity Calculation}
+\subsection{Time-of-flight Calculation}
 Following the graph $\mathbf{G}$ from the multiscale model,
 The charge dynamics are modeled as a continuous-time random walk on this graph. In the time-of-flight (ToF) model, some vertices serve as \textit{Source} nodes, representing the electrode where charge carriers are injected, and some as \textit{Sink} nodes, where charge carriers are detected and the ToF is recorded.
 In CTRW the ToF is calculated as the expected hitting time of a continuous time Markov chain.
@@ -306,6 +306,7 @@ where $N_\text{source}$ is the number of Source states.
 
 In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene) and study its charge mobility's dependence on HFX. 
 
+\subsection{Molecular Parameters}
 Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges is dipole moment at charge neutral state. 
 
 
@@ -317,8 +318,7 @@ Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evalua
 \end{figure}
 
 
-To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,
-Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
+To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$,Figure \ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX.
 Figure \ref{fig:autogen_MADN}(c)(d) show 
 The reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig.~\ref{fig:autogen_MADN}(c)(d).
 
