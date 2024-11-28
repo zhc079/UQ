@@ -39,7 +39,7 @@ floatfix
 \begin{document}
 
 
-\title{Uncertainty Quantification in Multiscale Model\bjoern{Needs}{new title}}
+\title{Uncertainty Quantification in Multiscale Models of Charge Transport in Organic Semiconductors: Influence of the Exhange-Correlation Functional}
 
 \author{Zhongquan Chen}
 \author{Pim van der Hoorn}
@@ -56,21 +56,12 @@ floatfix
   Monte Carlo simulations and sensitivity analysis are employed to estimate the range and confidence levels of the predicted charge mobility. As shown by Sobol indices, the QoI is most sensitive to molecule energy, then reorganization energy and least sensitive to coupling elements.  
 \end{abstract}
 
-%\keywords{Suggested keywords}%Use showkeys class option if keyword
-                              %display desired
+%\keywords{Suggested keywords}
+
 \maketitle
 
 
-%\tableofcontents
-
 \section{Introduction}
-\bjoern{UQ in general}{}
-Theoretical model and computer simulation for understanding a physical system usually contain some uncertainties in predicting the system features. 
-For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, the simulation use noisy quantities, etc~\cite{sarkar_uncertainty_2017,oconnor_quantifying_2024, chernatynskiy_uncertainty_2013, suleimenova_tutorial_2021,coveney_reliability_2021, coveney_when_2021}.
-Nevertheless, those uncertainties should not affect the validity of the model or the accuracy for the predicting system in terms of some quantities of interest (QoI). 
-Here the terminology "uncertainties" refers to the impossibility of getting a deterministic QoI, and excludes theoretical or numerical errors. 
-The amount of uncertainty in the QoI plays an important role in determining the usefulness of the model. 
-So quantifying the uncertainty is a key factor for telling if the model is quanlitatively or quantitatively accurate. 
 
 \bjoern{Intro OSCs}{}In this work, an investigated model containing uncertainties is the multiscale model of charge dynamics~\cite{Baumeier2011, edeling_global_2024,coropceanu_charge_2007} in organic semiconductors (OSCs), which are materials that consist of organic molecules with disordered and amorphous structure. Besides its semiconducting properties, they are mechanically flexible and comes with controllable charge transport properties~\cite{hamers_flexible_2001,liu_high_2015,chow_organic_2020}. 
 This flexible functionality is achieved by tuning molecular properties to achieve an ideal operating properties at the device-level\cite{bronstein_role_2020, bredas_organic_2002}, so a fundamental understanding of OSC from molecule scale  plays an important role in OSC optimization.
@@ -78,13 +69,6 @@ Conducting these optimization processes through experimental methods is financia
 
 \bjoern{Idea of the Multiscale Model}{}Like every other models, the multiscale model contains uncertainties due to certain approximation in modeling perspective, the randomness nature of the physical quantities, and the limitation of the numerical simulations, only to name a few.
 To explain in detail those uncertainties, the first-principle multiscale model is briefly reviewed. 
-
-\begin{figure*}[tbp]
-  \centering
-  \includegraphics[width=\linewidth]{figs/MSM2.pdf}
-  \caption{\bjoern{TODO Bjoern}{Rewrite caption}The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{ij}$ and coupling element $J_{ij}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
-  \label{fig:MSM}
-\end{figure*}
 
 Fundamentally, quantum-mechanical description is needed to model charge dynamics due to the motion of electrons. However, the resulting full many-electron schr\"{o}dinger equation is impossible to solve due to its complexity, so Density Functional Theory (DFT) \cite{kohn_selfconsistent_1965,jones_density_2015, hammesschiffer_conundrum_2017} appears as a manageable way to model electrons.
 DFT has its own challenges in achieving multiscale modeling.
@@ -102,6 +86,25 @@ As will be shown in the method section, $\omega_{ij}$ determines the QoIs whose 
 
 Figure \ref{fig:MSM} summarized the multiscale model as mentioned above using MADN, a type of OSC as an example. 
 The process includes: Firstly, classical Molecular Dynamics is used to generate the atomistic coordinates of all molecules. Then DFT is used to obtain electronic structures. Finally the charge dynamic is model as a CTRW among the molecules.
+
+\bjoern{UQ in general}{}
+Theoretical model and computer simulation for understanding a physical system usually contain some uncertainties in predicting the system features. 
+For example, the theoretical model does not encompass all relevant physical factors, the theoretical model incorporates empirical parameters that include noise, the numerical scheme contains approximation, the simulation use noisy quantities, etc~\cite{sarkar_uncertainty_2017,oconnor_quantifying_2024, chernatynskiy_uncertainty_2013, suleimenova_tutorial_2021,coveney_reliability_2021, coveney_when_2021}.
+Nevertheless, those uncertainties should not affect the validity of the model or the accuracy for the predicting system in terms of some quantities of interest (QoI). 
+Here the terminology "uncertainties" refers to the impossibility of getting a deterministic QoI, and excludes theoretical or numerical errors. 
+The amount of uncertainty in the QoI plays an important role in determining the usefulness of the model. 
+So quantifying the uncertainty is a key factor for telling if the model is quanlitatively or quantitatively accurate. 
+
+
+
+\begin{figure*}[tbp]
+  \centering
+  \includegraphics[width=\linewidth]{figs/MSM2.pdf}
+  \caption{\bjoern{TODO Bjoern}{Rewrite caption}The multiscale model workflow for OSC. Step 1: MD simulation to generate atom coordinates. Step 2: Molecule energy $E_i$ calculation. Step 3: Calculation of Reorganization energy $\lambda_{ij}$ and coupling element $J_{ij}$ for pairs of molecule $i,j$ whose COM distance is less than $r_\text{cutoff}$. Step 4: Modelling dynamics on device level, such as ToF calculation.}
+  \label{fig:MSM}
+\end{figure*}
+
+
 
 \bjoern{Uncertainties in the MSM}{way too verbose}
 In achieving the multiscale model, uncertainties are introduced. 
