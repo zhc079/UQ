@@ -33,8 +33,11 @@ floatfix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{hyperref}% add hypertext capabilities
 \usepackage{xcolor}
+\usepackage{xspace}
 
 \newcommand{\bjoern}[2]{{\color{blue}{{\bf #1} #2}}}
+\newcommand{\ahfx}{\ensuremath{\alpha_\text{HFX}}\xspace} 
+
 
 \begin{document}
 
@@ -95,24 +98,9 @@ This paper is organized as follows. Section~\ref{sec:model} outlines the theoret
 \label{sec:model}
 The multiscale model maps a large scale molecular morphology with atomistic detail into a graph $\mathbf{G}(\mathbf{V}, \mathbf{W})$, where the set of nodes $\mathbf{V}$ is determined from the center-of-masses of the individual molecules and $\mathbf{W}$ is the adjacency matrix formed by the Marcus rates $\omega_{ij}$. Two nodes $i,j$ are connected if the corresponding molecules have their closest-contact distance smaller than $r_\text{cutoff}=\unit[0.5]{nm}$. 
 
-%Those transition rates charge transfer rates from molecules $i$ to $j$ is calculated as the bi-molecular transition rates:
-%
-%\begin{equation}
-%    \omega_{ij} = \frac{2\pi}{\hbar} \frac{|J_{ij}|^2}{\sqrt{4\pi \lambda_{ij} k_\text{B}T}} \exp\left(-\frac{(\Delta E_{ij} + q \vec{F} \cdot \vec{r}_{ij} - \lambda_{ij})^2}{4\lambda_{ij} k_\text{B}T}\right) ,
-%    \label{equ:Marcus2}
-%\end{equation}
-%
-%where $\hbar$ is the reduced Planck constant and $k_\text{B}$ the Boltzmann constant. The temperature $T$ (in \unit[]{K}), the charge of the carrier $q$ (in \unit[]{e}) and the external electric field $\vec{F}$ (in V/m) can be considered the external, environmental parameters of the simulation. The vector $\vec{r}_{ij} = (r^x_{ij},r^y_{ij},r^z_{ij})^\text{T}$ connects the center-of-masses (COMs) of molecules $i$ and $j$, which is calculated using cyclic boundary conditions. 
-%The remaining physical, material-specific (or rather transfer-pair-specific) quantities are the reorganization energy $\lambda_{ij}$, the electronic coupling $J_{ij}$, and the energy difference $E_{ij} = E_i - E_j$ (all in \unit[]{eV}). 
-
-%The rest of this section will introduce the following: the molecular dynamics used to obtain the coordinates $r^x_{i},r^y_{i},r^z_{i}$, the calculation of node-specific quantities $\lambda$, $E_i$ and $J_{ij}$, as well as the calculation of ToF $\tau$ and steady state velocity $v_\text{SS}$.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \subsection{Molecular Dynamics}
 Classical molecular dynamics (MD) is used to create an amorphous morphology of MADN. An empirical force-field for these simulations has been obtained via the Automated Topology Builder~\cite{stroet_automated_2018}, and an initial structure containing 1000 molecules in a cubic cell is created. Periodic boundary conditions are applied throughout in all three spatial directions. 
-After energy minimization, the system is simulated for \unit[1]{ns} in the $NpT$ ensemble, keeping a constant temperature of \unit[300]{K} and constant pressure of \unit[1]{bar} using the velocity-rescale thermostat~\cite{bussi_canonical_2007} with the coupling time constant \unit[0.1]{ps} and the Parrinello-Rahman barostat~\cite{parrinello_polymorphic_1981} with a time constant for pressure coupling \unit[2]{ps}. The equation of motion for updating the atomic coordinates is implemented by leap-frog \bjoern{CHECK}{really? not velocity-verlet?} algorithm~\cite{van_gunsteren_leap} with a time step of \unit[1]{fs}. Following this, the temperature is increased to \unit[800]{K}, well above the glass transition temperature, during a period of \unit[0.5]{ns}. This temperature is maintained for \unit[1]{ns} before cooling back down to \unit[300]{K} during a period of \unit[0.5]{ns}. Such a heating-cooling cycle is repeated three times. After this simulated annealing, a production run is conducted for \unit[2]{ns} using the $NpT$ ensemble. The final configuration of MADN is chosen for the further steps in the multiscale model, whose configuration is a cubic box with a length of \unit[9.0]{nm} and a density of $\unit[1.08]{g/cm^3}$. All calculations have been performed with the GROMACS software package~\cite{berendsen_gromacs_1995}.
+After energy minimization, the system is simulated for \unit[1]{ns} in the $NpT$ ensemble, keeping a constant temperature of \unit[300]{K} and constant pressure of \unit[1]{bar} using the velocity-rescale thermostat~\cite{bussi_canonical_2007} with the coupling time constant \unit[0.1]{ps} and the Parrinello-Rahman barostat~\cite{parrinello_polymorphic_1981} with a time constant for pressure coupling \unit[2]{ps}. The equation of motion for updating the atomic coordinates is implemented by leap-frog algorithm~\cite{van_gunsteren_leap} with a time step of \unit[1]{fs}. Following this, the temperature is increased to \unit[800]{K}, well above the glass transition temperature, during a period of \unit[0.5]{ns}. This temperature is maintained for \unit[1]{ns} before cooling back down to \unit[300]{K} during a period of \unit[0.5]{ns}. Such a heating-cooling cycle is repeated three times. After this simulated annealing, a production run is conducted for \unit[2]{ns} using the $NpT$ ensemble. The final configuration of MADN is chosen for the further steps in the multiscale model, whose configuration is a cubic box with a length of \unit[9.0]{nm} and a density of $\unit[1.08]{g/cm^3}$. All calculations have been performed with the GROMACS software package~\cite{berendsen_gromacs_1995}.
 
 \subsection{Electronic Structure Calculations} 
 \label{sec:es}
@@ -206,71 +194,43 @@ where $N_\text{source}$ is the number of source nodes.
 
 To determine the ToF in the simulated MADN system along the positive $x$-direction, we remove the PBC in this direction and define the nodes with coordinates $\unit[0]{nm} < x < \unit[0.5]{nm}$ as source nodes, and those with coordinates $\unit[8.5]{nm} < x < \unit[9]{nm}$ as sink nodes. These definitions are changed accordingly for simulating transport in negative $x$-direction, and $y$- or $z$-directions.
 
-\bjoern{STOP}{HERE}
-
-
-\section{Results on MADN}
+\section{Explicit Results from the Multiscale Model}
 \label{sec:MSMresults}
-In this study, we investigate the hole-transporting organic semiconductor MADN (2-Methyl-9,10-di(naphth-2-yl)anthracene) and study its charge mobility's dependence on HFX. 
+In this section, we present and analyze the explicit results of the multiscale model of charge transport in amorphous MADN as obtained for different values of $\alpha_\text{HFX}$.
+
+
 
 \subsection{Molecular Parameters}
-Atomic charges and molecule polarizability $P_\text{iso}$ are crucial for evaluating molecular energy contributions from electrostatic and polarization effects. A physical property related to the overall atomic charges is dipole moment at charge neutral state. 
-
-To calculate the ToF from the electronic structures, the \textit{Source} region contains molecules with X-coordinate 
 
 \begin{figure}[tbp]
     \centering
     \includegraphics[width=\linewidth]{figs/fig_autogen.pdf}
-    \caption{\bjoern{TODO Zhong:}{The labels (a), (b), (c),(d) should be bigger and places at slightly to the left from the individual panels, which includes the y axis labels; panel (b): these atomic units can be abbreviated a.u. and you should also use [a.u.] and not round brackets; pane (d) is missing a ); I would also like to use $\alpha_{HF}$ throughout the paper; change $\mu$ to $d$.}(a) The dipole moment of neutral state MAND molecule $\mu$, (b) isotropic polarizability $P_\text{iso}$, (c) reorganization energies $\lambda$ and (d) energy disorder $\sigma(E)$ as a function of the HFX parameters (denoted by $\alpha$).}
+    \caption{Dependence of molecular parameters as used directly in the multiscale model or in its paramaterization phase on the amount of Hartree--Fock type exchange in the PBE0-based hybrid functional $\alpha_\text{HFX}$. (a) The adiabatic ionization potential, (b) reorganization energy, (c) dipole moment of the neutral molecule, and (d) isotropic molecular polarizability in neutral and charged states, respectively.}
     \label{fig:autogen_MADN}
 \end{figure}
 
+We begin with a brief discussion of the molecular parameters as they are used in different ways in the multiscale model. Figure~\ref{fig:autogen_MADN} shows the adiabatic ionization potential, reorganization energy, neutral state dipole moment, and isotropic polarizability in neutral and cationic (hole) states, respectively. The adiabatic ionization potential in Fig.~\ref{fig:autogen_MADN}(a) in principle contributes to the site energy but as it is determined per molecule-type in the system, it has no effect on the site-energy difference $\Delta E_{ij}$ in Eq.~\ref{equ:Marcus}. It is nevertheless interesting to see that it increases almost linearly over the shown range of \ahfx. In contrast, the reorganization energy as shown in Fig.~\ref{fig:autogen_MADN}(b) appears to saturate for \ahfx after an initially close to linear increase. In total, $\lambda$ is found to be in an interval between \unit[0.25]{eV} and \unit[0.31]{eV} \bjoern{need}{correct numbers here}. Panels (c) and (d) of Fig.~\ref{fig:autogen_MADN} show the dipole moment of the neutral MADN molecule and the isotropic polarizability of the neutral and cationic (hole) states, respectively, both as electrostatic properties that enter indirectly the parameterization of the microelectrostatic model. As is visible, the dipole moment is rather independent on \ahfx (note that the jump of the last shown data point appears more pronounced because of the vert small scale on the $y$-axis). The isotropic polarizabilities in panel (d) exhibit a linear decrease with increasing value of \ahfx which can be attributed to an increasingly attractive effective potential from stronger the Hartree--Fock-like exchange term and consequently more strongly bound electrons as one can also see from the increaseing ionization potential in panel (a).  
 
-To demonstration the effect of HFX on the atomic charges and molecule polarizability $P_\text{iso}$, Fig.~\ref{fig:autogen_MADN}(a)(b) illustrates the dependence of the dipole moment $\mu$ and isotropic polarizability $P_\text{iso}$ on HFX. Figure~\ref{fig:autogen_MADN}(c)(d) show the reorganization energy $\lambda$ and energy disorder $\sigma(E)$ as a function of HFX parameter are also shown in Fig.~\ref{fig:autogen_MADN}(c)(d).
+\subsection{Distributions of site energies}
 
-From Fig.~\ref{fig:autogen_MADN}(a) one can notice a mild decrease in the dipole moment with increasing HFX and in Fig.~\ref{fig:autogen_MADN}(b) a linear decrease in isotropic polarizability for both neutral and charged MADN states as HFX increases from 0 to 0.25, indicating reduced molecular polarizability.
-Figure~\ref{fig:autogen_MADN}(c) indicates an increase in reorganization energy $\lambda$ with higher HFX, reflecting greater energy requirements for electronic adjustments during charge transfer. This increase is nonlinear compared to the linear decrease in $P_\text{iso}$.
-Figure~\ref{fig:autogen_MADN}(d) shows that the energy disorder $\sigma(E)$ for MADN are similar and close to \unit[0.08]{eV} under different HFX values.
-
-
-The ToF is also calculated without energy disorder, meaning $\Delta E_{ij}=0$ for all $i,j$.
-Table~\ref{tab:ToF_MADN_HFX} shows the ToF and corresponding diffusive velocity $v_\text{ToF}$.
-With energy disorder, the ToF increases by a factor of approximately 15 as $\alpha$ increases from 0 to 0.25.  
-While without energy disorder, the increase factor is about 4. This increase in ToF is attributed to the rise in $\lambda$, changes in molecular energies, and variations in coupling elements.
-
-\begin{table}[tbp]
-\caption{The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.}
-\begin{ruledtabular}
-  \begin{tabular}{c c c c c}
-        $\alpha$ & ToF& $v_\text{ToF}$ & ToF(no $E$)& $v_\text{ToF}$(no $E$) \\
-    \hline
-        0.00 &  $6.4 \times 10^{-9}$ & 1.2 & $1.9 \times 10^{-10}$ & 42 \\
-        0.05 & $ 7.9 \times 10^{-9}$ & 1.0 & $4.1 \times 10^{-10}$ & 20 \\
-        0.10 & $ 1.6 \times 10^{-8}$ & 0.51 & $4.0 \times 10^{-10} $ & 20 \\
-        0.15 & $ 3.0 \times 10^{-8}$ & 0.31 & $4.0 \times 10^{-10} $ & 25 \\
-        0.20 & $ 2.1 \times 10^{-8}$ & 0.39 & $4.5 \times 10^{-10}$ & 18 \\
-        0.25 & $ 9.5 \times 10^{-8}$ & 0.083 & $7.2 \times 10^{-10}$ & 11 \\
-    \end{tabular}
-\end{ruledtabular}
-\label{tab:ToF_MADN_HFX}
-\end{table}
+\bjoern{STOP}{HERE}
 
 
-\begin{table*}[tbp]%The best place to locate the table environment is directly after its first reference in text
-\caption{\label{tab:W2_E}%
-The 1-Wasserstein distance between the distributions pair of molecule energy $P_{E(\alpha)}$, electrostatic energy $P_{E^\text{el}(\alpha)}$, polar energy $P_{E^\text{polar}(\alpha)}$ and $P_{\log_{10}(J_{ij}^2)(\alpha)}$.
-}
-\begin{ruledtabular}
-  \begin{tabular}{c c c c c c}
-  $\alpha'$ & 0 & 0.05 & 0.10 & 0.15 & 0.20 \\
-    \hline
-  $W_1 (P_{E(\alpha')}, P_{E(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
-  $W_1 (P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ &  0.010 & 0.012 & 0.0089 & 0.0070 & 0.0032 \\
-  $W_1 (P_{E^\text{polar}(\alpha')}, P_{E^\text{polar}(\alpha=0.25)})$ &  0.0065 & 0.0043 & 0.0027 & 0.0023 & 0.0031 \\
-  $W_1 (P_{\log_{10}(J_{ij}^2)(\alpha')}, P_{\log_{10}(J_{ij}^2)(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
-    \end{tabular}
-\end{ruledtabular}
-\end{table*}
+%\begin{table*}[tbp]%The best place to locate the table environment is directly after its first reference in text
+%\caption{\label{tab:W2_E}%
+%The 1-Wasserstein distance between the distributions pair of molecule energy $P_{E(\alpha)}$, electrostatic energy $P_{E^\text{el}(\alpha)}$, polar energy $P_{E^\text{polar}(\alpha)}$ and $P_{\log_{10}(J_{ij}^2)(\alpha)}$.
+%}
+%\begin{ruledtabular}
+%  \begin{tabular}{c c c c c c}
+%  $\alpha'$ & 0 & 0.05 & 0.10 & 0.15 & 0.20 \\
+%    \hline
+%  $W_1 (P_{E(\alpha')}, P_{E(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
+%  $W_1 (P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ &  0.010 & 0.012 & 0.0089 & 0.0070 & 0.0032 \\
+%  $W_1 (P_{E^\text{polar}(\alpha')}, P_{E^\text{polar}(\alpha=0.25)})$ &  0.0065 & 0.0043 & 0.0027 & 0.0023 & 0.0031 \\
+%  $W_1 (P_{\log_{10}(J_{ij}^2)(\alpha')}, P_{\log_{10}(J_{ij}^2)(\alpha=0.25)})$ &  0.0054 & 0.0091 & 0.0067 & 0.0053 & 0.0045 \\
+%    \end{tabular}
+%\end{ruledtabular}
+%\end{table*}
 %
   
 \begin{figure*}
@@ -280,26 +240,7 @@ The 1-Wasserstein distance between the distributions pair of molecule energy $P_
   \label{fig:E_qmmm_MADN}
 \end{figure*}
 
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterEstat_qmmm.pdf}
-  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
-  \label{fig:Estat_qmmm_MADN}
-\end{figure*}
 
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterEdip_qmmm.pdf}
-  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
-  \label{fig:Edip_qmmm_MADN}
-\end{figure*}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterJ_all.pdf}
-  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$; it should be $\log_{10}(J^2/(\unit[]{eV})^2)$; make sure the 10 of $\log_{10}$ is not touching $J$.} Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
-  \label{fig:J_MADN}
-\end{figure*}
 
 Figure \ref{fig:E_qmmm_MADN} presents a scatter plot comparing the site energies of MADN molecules across different HFX values, using $\alpha$ = 0.25 (PBE0 functional) as a reference for which the calculated molecule energy has a range from -1.17 to -0.60 \unit[]{eV}y.
 The range of molecule energy for the other five HFX are: 
@@ -310,14 +251,14 @@ from -1.16 to -0.60 \unit[]{eV} for $\alpha=0.15$,
 and from -1.12 to -0.63 \unit[]{eV} for $\alpha=0.20$.
 The bright-yellow color in all plots of Fig. \ref{fig:E_qmmm_MADN} indicates that most data points are clustering near the diagonal line, so the molecular energies calculated by different HFX are very close.
 
-To quantify the similarity between two empirical distribution, Wasserstein distance~\cite{villani_optimal_2009} is used.
-Denote the empirical distribution of molecular energy $E$ at $\alpha=0$ to be $P_{E(\alpha=0)}$. 
-The 1-Wasserstein distance between $P_{E(\alpha=0)}$ and $P_{E(\alpha=0.25)}$ is calculated as:
-\begin{eqnarray}
-    && W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = \nonumber \\
-    && \frac{1}{N} \sum\limits_{i=1}^N | E_{(i)}(\alpha=0) - E_{(i)}(\alpha=0.25) |
-\end{eqnarray}
-where $E_{(i)}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that the molecular energy distributions are very similar. 
+%To quantify the similarity between two empirical distribution, Wasserstein distance~\cite{villani_optimal_2009} is used.
+%Denote the empirical distribution of molecular energy $E$ at $\alpha=0$ to be $P_{E(\alpha=0)}$. 
+%The 1-Wasserstein distance between $P_{E(\alpha=0)}$ and $P_{E(\alpha=0.25)}$ is calculated as:
+%\begin{eqnarray}
+%    && W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)}) = \nonumber \\
+%    && \frac{1}{N} \sum\limits_{i=1}^N | E_{(i)}(\alpha=0) - E_{(i)}(\alpha=0.25) |
+%\end{eqnarray}
+%where $E_{(i)}(\alpha=0)$ is the order statistics of $E_i(\alpha=0)$. The 1-Wasserstein distance between two empirical distributions for each plot in Fig. \ref{fig:E_qmmm_MADN} is shown in Table \ref{tab:W2_E}. $W_1 (P_{E(\alpha=0)}, P_{E(\alpha=0.25)})$ has range between 0.0045 to 0.0091, indicating that the molecular energy distributions are very similar. 
 
 
 To further estimate the energy variation due to HFX, one can look at the molecule that has maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ for all molecule index $i=1,2,\cdots,N$. 
@@ -326,8 +267,8 @@ If molecule $i'$ energy is the lowest one among the $N$ molecules, then a furthe
 
 Table \ref{tab:maxEi} shows that depending on $\alpha'$, the maximum $|E_i(\alpha=0.25) - E_i(\alpha')|$ is 0.12 to 0.15, which is considerable small compared to the range of molecular energy and the magnitude of the energy disorder, which is around 0.08 as shown in Fig. \ref{fig:autogen_MADN}. 
 The energy of molecule $i'$ shown in Table \ref{tab:maxEi} indicates that the $i'$ molecule energy is not the lowest one in the system. So the maximum energy variation quantified by $\max(|E_i(\alpha=0.25) - E_i(\alpha')|)$ is not likely to results in large change in ToF due to trapping effects. 
-%
-\begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
+
+\begin{table}[tbp]
 \caption{\label{tab:maxEi}%
 In the tested $\alpha'$ values, the second column shows the maximum of $E_i(\alpha=0.25) - E_i(\alpha')$ for all molecules. Denoting $i'$ as the index of the molecule which has maximum $E_i(\alpha=0.25) - E_i(\alpha')$ for the chosen $\alpha'$, the third column shows the energy of molecule $i'$ calculated by $\alpha=0.25$. The fourth column shows the molecule energy $E_{i'}(\alpha')$ calculated by $\alpha'$. All the energies are in unit $\unit[]{eV}$.
 }
@@ -359,6 +300,18 @@ The maximum of $W_1(P_{E^\text{el}(\alpha')}, P_{E^\text{el}(\alpha=0.25)})$ 0.0
 
 The standard deviations of the electrostatic energy are 0.099, 0.094, 0.099, 0.11, 0.10, \unit[0.10]{eV}, and the standard deviations of the polarization energies are 0.044, 0.043, 0.043, 0.047, 0.045, \unit[0.045]{eV}. So the disorder in electrostatic energies is consistently larger than that in molecule energies, and the palorization effect reduces the electrostatic energy disorder. 
 Each individual molecule has similar polarization energies under different HFX calculation, in spite of $P_\text{iso}$ is linearly dependent on HFX. 
+
+
+
+\subsection{Distributions of electronic couplings}
+
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.80\textwidth]{figs/scatterJ_all.pdf}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$; it should be $\log_{10}(J^2/(\unit[]{eV})^2)$; make sure the 10 of $\log_{10}$ is not touching $J$.} Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \label{fig:J_MADN}
+\end{figure*}
 
 The coupling element obtained with different HFX for each molecular pair compared to that obtained with HFX=0.25 is shown in the scatter plot Fig. \ref{fig:J_MADN}.
 
@@ -416,9 +369,34 @@ In this section we answer the question of how does HF level change the electroni
 how does HF level change the ToF. 
 In the next section, uncertainty quantification via Monte Carlo method and sensitivity analysis is performed to answer which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the ToF distribution. 
 And further we estimate the range of the quantity of interest, given a confidence level.
+
+
+The ToF is also calculated without energy disorder, meaning $\Delta E_{ij}=0$ for all $i,j$.
+Table~\ref{tab:ToF_MADN_HFX} shows the ToF and corresponding diffusive velocity $v_\text{ToF}$.
+With energy disorder, the ToF increases by a factor of approximately 15 as $\alpha$ increases from 0 to 0.25.  
+While without energy disorder, the increase factor is about 4. This increase in ToF is attributed to the rise in $\lambda$, changes in molecular energies, and variations in coupling elements.
+
+\begin{table}[tbp]
+\caption{The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.}
+\begin{ruledtabular}
+  \begin{tabular}{c c c c c}
+        $\alpha$ & ToF& $v_\text{ToF}$ & ToF(no $E$)& $v_\text{ToF}$(no $E$) \\
+    \hline
+        0.00 &  $6.4 \times 10^{-9}$ & 1.2 & $1.9 \times 10^{-10}$ & 42 \\
+        0.05 & $ 7.9 \times 10^{-9}$ & 1.0 & $4.1 \times 10^{-10}$ & 20 \\
+        0.10 & $ 1.6 \times 10^{-8}$ & 0.51 & $4.0 \times 10^{-10} $ & 20 \\
+        0.15 & $ 3.0 \times 10^{-8}$ & 0.31 & $4.0 \times 10^{-10} $ & 25 \\
+        0.20 & $ 2.1 \times 10^{-8}$ & 0.39 & $4.5 \times 10^{-10}$ & 18 \\
+        0.25 & $ 9.5 \times 10^{-8}$ & 0.083 & $7.2 \times 10^{-10}$ & 11 \\
+    \end{tabular}
+\end{ruledtabular}
+\label{tab:ToF_MADN_HFX}
+\end{table}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{ToF Distribution and Sensitivity Analysis}
+\section{Uncertainty Quantification and Sensitivity Analysis}
 \label{sec:UQ}
 The previous section shows that different HFX affect the calculated ToF. In this section, we use the Monte Carlo method to estimate the range of the ToF given a confidence level, followed by a sensitivity analysis to determine which parameter contributes more to the variance of ToF. 
 
@@ -671,14 +649,25 @@ light the importance of selecting appropriate functionals to ensure model robust
 
 Assuming the maximum amount of uncertainty from the calculated electronic structure parameters using the six HFX, the 99\% confidence level of the ToFs around the median are estimated. The Sobol indexes show that the molecular energy has the most contribution to the total variance, followed by the reorganization energy and coupling elements. Our results also shows that due to the uncertainties, the steady state velocity distribution spans 4 orders of magnitude. So it is less robust when
 the electronic structure parameters are uncertain, and a useful range of velocity is hard to obtain. Future research should explore the impact of other sources of uncertainty and extend this framework to different types of semiconducting materials, thus enhancing the predictive power and applicability of multiscale models in the field.
-% The \nocite command causes all entries in a bibliography to be printed out
-% whether or not they are actually referenced in the text. This is appropriate
-% for the sample file to show the different styles of references, but authors
-% most likely will not want to use it.
-%\nocite{*}
 
-\bibliography{references}% Produces the bibliography via BibTeX.
+
+\bibliography{references}
+
+\appendix*
+\section{Electrostatic and polarized energy contributions}
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.80\textwidth]{figs/scatterEstat_qmmm.pdf}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN electrostatic energy calculated from different HFX, compared to the electrostatic energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \label{fig:Estat_qmmm_MADN}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=0.80\textwidth]{figs/scatterEdip_qmmm.pdf}
+  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$.}Scatter plot of MADN polarization energy calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \label{fig:Edip_qmmm_MADN}
+\end{figure*}
+
 
 \end{document}
-%
-% ****** End of file apssamp.tex ******
