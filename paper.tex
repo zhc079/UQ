@@ -243,12 +243,7 @@ Figure~\ref{fig:E_qmmm_MADN}(a)-(e) presents scatter plots comparing the distrib
 
 Interestingly, we find the biggest variation of \unit[0.1]{eV} in the values for $E_\text{min}$. This minimal energy (or rather all the energies in the low-energy region of the distributions) can have a very significant influence on the charge transport properties, depending on how much the site energy differences are influenced in the charge transport network. To further characterize the effect of different \ahfx values, we consider the largest absolute variation in the site energies depending on \ahfx by calculating the Chebyshev distance $D_{\ahfx} = \max\limits_{i}(|E_i(\ahfx=0.25) - E_i(\ahfx)|)$. From the results listed in Tab.~\ref{tab:maxEi}, one can see that on individual level the site energies can vary substantially, with more than \unit[0.1]{eV}. This variation is larger than the recorded values of $\sigma$ and with all \ahfx yielding the same mean site energy of \unit[-0.86]{eV} this could indicate non-neglibible effects on charge transport. 
 
-
-\bjoern{STOP}{HERE}
-
-
 \subsection{Electronic couplings}
-
 
 \begin{figure*}[tbp]
   \centering
@@ -268,26 +263,15 @@ Distributions and correlations compared with the PBE0 reference for the electron
 
 To determine the range of $\log_{10}[(J_{ij}/\unit[]{eV})^2]$ that are significant for the charge dynamics, a percolation analysis is performed to find a critical threshold value for the squared electronic coupling below which the largest connected subgraph is identical to the full graph. This is achieved by removing for a given value for $J_\text{c}$ from the full graph the edges with $J_{ij}^2 < J^2_\text{c}$ followed by the determination of the number of vertices in the larges connected subgraph $\max(N_\text{sub})$. Figure~\ref{fig:J_percolate} shows the resulting dependence of $\max({N_\text{sub}})$ on the critical value $J_c$. It is apparent that for $\log_{10} J_c^2 = -5$, all vertices are in the largest connected subgraph. The overall connectivity of the charge transport network is therefore mostly affected by the coupling elements larger than this threshold, and the charge transport properties are expected to be more sensitive to deviations for the associated edges. We also note that overall, the results in Fig.~\ref{fig:J_percolate} again seem to be very similar for all \ahfx studied in the work. 
 
+
 \subsection{Time-of-flight calculations}
-And the variation in small $J_{ij}$ due to HFX has less impact on the charge dynamics. Table \ref{tab:ToF_J} shows the ToF for the MADN system after deleting the molecular connections with  $\log_{10} J_c^2 < -5$. The resulting ToF is close to the values obtained without deleting any connections (shown in Table \ref{tab:ToF_MADN_HFX}).
-The increase of ToF after deleting the connections with  $\log_{10} J_c^2 < -5$ is always less than 30\%, confirming that the molecular connections with the small $J_{ij}$ has small effect in ToF. 
 
-In this section we answer the question of how does HF level change the electronic structures ($\lambda, E_i, J_{ij}$) and 
-how does HF level change the ToF. 
-In the next section, uncertainty quantification via Monte Carlo method and sensitivity analysis is performed to answer which electronic structure (among energy, coupling element and reorganization energy) uncertainty has the most impact on the ToF distribution. 
-And further we estimate the range of the quantity of interest, given a confidence level.
-
-
-The ToF is also calculated without energy disorder, meaning $\Delta E_{ij}=0$ for all $i,j$.
-Table~\ref{tab:ToF_MADN_HFX} shows the ToF and corresponding diffusive velocity $v_\text{ToF}$.
-With energy disorder, the ToF increases by a factor of approximately 15 as $\alpha$ increases from 0 to 0.25.  
-While without energy disorder, the increase factor is about 4. This increase in ToF is attributed to the rise in $\lambda$, changes in molecular energies, and variations in coupling elements.
 
 \begin{table}[tbp]
-\caption{The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.}
+\caption{\bjoern{TODO:}{rewrite}The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.}
 \begin{ruledtabular}
   \begin{tabular}{c c c c }
-        \ahfx & full & $J_{ij} \mathbb{1}(\log_{10} J^2_{ij} > 5)$ & $\Delta E_{ij} =0$ \\% & $v_\text{ToF}$(no $E$) \\
+        \ahfx & full & $J_{ij} \mathbb{1}(\log_{10} J^2_{ij} > -5)$ & $\Delta E_{ij} =0$ \\% & $v_\text{ToF}$(no $E$) \\
     \hline
         0.00 &  $6.4 \cdot 10^{-9}$ & $7.5 \cdot 10^{-9}$ & $1.9 \cdot 10^{-10}$ \\%& 42 \\
         0.05 & $ 7.9 \cdot 10^{-9}$ & $8.1 \cdot 10^{-9}$ & $4.1 \cdot 10^{-10}$ \\%& 20 \\
@@ -300,6 +284,10 @@ While without energy disorder, the increase factor is about 4. This increase in 
 \label{tab:ToF_MADN_HFX}
 \end{table}
 
+From the analysis of reorganization energies, site energies, and electronic coupling elements for different values of \ahfx, it is not clear how the mostly on distribution-level observed variations impact the overall charge transport properties. To scrutinize the dependence of such a material property, we now calculate the time-of-flight $\tau$ and report the respective values in Table~\ref{tab:ToF_MADN_HFX}. Here, we refer with ''full'' to time-of-flight obtained for the the as-calculated charge transport network. One can see that $\tau$ varies by roughly one order of magnitude between $\ahfx=0$ ($\unit[6.3\cdot 10^{-9}]{s}$) and $\ahfx=0.25$ ($\unit[9.5\cdot 10^{-8}]{s}$), with an almost monotonous increase. When the squared coupling elements with values below $\unit[10^{-5}]{(eV)^2}$ are set to zero ($J_{ij} \mathbb{1}(\log_{10} J^2_{ij} > -5)$), one obtains only minimally, but consistently, larger $\tau$, corroborating the notion that the very small coupling elements are of little relevance for charge transport. Finally, we also consider the case in which the energetic disorder is ignored ($\Delta E_{ij}=0$). Here, one also can see (next to the generally shorter time-of-flight) a consistent increase in $\tau$, however only by a factor of about \unit[3.8]{}, a combined effect of the increased reorganization energy and variations in coupling elements.
+
+
+\bjoern{STOP}{HERE}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
