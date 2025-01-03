@@ -34,6 +34,8 @@ floatfix
 \usepackage{hyperref}% add hypertext capabilities
 \usepackage{xcolor}
 \usepackage{xspace}
+\usepackage{mathbbol}
+
 
 \newcommand{\bjoern}[2]{{\color{blue}{{\bf #1} #2}}}
 \newcommand{\ahfx}{\ensuremath{\alpha_\text{HFX}}\xspace} 
@@ -213,7 +215,7 @@ We begin with a brief discussion of the molecular parameters as they are used in
 
 \subsection{Site energies}
 
-\begin{figure*}[t]
+\begin{figure*}[tbp]
   \centering
   \includegraphics[width=\linewidth]{figs/scatterE_qmmm.pdf}
   \caption{\bjoern{TODO: }{rewrite caption}Scatter plot of site energy of MADN molecules calculated from different HFX, compared to the site energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
@@ -248,62 +250,25 @@ Interestingly, we find the biggest variation of \unit[0.1]{eV} in the values for
 \subsection{Electronic couplings}
 
 
-\begin{figure*}
+\begin{figure*}[tbp]
   \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterJ_all.pdf}
-  \caption{\bjoern{TODO Zhong:}{add labels (a)...; replace $\alpha$ with $\alpha_\text{HF}$; it should be $\log_{10}(J^2/(\unit[]{eV})^2)$; make sure the 10 of $\log_{10}$ is not touching $J$.} Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
+  \includegraphics[width=\linewidth]{figs/scatterJ_all.pdf}
+  \caption{\bjoern{TODO:}{rewrite caption} Scatter plot of MADN coupling element $\log_{10} J^2$ calculated from different HFX, compared to the polarization energy calculated from HFX=0.25 (The PBE0 functional). The brighter color near the diagonal lines indicates denser population of the molecules.  The top and right histogram show the energy distributions.}
   \label{fig:J_MADN}
 \end{figure*}
 
-The coupling element obtained with different HFX for each molecular pair compared to that obtained with HFX=0.25 is shown in the scatter plot Fig. \ref{fig:J_MADN}.
+Distributions and correlations compared with the PBE0 reference for the electronic coupling elements calculated with different values for \ahfx are shown in Figure~\ref{fig:J_MADN}. The individual distributions appear very similar, with a peak of $\log_{10}[(J_{ij}/\unit[]{eV})^2]$ between \unit[-5]{} to \unit[-6]{}, and a long tail of the distribution towards more negative values. The comparison with the PBE0 reference shows that while there is a clear correlation between the results for different values of \ahfx, the spread in the order of magntitudes of $J_{ij}^2$ can be very large especially for the lower coupling regions. Overall, the squared electronic coupling elements are found in a very wide range from $\unit[10^{-2}]{}$ to $\unit[10^{-15}]{(eV)^2}$ due to its exponential distance dependence and sensitivity to mutual orientation of the two involved molecules. Whereas the site energy distributions discussed in the preceding section are well-defined in the sense that each energy is unambiguously associated to a physical entity -- a molecule in the morphology --, the coupling elements are evaluated for a neighborlist based on a chosen cutoff as explained in Section~\ref{sec:model}.\bjoern{TODO:}{add!} Clearly, if this cutoff is chosen to be large, a lot of hopping pairs with very small coupling elements will be considered that may not be relevant at all (or even unphysical) for charge transport. Therefore, the increasing deviations for the most negative values in Figure~\ref{fig:J_MADN} may not be relavent either. 
 
-
-The distribution of the majority $\log_{10} J_{ij}^2$ has a range of -14 to -2 while only a few $\log_{10} J_{ij}^2$ has low value below -15. For all HFX values, the distribution has a peak at around -5. 
-For large values $\log_{10} J_{ij}^2 < -5$ the coupling element calculated from $\alpha'=0, 0.05, 0.10, 0.15, 0.2$ remains consistently close to that calculated by $\alpha=0.25$. While for small values $\log_{10} J_{ij}^2 > -5$, the $\alpha'$ calculated coupling elements for a specific molecular pair can have large variation compared to $\log_{10} J_{ij}^2$ calculated using $\alpha=0.25$.
-The 1-Wasserstein distance between the $J$ distributions obtained by different $\alpha$ is always smaller than 0.01,  
-indicating similar $J$ distributions even though a few $J_{ij}$ shows large difference when $\alpha$ varies. 
-
-In charge transport network, $J_{ij}^2$ is undirectional for a molecular pair, and decays exponentially as the mutual center-of-mass distance increases. The large $\log_{10} J_{ij}^2$ are usually observed when molecular $i$ and $j$ are close.
-When the center-of-mass distance is very large, the $\log_{10} J_{ij}^2$ is small and some of those small $\log_{10} J_{ij}^2$ are sensitive to $\alpha$. 
-
-However, the charge dynamics is dominated by large $\log_{10} J_{ij}^2$ which are found between molecule pair having small center-of-mass. As the center-of-mass distance increases, $\log_{10} J^2$ becomes small and negligible for the charge dynamics. So the small $J_{ij}$ may not have noticeable effect on the ToF although their calculated values from different HFX are very different. 
-
-To determine the range of $\log_{10} J^2$ that are significant for the charge dynamics, a percolation algorithm is performed. This algorithm aims to find the largest size of subgraphs after removing the edges whose coupling elements are below a critical value. The procedure is as follows:
-\begin{enumerate}
-    \item A critical value $J_c$ is chosen,
-    \item In graph $\mathbf{G}$ remove all the edges with $J_{ij}^2 < J_c^2$
-    \item Calculate the maximum size $\max({N_\text{sub}})$ of the connected subgraphs
-\end{enumerate}
-
-\begin{figure}[btp]
+\begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figs/fig_network_all.pdf}
+  \includegraphics[width=\linewidth]{figs/fig_network_all.pdf}
   \caption{\bjoern{TODO Zhong:}{same comments regarding the $\log_{10}$ as above; replace $\alpha$ with $\alpha_\text{HF}$.}The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$. The molecular systems obtained by different HFX are colored according to the legend.}
   \label{fig:J_percolate}
 \end{figure}
 
-\begin{table}[t]
-  \caption{\label{tab:ToF_J} The ToF along a distance $L_x = 9 \unit[]{nm}$  of the MADN system as a function of the HFX. The molecular connections with coupling element $\log_{10} J^2_{ij} < 5$ are deleted.}
-  \centering
-  \begin{tabular}{c c c c }
-  \hline
-  \hline
-      $\alpha$ & & & ToF [s]  \\
-  \hline
-      0.00 & & &  $7.5 \times 10^{-9}$ \\
-      0.05 & & & $ 8.1 \times 10^{-9}$ \\
-      0.10 & & & $ 1.6 \times 10^{-8}$ \\
-      0.15 & & & $ 3.1 \times 10^{-8}$ \\
-      0.20 & & & $ 2.5 \times 10^{-8}$ \\
-      0.25 & & & $ 9.7 \times 10^{-8}$ \\
-  \hline
-  \hline
-  \end{tabular}
-\end{table}
+To determine the range of $\log_{10}[(J_{ij}/\unit[]{eV})^2]$ that are significant for the charge dynamics, a percolation analysis is performed to find a critical threshold value for the squared electronic coupling below which the largest connected subgraph is identical to the full graph. This is achieved by removing for a given value for $J_\text{c}$ from the full graph the edges with $J_{ij}^2 < J^2_\text{c}$ followed by the determination of the number of vertices in the larges connected subgraph $\max(N_\text{sub})$. Figure~\ref{fig:J_percolate} shows the resulting dependence of $\max({N_\text{sub}})$ on the critical value $J_c$. It is apparent that for $\log_{10} J_c^2 = -5$, all vertices are in the largest connected subgraph. The overall connectivity of the charge transport network is therefore mostly affected by the coupling elements larger than this threshold, and the charge transport properties are expected to be more sensitive to deviations for the associated edges. We also note that overall, the results in Fig.~\ref{fig:J_percolate} again seem to be very similar for all \ahfx studied in the work. 
 
-After performing percolation algorithm, Figure \ref{fig:J_percolate} shows the dependence of $\max({N_\text{sub}})$ on the critical value $J_c$. When $\log_{10} J_c^2 < 5$, $\max({N_\text{sub}})$ is 1000, meaning that removing all the edges with $J_{ij}^2 < 1 \times 10^{-5}$ the 1000 vertexes still form a connected graph. 
-But when removing the edges with $J_{ij}^2 < 3.1 \times 10^{-4}$ ( corresponding to $J_c > -3.5$), the maximum size subgraph is 600, and it quickly decreases as $J_c$ increases, showing a phase transition. 
-So the dominated coupling elements are those with $\log_{10} J_c^2 > -5$. 
+\subsection{Time-of-flight calculations}
 And the variation in small $J_{ij}$ due to HFX has less impact on the charge dynamics. Table \ref{tab:ToF_J} shows the ToF for the MADN system after deleting the molecular connections with  $\log_{10} J_c^2 < -5$. The resulting ToF is close to the values obtained without deleting any connections (shown in Table \ref{tab:ToF_MADN_HFX}).
 The increase of ToF after deleting the connections with  $\log_{10} J_c^2 < -5$ is always less than 30\%, confirming that the molecular connections with the small $J_{ij}$ has small effect in ToF. 
 
@@ -321,15 +286,15 @@ While without energy disorder, the increase factor is about 4. This increase in 
 \begin{table}[tbp]
 \caption{The ToF and diffusive velocity calculated by ToF along a distance $L_x = \unit[9.0]{nm}$ with and without energy disorder of the MADN system as a function of the HFX. The ToF is in unit $\unit[]{s}$ and $v_\text{ToF}$ in unit $\unit[]{m/s}$.}
 \begin{ruledtabular}
-  \begin{tabular}{c c c c c}
-        $\alpha$ & ToF& $v_\text{ToF}$ & ToF(no $E$)& $v_\text{ToF}$(no $E$) \\
+  \begin{tabular}{c c c c }
+        \ahfx & full & $J_{ij} \mathbb{1}(\log_{10} J^2_{ij} > 5)$ & $\Delta E_{ij} =0$ \\% & $v_\text{ToF}$(no $E$) \\
     \hline
-        0.00 &  $6.4 \times 10^{-9}$ & 1.2 & $1.9 \times 10^{-10}$ & 42 \\
-        0.05 & $ 7.9 \times 10^{-9}$ & 1.0 & $4.1 \times 10^{-10}$ & 20 \\
-        0.10 & $ 1.6 \times 10^{-8}$ & 0.51 & $4.0 \times 10^{-10} $ & 20 \\
-        0.15 & $ 3.0 \times 10^{-8}$ & 0.31 & $4.0 \times 10^{-10} $ & 25 \\
-        0.20 & $ 2.1 \times 10^{-8}$ & 0.39 & $4.5 \times 10^{-10}$ & 18 \\
-        0.25 & $ 9.5 \times 10^{-8}$ & 0.083 & $7.2 \times 10^{-10}$ & 11 \\
+        0.00 &  $6.4 \cdot 10^{-9}$ & $7.5 \cdot 10^{-9}$ & $1.9 \cdot 10^{-10}$ \\%& 42 \\
+        0.05 & $ 7.9 \cdot 10^{-9}$ & $8.1 \cdot 10^{-9}$ & $4.1 \cdot 10^{-10}$ \\%& 20 \\
+        0.10 & $ 1.6 \cdot 10^{-8}$ & $1.6 \cdot 10^{-8}$ & $4.0 \cdot 10^{-10} $ \\%& 20 \\
+        0.15 & $ 3.0 \cdot 10^{-8}$ & $3.1 \cdot 10^{-8}$ & $4.0 \cdot 10^{-10} $ \\%& 25 \\
+        0.20 & $ 2.1 \cdot 10^{-8}$ & $2.5 \cdot 10^{-8}$ & $4.5 \cdot 10^{-10}$ \\%& 18 \\
+        0.25 & $ 9.5 \cdot 10^{-8}$ & $9.7 \cdot 10^{-8}$ & $7.2 \cdot 10^{-10}$ \\%& 11 \\
     \end{tabular}
 \end{ruledtabular}
 \label{tab:ToF_MADN_HFX}
@@ -536,13 +501,13 @@ When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distri
     \centering
     \includegraphics[width=0.45\textwidth]{figs/fig_mle_withE_mu2_ave.pdf}
     \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\mu/(\unit[]{cm^2(Vs)^{-1}}))$; there should be no PF label at $\mu$.} Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
-    Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \times 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \times 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \times 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \times 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \times 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \times 10^7 \unit{V/m}$.}
+    Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \cdot 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \cdot 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \cdot 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \cdot 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \cdot 10^7 \unit{V/m}$.}
     \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
 %
 
-When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig. \ref{fig:fig_mle_withE_mu2_ave}. The ToF depends on the electric field through the Marcus rate. As the electric increase from $|\vec{F}|=4 \times 10^7 \unit{V/m}$
-$|\vec{F}|=9 \times 10^7 \unit{V/m}$, the
+When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig. \ref{fig:fig_mle_withE_mu2_ave}. The ToF depends on the electric field through the Marcus rate. As the electric increase from $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$
+$|\vec{F}|=9 \cdot 10^7 \unit{V/m}$, the
 range of the 90\% confidence interval where $\log_{10} \mu_\text{PF}$ lies
 estimated from the MC sample decrease from 0.90 to 0.69.
 So the electric field results in a narrower range of $\mu_\text{PF}$ distribution.
@@ -570,18 +535,18 @@ This interval suggests that if the uncertainties from the parameters are represe
     \begin{tabular}{c c c c c}
     $\alpha$ & & $\mu_0$  & & $\beta$ \\
       \hline
-    0 & & $4.0 \times 10^{-3}$ & & $1.0 \times 10^{-3}$ \\
-    0.05 & & $2.1 \times 10^{-3}$ & & $9.3 \times 10^{-4}$ \\
-    0.10 & & $1.0 \times 10^{-3}$ & & $1.5 \times 10^{-3}$ \\
-    0.15 & & $8.0 \times 10^{-4}$ & & $1.6 \times 10^{-3}$ \\
-    0.20 & & $9.3 \times 10^{-4}$ & & $1.3 \times 10^{-3}$ \\
-    0.20 & & $2.6 \times 10^{-4}$ & & $1.8 \times 10^{-3}$ \\
+    0 & & $4.0 \cdot 10^{-3}$ & & $1.0 \cdot 10^{-3}$ \\
+    0.05 & & $2.1 \cdot 10^{-3}$ & & $9.3 \cdot 10^{-4}$ \\
+    0.10 & & $1.0 \cdot 10^{-3}$ & & $1.5 \cdot 10^{-3}$ \\
+    0.15 & & $8.0 \cdot 10^{-4}$ & & $1.6 \cdot 10^{-3}$ \\
+    0.20 & & $9.3 \cdot 10^{-4}$ & & $1.3 \cdot 10^{-3}$ \\
+    0.20 & & $2.6 \cdot 10^{-4}$ & & $1.8 \cdot 10^{-3}$ \\
       \end{tabular}
   \end{ruledtabular}
   \end{table}
 %  
 The extracted Poole–Frenkel paratermeter calculated from the six $\alpha$ values are summarized in Table \ref{tab:PF_parameter}. 
-Excluding the data of $\alpha=0$, the extracted zero-field mobility $\mu_0$ has a range from $2.6 \times 10^{-4}$ to $2.1 \times 10^{-3}$, and the field effect constant $\beta$ range from $9.3 \times 10^{-4}$ to $1.8 \times 10^{-3}$.
+Excluding the data of $\alpha=0$, the extracted zero-field mobility $\mu_0$ has a range from $2.6 \cdot 10^{-4}$ to $2.1 \cdot 10^{-3}$, and the field effect constant $\beta$ range from $9.3 \cdot 10^{-4}$ to $1.8 \cdot 10^{-3}$.
 So $\beta$ is less sensitive to the multiscale model parameter $\alpha$ compared the zero-field mobility.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
