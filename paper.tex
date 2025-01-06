@@ -287,7 +287,6 @@ To determine the range of $\log_{10}[(J_{ij}/\unit[]{eV})^2]$ that are significa
 From the analysis of reorganization energies, site energies, and electronic coupling elements for different values of \ahfx, it is not clear how the mostly on distribution-level observed variations impact the overall charge transport properties. To scrutinize the dependence of such a material property, we now calculate the time-of-flight $\tau$ and report the respective values in Table~\ref{tab:ToF_MADN_HFX}. Here, we refer with ''full'' to time-of-flight obtained for the the as-calculated charge transport network. One can see that $\tau$ varies by roughly one order of magnitude between $\ahfx=0$ ($\unit[6.3\cdot 10^{-9}]{s}$) and $\ahfx=0.25$ ($\unit[9.5\cdot 10^{-8}]{s}$), with an almost monotonous increase. When the squared coupling elements with values below $\unit[10^{-5}]{(eV)^2}$ are set to zero ($J_{ij} \mathbb{1}(\log_{10} J^2_{ij} > -5)$), one obtains only minimally, but consistently, larger $\tau$, corroborating the notion that the very small coupling elements are of little relevance for charge transport. Finally, we also consider the case in which the energetic disorder is ignored ($\Delta E_{ij}=0$). Here, one also can see (next to the generally shorter time-of-flight) a consistent increase in $\tau$, however only by a factor of about \unit[3.8]{}, a combined effect of the increased reorganization energy and variations in coupling elements.
 
 
-\bjoern{STOP}{HERE}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -295,39 +294,30 @@ From the analysis of reorganization energies, site energies, and electronic coup
 \label{sec:UQ}
 The previous section shows that different HFX affect the calculated ToF. In this section, we use the Monte Carlo method to estimate the range of the ToF given a confidence level, followed by a sensitivity analysis to determine which parameter contributes more to the variance of ToF. 
 
-\subsection{ToF Distribution}
-The ToF is calculated from electronic structure ($E$, $\lambda$ and $\log_{10}(J^2)$) data, that is, ToF is a function with the input of all electronic structure parameters:
-\begin{equation}
-    %\tau = g(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \}) \;
-    \tau = g(x_1, x_2, \cdots, x_{N_d})
-    \label{eq:tau1}
-\end{equation}
-The input $(x_1, x_2, \cdots, x_{N_d})$ represents the collection of the parameters $$(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$$  where $N_d$ is the parameter dimension, that is the number of input parameters. 
-And $\{E_i|i=1,2,\cdots,N \}$ is the ordered set whose elements are the molecule energy,
-$\{J_{ij}|i,j=1,2,\cdots,N \}$ is the ordered set whose elements are the coupling elements. 
+\subsection{Monte-Carlo Sampling of ToF}
+As discussed the ToF is calculated from the graph with weighted edges defined by the electronic structure data $(\lambda, E_1,\ldots,E_N, J_1^2,\ldots,J_{N_\text{p}}^2)$, where $N$ is the number of molecules (vertices) and $N_\text{p}$ the number of molecule pairs (edges) in the neighbor list. We can therefore consider that $\tau = \tau(\mathbf{x})$ with $\mathbf{x}=(\lambda, E_1,\ldots,E_N, \log_{10}(J_1^2),\ldots,\log_{10}(J_{N_\text{p}}^2))$ as dependent on $M = 1+N+N_\text{p}$ parameters with uncertainty, in this case stemming from the possible choices of \ahfx in the exchange-correlation functional of the multiscale model. Note that due to the data range for the electronic coupling element as discussed in the previous section, we consider $\log_{10}(J^2)$ instead of $J^2$. For MADN, we have that $M=XXX$ \bjoern{ADD:}{how many pairs?}
 
-Each parameter has uncertainty caused by the exchange-correlation functional in the multiscale model.
-To estimate the uncertainty which is unknown, we consider the maximum amount of uncertainties according to the obtained $(\lambda, \{E_i|i=1,2,\cdots,N \}, \{J_{ij}|i,j=1,2,\cdots,N \})$ with the six different HFX.
-To achieve this, each parameter can be modeled as a normal distribution with the mean and standard deviation obtained by the maximum likelihood estimation. For a normal distribution, they are respectively the sample mean and standard deviation obtained by six different HFXs.
-
-Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
-\begin{enumerate}
-\item For all $i,j=1,2,\cdots, N_d$, obtain a realization $(x_1, x_2, \cdots, x_{N_d})$ where each parameter has the normal distribution, meaning the corresponding electronic parameters are sampled from the distribution $\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, $E_i \in \mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$, $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. 
-\item Calculate ToF using the sampled data set $(x_1, x_2, \cdots, x_{Nd})$. 
-\item Repeat step 1 and 2 for $N_\text{MC} = 50000$ times to obtain ToFs. Plot the distribution of the ToFs.
-\item Estimate the 99\% confidence interval around the median.
-\end{enumerate}
+Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. 
 
 
-To understand how the uncertainty pass from $E, \lambda, J_{ij}$ to ToF, the parameter control is used. That is, a set of parameter, such as $E_i$ for all $i=1,2,\cdots,N$ is choose while keeping other parameter fixed, then performed Monte Carlo sampling to obtain ToF distribution and estimate upper and lower confidence bound.
-Then we use Sobol total indices to analyze and quantify 
-which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, 
+%Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
+%\begin{enumerate}
+%\item For all $i,j=1,2,\cdots, N_d$, obtain a realization $(x_1, x_2, \cdots, x_{N_d})$ where each parameter has the normal distribution, meaning the corresponding electronic parameters are sampled from the distribution $\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, $E_i \in \mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$, $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. 
+%\item Calculate ToF using the sampled data set $(x_1, x_2, \cdots, x_{Nd})$. 
+%\item Repeat step 1 and 2 for $N_\text{MC} = 50000$ times to obtain ToFs. Plot the distribution of the ToFs.
+%\item Estimate the 99\% confidence interval around the median.
+%\end{enumerate}
 
-%
+
+%To understand how the uncertainty pass from $E, \lambda, J_{ij}$ to ToF, the parameter control is used. That is, a set of parameter, such as $E_i$ for all $i=1,2,\cdots,N$ is choose while keeping other parameter fixed, then performed Monte Carlo sampling to obtain ToF distribution and estimate upper and lower confidence bound.
+%Then we use Sobol total indices to analyze and quantify 
+%which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, 
+
+
 \begin{figure}
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE.pdf}
-  \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\tau/\unit[]{s})$.}Distribution of ToFs in the multiscale modeled MADN system.
+  \caption{\bjoern{TODO Zhong:}{swap panels a and b}Distribution of ToFs in the multiscale modeled MADN system.
   Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
   The black circles indicate the ToF obtained using varying HFX values.
   (a) $P(\log_{10}(\tau)|E_i \text{ uncertain})$, 
@@ -336,24 +326,26 @@ which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF,
   (d) $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$. }
   \label{fig:mle_MADN_withE}
 \end{figure}
-%
 
 
-The distribution that we want to obtained during the parameter control are as followed:
-\begin{enumerate}
-    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$, and $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$. Finally obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
-    \item Fixed all $E_i$ to be $\mathbb{E}(E_i)$ and all $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
-    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$ and all $E_i$ to be $\mathbb{E}(E_i)$.     Then $J_{ij}$ is sampled from the normal distribution $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
-    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sampled from their normal distribution:
+%The distribution that we want to obtained during the parameter control are as followed:
+%\begin{enumerate}
+%    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$, and $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then each molecule energy $E_i$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(E_i), \mathbb{V}(E_i))$. Finally obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|E_i \text{ uncertain})$.
+%    \item Fixed all $E_i$ to be $\mathbb{E}(E_i)$ and all $\log_{10}(J_{ij}^2)$ to be $\mathbb{E}(\log_{10}(J_{ij}^2))$. Then $\lambda$ is sampled from the normal distribution $\mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|\lambda \text{ uncertain})$. 
+%    \item Fixed the $\lambda$ to be $\mathbb{E}(\lambda)$ and all $E_i$ to be $\mathbb{E}(E_i)$.     Then $J_{ij}$ is sampled from the normal distribution $\log_{10}(J_{ij}^2) \in \mathcal{N}(\mathbb{E}(\log_{10}(J_{ij}^2)), \mathbb{V}(\log_{10}(J_{ij}^2)))$. Finally obtain and plot the histogram  $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$.
+%    \item Both $E_i$, $\lambda$ and $J_{ij}$ are sampled from their normal distribution:
     
-    $\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, 
+%    $\lambda_i \in \mathcal{N}(\mathbb{E}(\lambda), \mathbb{V}(\lambda))$, 
     
-    $E_i \in \mathcal{N}(\mathbb{E}(E), \mathbb{V}(E))$, 
+%    $E_i \in \mathcal{N}(\mathbb{E}(E), \mathbb{V}(E))$, 
     
-    $\log_{10}J_{ij}^2 \in \mathcal{N}(\mathbb{E}(\log_{10}J_{ij}^2), \mathbb{V}(\log_{10}J_{ij}^2))$.
-    Then obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as the following distribution: 
-    $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
-\end{enumerate}
+%    $\log_{10}J_{ij}^2 \in \mathcal{N}(\mathbb{E}(\log_{10}J_{ij}^2), \mathbb{V}(\log_{10}J_{ij}^2))$.
+%    Then obtain and plot the histogram $N_\text{MC}$ sample of $\tau$, whose distribution is denoted as the following distribution: 
+%    $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
+%\end{enumerate}
+
+\bjoern{STOP}{HERE}
+
 
 The ToF distribution for the MADN systems with energy disorder is shown in Fig.\ref{fig:mle_MADN_withE}.
 The lower and upper bounds in Fig. \ref{fig:mle_MADN_withE} shows that when only the energies $E_i$ are uncertain, the $\log_{10}(\tau)$ has lower -8.0 and upper bound -6.5. This lower and upper bound is close to that of $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$, meaning that varying the energy alone generates a $\tau$ distribution close to that when $E_i, \lambda, J_{ij}$ are uncertain. 
@@ -379,6 +371,9 @@ Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{1
 When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}. 
 The distribution $P(\log_{10}(\tau)|\lambda \text{ uncertain})$ has a range of confidence interval -9.6 to -9.0 resembles that of $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$, which has a range of confidence interval -9.7 to -9.1. 
 
+
+
+\subsection{Sobol indices}
 Measuring the sensitivity of each electronic parameter to ToF is to measure each electronic parameter's contribution to the variance of ToF. 
 That is, if ToF is most sensitive to one parameter, the variance in this particular parameter will contribute most to the ToF variance. 
 
