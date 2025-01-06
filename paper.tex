@@ -297,7 +297,7 @@ The previous section shows that different HFX affect the calculated ToF. In this
 \subsection{Monte-Carlo Sampling of ToF}
 As discussed the ToF is calculated from the graph with weighted edges defined by the electronic structure data $(\lambda, E_1,\ldots,E_N, J_1^2,\ldots,J_{N_\text{p}}^2)$, where $N$ is the number of molecules (vertices) and $N_\text{p}$ the number of molecule pairs (edges) in the neighbor list. We can therefore consider that $\tau = \tau(\mathbf{x})$ with $\mathbf{x}=(\lambda, E_1,\ldots,E_N, \log_{10}(J_1^2),\ldots,\log_{10}(J_{N_\text{p}}^2))$ as dependent on $M = 1+N+N_\text{p}$ parameters with uncertainty, in this case stemming from the possible choices of \ahfx in the exchange-correlation functional of the multiscale model. Note that due to the data range for the electronic coupling element as discussed in the previous section, we consider $\log_{10}(J^2)$ instead of $J^2$. For MADN, we have that $M=XXX$ \bjoern{ADD:}{how many pairs?}
 
-Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. 
+Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. As these distributions do not necessarily follow any specific analytic form, we estimate a $99\%$ confidence interval around the median using the equal-tailed percentile method.
 
 
 %Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
@@ -344,22 +344,24 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 %    $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$.
 %\end{enumerate}
 
+%The analytical forms of the distribution $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, $P_J(\log_{10}(\tau))$ and $P_\mathbf{x}(\log_{10}(\tau))$ are usually unknown. 
+%To quantify the uncertainty and variability in the sample data, we calculate a $99\%$ confidence interval around the median. 
+%This statistical quantity is typically nonparametric, and relies on percentiles of the data, making it robust to different types of probability mass function.
+
+%Using the equal-tailed percentile method, its calculation involves sorting the data and determining percentiles that correspond to the desired confidence level.
+%Given a dataset $\{ \tau_1, \tau_2, \dots, \tau_n \}$, the procedure can be described as follows:
+%\begin{enumerate}
+%  \item Sort the data in ascending order. For a confidence level $CL$, the corresponding complement 
+%  $1-CL$ determines the tails of the interval. 
+%  \item Find the lower bound $\tau_{\eta}$ corresponds to the $\eta$-th percentile of the dataset where $\eta = (1-CL)/2$. For a $99\%$ confidence interval, $\eta=0.05$.
+%  \item Find the upper bound $\tau_{(1-\eta)}$ corresponds to the $(1-\eta)$-th percentile of the dataset.
+%  \item The confidence interval around the median is $[\tau_{\eta}, \tau_{(1-\eta)}]$.
+%\end{enumerate}
+
+The four respective distributions of $\tau$ in the MADN system are shown in Fig.~\ref{fig:mle_MADN_withE} together with the indicated confidence intervals. Considering first the three distributions with single property sampling in panels (a)-(c), we find the confidence intervals for $\log_{10}(\tau)$ of $[-8.0,-7.4]$ for uncertain $\lambda$, $[-8.0,-6.5]$ for uncertain $E$, and $[-7.9,-7.7]$ for uncertain $J$, respectively. Interestingly, all three share very similar lower limits of the confidence interval, while the upper limits and the shape of the distributions differ significantly. 
 \bjoern{STOP}{HERE}
-The analytical forms of the distribution $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, $P_J(\log_{10}(\tau))$ and $P_\mathbf{x}(\log_{10}(\tau))$ are usually unknown. 
-To quantify the uncertainty and variability in the sample data, we calculate a $99\%$ confidence interval around the median. 
-This statistical quantity is typically nonparametric, and relies on percentiles of the data, making it robust to different types of probability mass function.
 
-Using the equal-tailed percentile method, its calculation involves sorting the data and determining percentiles that correspond to the desired confidence level.
-Given a dataset $\{ \tau_1, \tau_2, \dots, \tau_n \}$, the procedure can be described as follows:
-\begin{enumerate}
-  \item Sort the data in ascending order. For a confidence level $CL$, the corresponding complement 
-  $1-CL$ determines the tails of the interval. 
-  \item Find the lower bound $\tau_{\eta}$ corresponds to the $\eta$-th percentile of the dataset where $\eta = (1-CL)/2$. For a $99\%$ confidence interval, $\eta=0.05$.
-  \item Find the upper bound $\tau_{(1-\eta)}$ corresponds to the $(1-\eta)$-th percentile of the dataset.
-  \item The confidence interval around the median is $[\tau_{\eta}, \tau_{(1-\eta)}]$.
-\end{enumerate}
 
-The ToF distribution for the MADN systems with energy disorder is shown in Fig.\ref{fig:mle_MADN_withE}.
 The lower and upper bounds in Fig. \ref{fig:mle_MADN_withE} shows that when only the energies $E_i$ are uncertain, the $\log_{10}(\tau)$ has lower -8.0 and upper bound -6.5. This lower and upper bound is close to that of $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$, meaning that varying the energy alone generates a $\tau$ distribution close to that when $E_i, \lambda, J_{ij}$ are uncertain. 
 
 Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidence interval of -8.0 to -7.4 when $\lambda$ is varied. 
