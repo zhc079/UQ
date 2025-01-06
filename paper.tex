@@ -345,7 +345,19 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 %\end{enumerate}
 
 \bjoern{STOP}{HERE}
+The analytical forms of the distribution $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, $P_J(\log_{10}(\tau))$ and $P_\mathbf{x}(\log_{10}(\tau))$ are usually unknown. 
+To quantify the uncertainty and variability in the sample data, we calculate a $99\%$ confidence interval around the median. 
+This statistical quantity is typically nonparametric, and relies on percentiles of the data, making it robust to different types of probability mass function.
 
+Using the equal-tailed percentile method, its calculation involves sorting the data and determining percentiles that correspond to the desired confidence level.
+Given a dataset $\{ \tau_1, \tau_2, \dots, \tau_n \}$, the procedure can be described as follows:
+\begin{enumerate}
+  \item Sort the data in ascending order. For a confidence level $CL$, the corresponding complement 
+  $1-CL$ determines the tails of the interval. 
+  \item Find the lower bound $\tau_{\eta}$ corresponds to the $\eta$-th percentile of the dataset where $\eta = (1-CL)/2$. For a $99\%$ confidence interval, $\eta=0.05$.
+  \item Find the upper bound $\tau_{(1-\eta)}$ corresponds to the $(1-\eta)$-th percentile of the dataset.
+  \item The confidence interval around the median is $[\tau_{\eta}, \tau_{(1-\eta)}]$.
+\end{enumerate}
 
 The ToF distribution for the MADN systems with energy disorder is shown in Fig.\ref{fig:mle_MADN_withE}.
 The lower and upper bounds in Fig. \ref{fig:mle_MADN_withE} shows that when only the energies $E_i$ are uncertain, the $\log_{10}(\tau)$ has lower -8.0 and upper bound -6.5. This lower and upper bound is close to that of $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$, meaning that varying the energy alone generates a $\tau$ distribution close to that when $E_i, \lambda, J_{ij}$ are uncertain. 
