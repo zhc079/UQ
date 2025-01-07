@@ -294,7 +294,7 @@ From the analysis of reorganization energies, site energies, and electronic coup
 \label{sec:UQ}
 The previous section shows that different HFX affect the calculated ToF. In this section, we use the Monte Carlo method to estimate the range of the ToF given a confidence level, followed by a sensitivity analysis to determine which parameter contributes more to the variance of ToF. 
 
-\subsection{Monte-Carlo Sampling of ToF}
+\subsection{Time-of-flight of diffusion}
 As discussed the ToF is calculated from the graph with weighted edges defined by the electronic structure data $(\lambda, E_1,\ldots,E_N, J_1^2,\ldots,J_{N_\text{p}}^2)$, where $N$ is the number of molecules (vertices) and $N_\text{p}$ the number of molecule pairs (edges) in the neighbor list. We can therefore consider that $\tau = \tau(\mathbf{x})$ with $\mathbf{x}=(\lambda, E_1,\ldots,E_N, \log_{10}(J_1^2),\ldots,\log_{10}(J_{N_\text{p}}^2))$ as dependent on $M = 1+N+N_\text{p}$ parameters with uncertainty, in this case stemming from the possible choices of \ahfx in the exchange-correlation functional of the multiscale model. Note that due to the data range for the electronic coupling element as discussed in the previous section, we consider $\log_{10}(J^2)$ instead of $J^2$. For MADN, we have that $M=XXX$ \bjoern{ADD:}{how many pairs?}
 
 Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. As these distributions do not necessarily follow any specific analytic form, we estimate a $99\%$ confidence interval around the median using the equal-tailed percentile method. \bjoern{Maybe discuss somewhere:}{correlations between parameters are gone, especially in site energies, but they are (practically) uncorrelated in MADN.}
@@ -382,9 +382,7 @@ The four respective distributions of $\tau$ in the MADN system are shown in Fig.
 %When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}. 
 %The distribution $P(\log_{10}(\tau)|\lambda \text{ uncertain})$ has a range of confidence interval -9.6 to -9.0 resembles that of $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$, which has a range of confidence interval -9.7 to -9.1. 
 
-
-
-\subsection{Sobol indices}
+%\subsection{Sobol indices}
 Besides the inspection on the distributions for various uncertain parameter (sets) as above, one can also quantify the sensitivity of the time-of-fight to the respective parameters by evaluating their contributions to the overall observed variance in $\tau$. One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis using Sobol indices~\cite{saltelli_variance_2010}. 
 
 To measure the parameter $x_i$'s contribution to $\tau=\tau(\mathbf{x})$ including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total Sobol index $S_{T,i}$ is calculated as
@@ -422,7 +420,6 @@ Here, $\mathbf{x}_{\sim i}$ denotes the vector of all entries of $\mathbf{x}$ bu
 %And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances.
 %When there is no energy disorder, the variance in $\lambda$ has the most contribution to the total variance as shown in Table \ref{tab:Sobol}.
 
-\bjoern{STOP}{HERE}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -470,44 +467,37 @@ Here, $\mathbf{x}_{\sim i}$ denotes the vector of all entries of $\mathbf{x}$ bu
 %In the next section, the Poole–Frenkel behavior, that is the dependence of charge mobility on the electric field will be study using the ToF setting. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Charge mobility and PF Behavior}
-
-In this section, we want to study the dependence of drift mobility on the HFX. The charge mobility is calculated as:
+\subsection{Drift-diffusion Charge mobility}
+When an external electric field, $\mathbf{F}$, is applied to the system, the transport is not just diffusive but a drift-diffusion process. The material property of interest is then the drift mobility
+%
 \begin{equation}
-    \mu = \frac{\vec{v} \vec{F} }{ |\vec{F}|^2}
+    \mu = \frac{\mathbf{v} \mathbf{F} }{ |\mathbf{F}|^2},
     \label{eq:mu}
 \end{equation}
-To consider the charge dynamics along X, Y and Z axis in the ToF setting, the ToF is calculated with different settings of \textit{Source}-\textit{Sink} and $\vec{F}$ combinations.
-
-\begin{itemize}
-    \item Setting the molecules with $r^x < \min(r^x)+0.5$ as \textit{Source}, and the molecules with $r^x > \max(r^x)-0.5$ as \textit{Sink}, and $\vec{F}^T = (F,0,0)$, denote the calculated the ToF as $\tau_\text{Xmin}$, and the mobility is as $\mu_\text{Xmin} = \frac{L_x }{\tau_\text{Xmin} |\vec{F}|}$.  
-    \item Setting the molecules with $r^x > \max(r^x)-0.5$ as \textit{Source}, and the molecules with $r^x < \min(r^x)+0.5$ as \textit{Sink}, and $\vec{F}^T = (-F,0,0)$, denote the calculated the ToF as $\tau_\text{Xmax}$, and the mobility is as $\mu_\text{Xmax} = \frac{L_x }{\tau_\text{Xmax} |\vec{F}|}$.  
-    \item Setting the molecules with $r^y < \min(r^y)+0.5$ as \textit{Source}, and the molecules with $r^y > \max(r^y)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,F,0)$, denote the calculated the ToF as $\tau_\text{Ymin}$, and the mobility is as $\mu_\text{Ymin} = \frac{L_y }{\tau_\text{Ymin} |\vec{F}|}$. 
-    \item Setting the molecules with $r^y > \max(r^y)-0.5$ as \textit{Source}, and the molecules with $r^y > \max(r^y)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,-F,0)$, denote the calculated the ToF as $\tau_\text{Ymax}$, and the mobility is as $\mu_\text{Ymax} = \frac{L_y }{\tau_\text{Ymax} |\vec{F}|}$. 
-    \item Setting the molecules with $r^z < \min(r^z)+0.5$ as \textit{Source}, and the molecules with $r^z > \max(r^z)-0.5$ as \textit{Sink}, and $\vec{F}^T = (0,0,F)$, denote the calculated the ToF as $\tau_\text{Zmin}$, and the mobility is as $\mu_\text{Zmin} = \frac{L_z }{\tau_\text{Zmin} |\vec{F}|}$. 
-    \item Setting the molecules with $r^z > \max(r^z)-0.5$ as \textit{Source}, and the molecules with $r^z > \min(r^z)+0.5$ as \textit{Sink}, and $\vec{F}^T = (0,0,-F)$, denote the calculated the ToF as $\tau_\text{Zmax}$, and the mobility is as $\mu_\text{Zmax} = \frac{L_z }{\tau_\text{Zmax} |\vec{F}|}$. 
-\end{itemize}
-Finally the ToF drift mobility is calculated as:
-\begin{equation}
-    \mu_\text{PF} = \frac{1}{6} (\mu_\text{Xmin}+\mu_\text{Xmax}+\mu_\text{Ymin}+\mu_\text{Ymax}+\mu_\text{Zmin}+\mu_\text{Zmax})
-\end{equation}
-
-When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig.\ref{fig:fig_mle_withE_mu2_ave}.
 %
-\begin{figure}
+where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge carrier and $\mathbf{s}$ is the vector connecting the inital and final positions of the charge carrier. Here, we perform calculations for six different field directions (positive and negative Cartesian directions) with the source and sink conditions set accordingly. Finally, we define for a certain field strength $F=\vert\mathbf{F}\vert$  the ToF drift mobility $\mu(F)$ is as the average over the six directions. 
+
+\begin{figure}[tbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/fig_mle_withE_mu2_ave.pdf}
-    \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\mu/(\unit[]{cm^2(Vs)^{-1}}))$; there should be no PF label at $\mu$.} Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
+    \includegraphics[width=\linewidth]{figs/fig_mle_withE_mu2_ave.pdf}
+    \caption{\bjoern{TODO Zhong:}{all panels should have the same x-axis range for better comparison} Distribution of $\mu_\text{PF}$ in the multiscale modeled MADN system.
     Monte Carlo sampling with a sample size $N_\text{MC}=10000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \cdot 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \cdot 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \cdot 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \cdot 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \cdot 10^7 \unit{V/m}$.}
     \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
-%
 
-When the $\lambda, E_i, J_{ij}$ are uncertain and sampled from the normal distribution, the distributions of charge mobility obtained from MC sample under specific electric field are shown in Fig. \ref{fig:fig_mle_withE_mu2_ave}. The ToF depends on the electric field through the Marcus rate. As the electric increase from $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$
-$|\vec{F}|=9 \cdot 10^7 \unit{V/m}$, the
-range of the 90\% confidence interval where $\log_{10} \mu_\text{PF}$ lies
-estimated from the MC sample decrease from 0.90 to 0.69.
-So the electric field results in a narrower range of $\mu_\text{PF}$ distribution.
+We perform such mobility calculations for the six explicit \ahfx models as well as the Monte-Carlo sampled uncertainty for six different values of $F$. The results are shown in Fig.~\ref{fig:fig_mle_withE_mu2_ave}. While the distributions shift depending on the strength of the applied field, the overall shape and the width of the confidence intervals is very similar. The width of the confidence intervals in $\log_{10}(\mu)$ decreases from \unit[0.9] at low fields ($\unit[4 \cdot 10^7]{V/m}$) to \unit[0.9] at a field of $\unit[9 \cdot 10^7]{V/m}$, corresponding broadly to a width of close to one order of magnitude in $\mu$. A stronger drift component due to a larger external electric field seems to make the mobility slightly less sensitive to uncertainties \bjoern{CHECK}{not sure about this interpretation}.
+
+
+\bjoern{STOP}{HERE}
+
+
+%As the electric increase from $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$
+%$|\vec{F}|=9 \cdot 10^7 \unit{V/m}$, the
+%range of the 90\% confidence interval \bjoern{TO CHECK}{above and below it is 99\%!!} where $\log_{10} \mu_\text{PF}$ lies
+%estimated from the MC sample decrease from 0.90 to 0.69.
+%So the electric field results in a narrower range of $\mu_\text{PF}$ distribution.
+
+
 Due to this reason, the $\mu_\text{PF}$ calculated from $\alpha=0$ is not in the 99\% confidence interval around the median of the MC sampled data, although the zero-field ToF of $\alpha=0$ is contained in the according 99\% confidence interval, as shown in Fig. \ref{fig:mle_MADN_withE}(d).
 
 The ToF depends on the electric field through the Marcus rate. 
