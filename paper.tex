@@ -297,7 +297,7 @@ The previous section shows that different HFX affect the calculated ToF. In this
 \subsection{Monte-Carlo Sampling of ToF}
 As discussed the ToF is calculated from the graph with weighted edges defined by the electronic structure data $(\lambda, E_1,\ldots,E_N, J_1^2,\ldots,J_{N_\text{p}}^2)$, where $N$ is the number of molecules (vertices) and $N_\text{p}$ the number of molecule pairs (edges) in the neighbor list. We can therefore consider that $\tau = \tau(\mathbf{x})$ with $\mathbf{x}=(\lambda, E_1,\ldots,E_N, \log_{10}(J_1^2),\ldots,\log_{10}(J_{N_\text{p}}^2))$ as dependent on $M = 1+N+N_\text{p}$ parameters with uncertainty, in this case stemming from the possible choices of \ahfx in the exchange-correlation functional of the multiscale model. Note that due to the data range for the electronic coupling element as discussed in the previous section, we consider $\log_{10}(J^2)$ instead of $J^2$. For MADN, we have that $M=XXX$ \bjoern{ADD:}{how many pairs?}
 
-Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. As these distributions do not necessarily follow any specific analytic form, we estimate a $99\%$ confidence interval around the median using the equal-tailed percentile method.
+Because the precise distribution of the uncertainties of the $M$ parameters is not known, we consider the maximum amount of uncertainties from a maximum likelihood estimation based on the data obtained from the explicit results for the different values of \ahfx and the assumption of normal distributions. In other words, each of the parameters $x_i$ for $i=1,\ldots,M$ is assigned a normal distribution with $\mathcal{N}(\mathbb{E}(x_i),\mathbb{V}(x_i))$, with $\mathbb{E}(x_i)$ ($\mathbb{V}(x_i)$) the mean (variance) of the respective data. Then, Monte-Carlo sampling is used to obtain $N_\text{MC}=50000$ different realizations of $\mathbf{x}$, the respective time-of-flight is calculated from these samples, and the resulting distribution $P(\log_{10}(\tau))$ is statistically analyzed. Specifically, we consider four different settings: in three settings, only one of the parameters blocks $(\lambda,\left\{E\right\},\left\{\log_{10}(J^2)\right\})$ is sampled while the values of the other blocks are set to their respective mean values and we denote the resulting distributions as $P_\lambda(\log_{10}(\tau))$, $P_E(\log_{10}(\tau))$, and $P_J(\log_{10}(\tau))$, respectively. In the fourth setting, all parameters are sampled at the same time, yielding $P_\mathbf{x}(\log_{10}(\tau))$. As these distributions do not necessarily follow any specific analytic form, we estimate a $99\%$ confidence interval around the median using the equal-tailed percentile method. \bjoern{Maybe discuss somewhere:}{correlations between parameters are gone, especially in site energies, but they are (practically) uncorrelated in MADN.}
 
 
 %Then Monte Carlo scheme is used to estimate the distribution of the ToF. The Monte Carlo scheme has the procedure:
@@ -314,7 +314,7 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 %which uncertainty among $E, \lambda, J_{ij}$ has a greater impact on the ToF, 
 
 
-\begin{figure}
+\begin{figure}[tbp]
   \centering
   \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE.pdf}
   \caption{\bjoern{TODO Zhong:}{swap panels a and b}Distribution of ToFs in the multiscale modeled MADN system.
@@ -358,72 +358,72 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 %  \item The confidence interval around the median is $[\tau_{\eta}, \tau_{(1-\eta)}]$.
 %\end{enumerate}
 
-The four respective distributions of $\tau$ in the MADN system are shown in Fig.~\ref{fig:mle_MADN_withE} together with the indicated confidence intervals. Considering first the three distributions with single property sampling in panels (a)-(c), we find the confidence intervals for $\log_{10}(\tau)$ of $[-8.0,-7.4]$ for uncertain $\lambda$, $[-8.0,-6.5]$ for uncertain $E$, and $[-7.9,-7.7]$ for uncertain $J$, respectively. Interestingly, all three share very similar lower limits of the confidence interval, while the upper limits and the shape of the distributions differ significantly. 
-\bjoern{STOP}{HERE}
+The four respective distributions of $\tau$ in the MADN system are shown in Fig.~\ref{fig:mle_MADN_withE} together with the indicated confidence intervals obtained from Monte-Carlo sampling. Black dots at the $x$-axes are the data from the explicit calculations for the six \ahfx values discussed before. Considering first the three distributions with single property sampling in panels (a)-(c), we find the confidence intervals for $\log_{10}(\tau)$ of $[-8.0,-7.4]$ for uncertain $\lambda$, $[-8.0,-6.5]$ for uncertain $E$, and $[-7.9,-7.7]$ for uncertain $J$, respectively. Interestingly, all three share very similar lower limits of the confidence interval, while the upper limits and the shape of the distributions differ significantly. While $P_\lambda(\log_{10}(\tau))$ and $P_J(\log_{10}(\tau))$ appear relatively symmetric, indictaing possible a log-normal distribution of $\tau$, $P_E(\log_{10}(\tau))$ is distinctly asymmetric which might point to a normal distribution of $\tau$ for uncertain energies. From the three distributions and the confidence intervals one can see that the effect of the uncertainty in the coupling elements on the time-of-flight is small (factor of 2 on $\tau$). The effect of uncertainty in the reorganization energy is only slightly higher (factor of four). Uncertainty in the site energies, in contrast, has a much bigger impact on the estimates of $\tau$. From the distribution of $P_\mathbf{x}(\log_{10}(\tau))$ in Fig.~\ref{fig:mle_MADN_withE}(d), one can see than when all parameters are sampled, the result is dominated by the effects from the uncertainty in the site energies, with an overall similar shape and a confidence interval of $[-8.3,-6.6]$, corresponding to a range from about \unit[5]{ns} to about \unit[250]{ns} in $\tau$. 
 
 
-The lower and upper bounds in Fig. \ref{fig:mle_MADN_withE} shows that when only the energies $E_i$ are uncertain, the $\log_{10}(\tau)$ has lower -8.0 and upper bound -6.5. This lower and upper bound is close to that of $P(\log_{10}(\tau)|E_i, \lambda, J_{ij} \text{ uncertain})$, meaning that varying the energy alone generates a $\tau$ distribution close to that when $E_i, \lambda, J_{ij}$ are uncertain. 
-
-Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidence interval of -8.0 to -7.4 when $\lambda$ is varied. 
-Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{10}(\tau)$ has a narrow confidence interval of -7.9 to -7.7, suggesting that the variation in $J_{ij}$ leads to relatively small change in $\log_{10}(\tau)$ compared to $E_i$ and $\lambda$.
+%Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidence interval of -8.0 to -7.4 when $\lambda$ is varied. 
+%Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{10}(\tau)$ has a narrow confidence interval of -7.9 to -7.7, suggesting that the variation in $J_{ij}$ leads to relatively small change in $\log_{10}(\tau)$ compared to $E_i$ and $\lambda$.
 
 %
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE.pdf}
-  \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\tau/\unit[]{s})$.}Distribution of ToFs in the multiscale modeled MADN system.
-  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
-  Energy disorder is not consider. 
-  The black circles indicate the ToF obtained using varying HFX values.
-  (a) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
-  (b) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
-  (c) $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$. }
-  \label{fig:mle_MADN_noE}
-\end{figure}
+%\begin{figure}[t]
+%  \centering
+%  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_noE.pdf}
+%  \caption{\bjoern{TODO Zhong:}{these should also strictly be $\log_{10}(\tau/\unit[]{s})$.}Distribution of ToFs in the multiscale modeled MADN system.
+%  Monte Carlo sampling with a sample size $N_\text{MC}=50000$ is used to obtain the sampled distribution. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median.
+%  Energy disorder is not consider. 
+%  The black circles indicate the ToF obtained using varying HFX values.
+%  (a) $P(\log_{10}(\tau)|\lambda \text{ uncertain})$, 
+%  (b) $P(\log_{10}(\tau)|J_{ij} \text{ uncertain})$, 
+%  (c) $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$. }
+%  \label{fig:mle_MADN_noE}
+%\end{figure}
 %
 
-When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}. 
-The distribution $P(\log_{10}(\tau)|\lambda \text{ uncertain})$ has a range of confidence interval -9.6 to -9.0 resembles that of $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$, which has a range of confidence interval -9.7 to -9.1. 
+%When the energy disorder in MADN system is not considered, that is, all the MADN molecule energy are set to be equal giving $\Delta E=0$, the distribution of ToF is shown in Fig.\ref{fig:mle_MADN_noE}. 
+%The distribution $P(\log_{10}(\tau)|\lambda \text{ uncertain})$ has a range of confidence interval -9.6 to -9.0 resembles that of $P(\log_{10}(\tau)|\lambda, J_{ij} \text{ uncertain})$, which has a range of confidence interval -9.7 to -9.1. 
 
 
 
 \subsection{Sobol indices}
-Measuring the sensitivity of each electronic parameter to ToF is to measure each electronic parameter's contribution to the variance of ToF. 
-That is, if ToF is most sensitive to one parameter, the variance in this particular parameter will contribute most to the ToF variance. 
+Besides the inspection on the distributions for various uncertain parameter (sets) as above, one can also quantify the sensitivity of the time-of-fight to the respective parameters by evaluating their contributions to the overall observed variance in $\tau$. One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis using Sobol indices~\cite{saltelli_variance_2010}. 
 
-
-One way of decomposing the variance of the model output into fractions attributed to input parameters is the variance-based sensitivity analysis. The local sensitive analysis is to use the partial derivative $\frac{\partial \tau}{\partial x_i}$. While the global sensitivity analysis can use Sobol's indices. Given a model of Equation \ref{eq:tau1}, to measure the parameter $x_i$'s contribution to $\tau$ including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total effect Sobol's index is calculated as \cite{saltelli_variance_2010}:
+To measure the parameter $x_i$'s contribution to $\tau=\tau(\mathbf{x})$ including all variance caused by its interaction with other parameters $\{x_k, k \neq i \}$, the total Sobol index $S_{T,i}$ is calculated as
+%
 \begin{equation}
-    S_{T,i} = \frac{ \mathbb{E}_{\mathbf{x}_{\sim i}}[ \mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i}) ] }{ \mathbb{V}(\tau) }
+    S_{T,i} = \frac{ \mathbb{E}_{\mathbf{x}_{\sim i}}[ \mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i}) ] }{ \mathbb{V}(\tau) } .
     \label{eq:STi}
 \end{equation}
-The details of the notation is as followed: the vector $\mathbf{x}=(x_1, x_2, \cdots, x_{N_d})$, and $\mathbf{x}_{\sim i}$ denotes the vector of all entries but $x_i$. 
-$\mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i})$ means the variance of $\tau$ given a set of $\mathbf{x}_{\sim i}$ taken over $x_i$. And $ \mathbb{E}_{\mathbf{x}_{\sim i}}[\cdot]$ denotes the mean of argument $(\cdot)$ taken over all factors but $x_i$.
-
 %
-\begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
-\caption{\label{tab:Sobol}%
-Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$ when ToF is calculated with energy disorder, and Sobol indices of $\lambda$ and $\log_{10} J^2$ when ToF is calculated without energy disorder.
-}
-\begin{ruledtabular}
-  \begin{center}
-    \begin{tabular}{c c c c c c c} %\hline
-      &  \multicolumn{3}{c}{\bf Energy Disorder} & &\multicolumn{2}{c}{\bf no Disorder}\\\cline{2-4}  \cline{6-7}
-      parameter  & $\lambda$ & $ E_i$ & $ \log_{10}(J_{ij}^2)$ && $\lambda$ & $ \log_{10}(J_{ij}^2)$ \\ \hline
+Here, $\mathbf{x}_{\sim i}$ denotes the vector of all entries of $\mathbf{x}$ but $x_i$. The variance of $\tau$ given a set of $\mathbf{x}_{\sim i}$ taken over $x_i$ is $\mathbb{V}_{x_i}(\tau|\mathbf{x}_{\sim i})$ and $ \mathbb{E}_{\mathbf{x}_{\sim i}}[\cdot]$ denotes the mean of argument $(\cdot)$ taken over all factors but $x_i$. We then consider based on the structure of the vector $\mathbf{x}$ the Sobol index for the reorganization energy as $S_{T,\lambda} = S_{T,1}$, for the site energies as $S_{T,E} = \sum\limits_{i=2}^{N+1} S_{T,i}$, and for the coupling elements as $S_{T,E} = \sum\limits_{i=N+2}^{N+1+N_\text{p}} S_{T,i}$. Using the quasi Monte Carlo method\cite{sobol_global_2001} with a sample size $N_\text{QMC}=1000$ to calculate $S_{T,i}$, we find that $S_{T,\lambda}=0.097$, $S_{T,E} =0.950$ and $S_{T,J}=0.018$. The Sobol indices corroborate the observation from the confidence intervals that the uncertainty in the site energies gives the dominant contribution to the variance of the simulated time-of-flight. Contributions from the reorganization energy and the coupling elements are both small in relation, with the one of $\lambda$ slightly larger than the one of $J$. This is also in line with the general observations on the distributions in Fig.~\ref{fig:mle_MADN_withE}.
+
+
+
+
+%\begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
+%\caption{\label{tab:Sobol}%
+%Sobol indices of $\lambda$, $E$ and $\log_{10} J^2$ when ToF is calculated with energy disorder, and Sobol indices of $\lambda$ and $\log_{10} J^2$ when ToF is calculated without energy disorder.
+%}
+%\begin{ruledtabular}
+%  \begin{center}
+%    \begin{tabular}{c c c c c c c} %\hline
+%      &  \multicolumn{3}{c}{\bf Energy Disorder} & &\multicolumn{2}{c}{\bf no Disorder}\\\cline{2-4}  \cline{6-7}
+%      parameter  & $\lambda$ & $ E_i$ & $ \log_{10}(J_{ij}^2)$ && $\lambda$ & $ \log_{10}(J_{ij}^2)$ \\ \hline
       %\multicolumn{6}{c}{\bf GRW for $\mathbf{N_c=1}$}\\
-   $S_T$  & 0.097 & 0.95 & 0.018 && 0.96 & 0.11 \\
-    \end{tabular}
-  \end{center}
-\end{ruledtabular}
-\end{table}
+%   $S_T$  & 0.097 & 0.95 & 0.018 && 0.96 & 0.11 \\
+%    \end{tabular}
+%  \end{center}
+%\end{ruledtabular}
+%\end{table}
 %
-Then the $\lambda$ contribution to the total variance is $S_{T,i=1}$.
-The energy contribution to the total variance is $S_{T,E} = \sum\limits_{i=1}^{N+1} S_{T,i}$ where $N=1000$ is the number of energy parameter, and the coupling element contribution due to variation in $\log_{10}(J_{ij}^2)$ to the total variance is $S_{T,J}=\sum\limits_{i=N+2}^{N_d} S_{T,i}$. 
-Using the quasi Monte Carlo method\cite{sobol_global_2001} with a sample size $N_\text{QMC}=1000$ to calculate $S_{T,i}$, the results are shown in the table \ref{tab:Sobol}.
 
-From table \ref{tab:Sobol} one can see that most of the total variance can be attributed to the energy $E$. In contrast to $E$, the uncertainty in $\lambda$ and $\log_{10} J^2$ contributes much less compared to $E$, this is consistent to the Fig.\ref{fig:mle_MADN_withE}, where the distribution in Fig.\ref{fig:mle_MADN_withE}(d) resembles the distribution in Fig.\ref{fig:mle_MADN_withE}(a).
-And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances.
-When there is no energy disorder, the variance in $\lambda$ has the most contribution to the total variance as shown in Table \ref{tab:Sobol}.
+ 
+
+%From table \ref{tab:Sobol} one can see that most of the total variance can be attributed to the energy $E$. In contrast to $E$, the uncertainty in $\lambda$ and $\log_{10} J^2$ contributes much less compared to $E$, this is consistent to the Fig.\ref{fig:mle_MADN_withE}, where the distribution in Fig.\ref{fig:mle_MADN_withE}(d) resembles the distribution in Fig.\ref{fig:mle_MADN_withE}(a).
+%And Fig.\ref{fig:mle_MADN_withE}(c) shows that the uncertainty in $\log_{10}(J^2)$ only leads to small variances.
+%When there is no energy disorder, the variance in $\lambda$ has the most contribution to the total variance as shown in Table \ref{tab:Sobol}.
+
+\bjoern{STOP}{HERE}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
