@@ -475,7 +475,7 @@ When an external electric field, $\mathbf{F}$, is applied to the system, the tra
     \label{eq:mu}
 \end{equation}
 %
-where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge carrier and $\mathbf{s}$ is the vector connecting the inital and final positions of the charge carrier. Here, we perform calculations for six different field directions (positive and negative Cartesian directions) with the source and sink conditions set accordingly. Finally, we define for a certain field strength $F=\vert\mathbf{F}\vert$  the ToF drift mobility $\mu(F)$ is as the average over the six directions. 
+where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge carrier and $\mathbf{s}$ is the vector connecting the initial and final positions of the charge carrier. Here, we perform calculations for six different field directions (positive and negative Cartesian directions) with the source and sink conditions set accordingly. The electric field is taken account in the Marcus rate in Eq.~\ref{equ:Marcus} via an additional term in $\Delta E_{ij}$ given by $e\mathbf{F} \cdot \mathbf{r}_{ij}$, where $\mathbf{r}_{ij}$ connects the center-of-masses (COMs) of molecules $i$ and $j$. Finally, we define for a certain field strength $F=\vert\mathbf{F}\vert$ the ToF drift mobility $\mu(F)$ is as the average over the six directions. 
 
 \begin{figure}[tbp]
     \centering
@@ -485,8 +485,16 @@ where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge c
     \label{fig:fig_mle_withE_mu2_ave}
 \end{figure}
 
-We perform such mobility calculations for the six explicit \ahfx models as well as the Monte-Carlo sampled uncertainty for six different values of $F$. The results are shown in Fig.~\ref{fig:fig_mle_withE_mu2_ave}. While the distributions shift depending on the strength of the applied field, the overall shape and the width of the confidence intervals is very similar. The width of the confidence intervals in $\log_{10}(\mu)$ decreases from \unit[0.9] at low fields ($\unit[4 \cdot 10^7]{V/m}$) to \unit[0.9] at a field of $\unit[9 \cdot 10^7]{V/m}$, corresponding broadly to a width of close to one order of magnitude in $\mu$. A stronger drift component due to a larger external electric field seems to make the mobility slightly less sensitive to uncertainties \bjoern{CHECK}{not sure about this interpretation}.
+We perform such mobility calculations for the six explicit \ahfx models as well as the Monte-Carlo sampled uncertainty for six different values of $F$. The results are shown in Fig.~\ref{fig:fig_mle_withE_mu2_ave}. While the distributions shift depending on the strength of the applied field, the overall shape and the width of the confidence intervals is very similar. The width of the confidence intervals in $\log_{10}(\mu)$ decreases from \unit[0.9]{} at low fields ($\unit[4 \cdot 10^7]{V/m}$) to \unit[0.7]{} at a field of $\unit[9 \cdot 10^7]{V/m}$, corresponding broadly to a width of close to one order of magnitude in $\mu$. A stronger drift component due to a larger external electric field seems to make the mobility slightly less sensitive to uncertainties \bjoern{CHECK}{not sure about this interpretation}.
 
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/fig_PF_plot_ave.pdf}
+    \caption{\bjoern{TODO Zhong:}{remove PF label; avoid the large white space at the right; make data plot symbols a little bigger and lines a little thicker.}Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole--Frenkel plots obtained with specific HFX value, and the green shadow indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
+    \label{fig:PF_plot_ave}
+\end{figure}
+
+Figure~\ref{fig:PF_plot_ave} shows the plot of the charge mobility one logarithmic $y$-axis as a function of $\sqrt{F}$ to reveal the electric field dependence of the type $\mu(F)=\mu_0 \exp (\beta \sqrt{F})$ as predicted by Poole and Frenkel~\cite{frenkel_prebreakdown_1938}. We show the explicit results for the six chosen \ahfx values together with the confidence interval estimate from the uncertainty quantification via Monte-Carlo sampling. 
 
 \bjoern{STOP}{HERE}
 
@@ -498,22 +506,9 @@ We perform such mobility calculations for the six explicit \ahfx models as well 
 %So the electric field results in a narrower range of $\mu_\text{PF}$ distribution.
 
 
-Due to this reason, the $\mu_\text{PF}$ calculated from $\alpha=0$ is not in the 99\% confidence interval around the median of the MC sampled data, although the zero-field ToF of $\alpha=0$ is contained in the according 99\% confidence interval, as shown in Fig. \ref{fig:mle_MADN_withE}(d).
-
-The ToF depends on the electric field through the Marcus rate. 
-Poole and Frenkel \cite{frenkel_prebreakdown_1938} predicted the electric-field dependence of charge mobility as $\mu_\text{PF}(F)=\mu_0 \exp (\beta \sqrt{|\vec{F}|})$.
-So it is common to plot the mobility $\mu_\text{PF}$ against $\sqrt{|\vec{F}|}$ in a so-called Poole-Frenkel plot.
-which is shown in Fig. \ref{fig:PF_plot_ave} for specifie HFX values. The 99\% confidence interval obtained via MC sampled in shown in the green shadow. 
 This interval suggests that if the uncertainties from the parameters are represented by the maximum likelihood distribution, the Poole–Frenkel plot from $\alpha=0$ has less 1\% chance to happen and thus is very likely. 
-%
-\begin{figure}[tbp]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figs/fig_PF_plot_ave.pdf}
-    \caption{\bjoern{TODO Zhong:}{remove PF label; avoid the large white space at the right; make data plot symbols a little bigger and lines a little thicker.}Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole–Frenkel plots obtained with specific HFX value, and the green shadow indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
-    \label{fig:PF_plot_ave}
-\end{figure}
 
-%
+
 \begin{table}[tbp]%The best place to locate the table environment is directly after its first reference in text
   \caption{\label{tab:PF_parameter}%
   Poole-Frenkel parameters $\mu_0$ (in $\unit[]{cm^2/(Vs)}$) and $\beta$ (in $\unit[]{\sqrt{cm/V}}$) of the multiscale modeled MADN, calculated by the six different HFX values. 
@@ -527,15 +522,18 @@ This interval suggests that if the uncertainties from the parameters are represe
     0.10 & & $1.0 \cdot 10^{-3}$ & & $1.5 \cdot 10^{-3}$ \\
     0.15 & & $8.0 \cdot 10^{-4}$ & & $1.6 \cdot 10^{-3}$ \\
     0.20 & & $9.3 \cdot 10^{-4}$ & & $1.3 \cdot 10^{-3}$ \\
-    0.20 & & $2.6 \cdot 10^{-4}$ & & $1.8 \cdot 10^{-3}$ \\
+    0.25 & & $2.6 \cdot 10^{-4}$ & & $1.8 \cdot 10^{-3}$ \\
       \end{tabular}
   \end{ruledtabular}
   \end{table}
-%  
+
 The extracted Poole–Frenkel paratermeter calculated from the six $\alpha$ values are summarized in Table \ref{tab:PF_parameter}. 
 Excluding the data of $\alpha=0$, the extracted zero-field mobility $\mu_0$ has a range from $2.6 \cdot 10^{-4}$ to $2.1 \cdot 10^{-3}$, and the field effect constant $\beta$ range from $9.3 \cdot 10^{-4}$ to $1.8 \cdot 10^{-3}$.
 So $\beta$ is less sensitive to the multiscale model parameter $\alpha$ compared the zero-field mobility.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Conclusion}
 The uncertainty effect from the exchange-correlation functional of the DFT on the multiscale model of OSC is studied. By choosing different HFX, the calculated values of some electronic structures remain very similar,
 such as the reorganization energy $\lambda$, molecular energy $E_i$ and the majority of the coupling elements  $J_{ij}$. While a few small-value coupling elements $J_{ij}$ show large different in calculated values when different HFX is used. Those uncertainties propagate to the output of the multiscale model, resulting in a range of QoI which has a maximum about 15 times of its minimum. These findings high-
