@@ -13,10 +13,10 @@ values=np.vstack([J, std])
 k = gaussian_kde(values)
 xi, yi = np.mgrid[J.min():J.max():nbins*1j, std.min():std.max():nbins*1j]
 zi = k(np.vstack([xi.flatten(), yi.flatten()]))
-plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='gouraud', cmap=plt.cm.BuGn_r)
-plt.contour(xi, yi, zi.reshape(xi.shape) )
+plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='gouraud', cmap=plt.cm.RdYlBu_r)
+plt.contour(xi, yi, zi.reshape(xi.shape),levels=10, colors='white', linewidths=1.0)
 
-
+plt.xlabel("$\mathbb{E}\log_{10}$")
 
 #plt.yscale("log")
 #plt.ylim([1e-20,1e-1])
