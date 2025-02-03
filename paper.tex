@@ -38,6 +38,7 @@ floatfix
 
 
 \newcommand{\bjoern}[2]{{\color{blue}{{\bf #1} #2}}}
+\newcommand{\Zhong}[2]{{\color{purple}{{\bf #1} #2}}}
 \newcommand{\ahfx}{\ensuremath{\alpha_\text{HFX}}\xspace}
 
 
@@ -349,6 +350,9 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 
 The four respective distributions of $\tau$ in the MADN system are shown in Fig.~\ref{fig:mle_MADN_withE} together with the indicated confidence intervals obtained from Monte-Carlo sampling. Black dots at the $x$-axes are the data from the explicit calculations for the six \ahfx values discussed before. Considering first the three distributions with single property sampling in panels (a)-(c), we find the confidence intervals for $\log_{10}(\tau)$ of $[-8.0,-7.4]$ for uncertain $\lambda$, $[-8.0,-6.5]$ for uncertain $E$, and $[-7.9,-7.7]$ for uncertain $J$, respectively. Interestingly, all three share very similar lower limits of the confidence interval, while the upper limits and the shape of the distributions differ significantly. While $P_\lambda(\log_{10}(\tau))$ and $P_J(\log_{10}(\tau))$ appear relatively symmetric, indictaing possible a log-normal distribution of $\tau$, $P_E(\log_{10}(\tau))$ is distinctly asymmetric which might point to a normal distribution of $\tau$ for uncertain energies. From the three distributions and the confidence intervals one can see that the effect of the uncertainty in the coupling elements on the time-of-flight is small (factor of 2 on $\tau$). The effect of uncertainty in the reorganization energy is only slightly higher (factor of four). Uncertainty in the site energies, in contrast, has a much bigger impact on the estimates of $\tau$. From the distribution of $P_\mathbf{x}(\log_{10}(\tau))$ in Fig.~\ref{fig:mle_MADN_withE}(d), one can see than when all parameters are sampled, the result is dominated by the effects from the uncertainty in the site energies, with an overall similar shape and a confidence interval of $[-8.3,-6.6]$, corresponding to a range from about \unit[5]{ns} to about \unit[250]{ns} in $\tau$. 
 
+\Zhong{}{It is worth noting that in multiscale modeling there is usually correlations between the site energies $E_i$. 
+Those correlations are due to electrostatic interactions, while the distribution $P(\log_{10}(\tau))$ evaluated from the Monte Carlo sampling does not take the energy correlations into account.
+However, in the case of MADN, these correlations are notably absent. This can be attributed to the specific molecular arrangement and electronic structure of MADN, which effectively decouples the site energies from one another. As a result, the site energies in MADN are practically uncorrelated, simplifying the analysis of their contributions to the time-of-flight distribution. }
 
 %Figure .\ref{fig:mle_MADN_withE}(b) shows that $\log_{10}(\tau)$ has a confidence interval of -8.0 to -7.4 when $\lambda$ is varied. 
 %Figure \ref{fig:mle_MADN_withE}(c) show that when $J_{ij}$ is uncertain $\log_{10}(\tau)$ has a narrow confidence interval of -7.9 to -7.7, suggesting that the variation in $J_{ij}$ leads to relatively small change in $\log_{10}(\tau)$ compared to $E_i$ and $\lambda$.
@@ -475,6 +479,14 @@ where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge c
 \end{figure}
 
 We perform such mobility calculations for the six explicit \ahfx models as well as the Monte-Carlo sampled uncertainty for six different values of $F$. The results are shown in Fig.~\ref{fig:fig_mle_withE_mu2_ave}. While the distributions shift depending on the strength of the applied field, the overall shape and the width of the confidence intervals is very similar. The width of the confidence intervals in $\log_{10}(\mu)$ decreases from \unit[0.9]{} at low fields ($\unit[4 \cdot 10^7]{V/m}$) to \unit[0.7]{} at a field of $\unit[9 \cdot 10^7]{V/m}$, corresponding broadly to a width of close to one order of magnitude in $\mu$. A stronger drift component due to a larger external electric field seems to make the mobility slightly less sensitive to uncertainties \bjoern{CHECK}{not sure about this interpretation}.
+
+\Zhong{}{The decrease in the confidence intervals of $\log_{10}(\mu)$ indicates a reduction in the relative uncertainty in charge mobility, so a higher fields lead to a more deterministic mobility values.
+There some possible physical reasons for such reduction in uncertainty. At low electric fields, the charge carriers spend a significant amount of time in some low-energy sites which are generated in the Monte Carlo sampling. 
+As the field strength increases, the drift term becomes more dominant, reducing the impact of these stochastic factors. 
+
+Furthermore, a stronger electric field help the carrier to escape from the low energy sites more efficiently. This effect would reduce variability in observed mobilities, contributing to a narrowing confidence interval.
+So a stronger applied field, which is deterministic, results in a more predictable mobility response, therefore reducing the spread in $\log_{10}(\mu)$ distribution.
+}
 
 \begin{figure}[tbp]
     \centering
