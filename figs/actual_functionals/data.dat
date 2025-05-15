@@ -1,0 +1,13 @@
+#functional HFX     tau
+#BHANDHLYP   0.5     4.62e-8  # hybrid
+PBE         0.0     5.32e-9  # pure GGA
+B3LYP       0.20    2.16e-8  # hybrid   
+BHLYP       0.5    1.43e-7  # 
+#M06L        0.00    8.94e-9
+#BP86        0.00    3.89e-8
+wB97X       0.158    3.75e-8
+#wB97X-D3    0.158    2.07e-8
+#TPSS        0.00    6.86e-9
+PBE0        0.25    9.5e-8
+
+

@@ -65,7 +65,7 @@ Organic semiconductors (OSCs) are materials that consist of organic molecules, o
 
 \begin{figure*}[tbp]
   \centering
-  \includegraphics[width=\linewidth]{figs/MSM2.pdf}
+  \includegraphics[width=\linewidth]{fig1.pdf}
   \caption{Schematic representation of the multiscale framework for simulation of charge transport: (a) a representative large-scale morphology is obtained from Molecular Dynamics. (b) Information about the molecular building blocks and the morphology are used to determine the molecular transport graph $\mathbf{G}$ for a given choice of the \ahfx via calculation of reorganization energy, site energies, and electronic couplings. (c) The time-of-flight charge mobility is simulated based on the graph.}
   \label{fig:MSM}
 \end{figure*}
@@ -200,7 +200,7 @@ In this section, we present and analyze the explicit results of the multiscale m
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=\linewidth]{figs/fig_autogen.pdf}
+    \includegraphics[width=\linewidth]{fig2.pdf}
     \caption{Dependence of molecular parameters as used directly in the multiscale model or in its paramaterization phase on the amount of Hartree--Fock type exchange in the PBE0-based hybrid functional $\alpha_\text{HFX}$. (a) The adiabatic ionization potential, (b) reorganization energy, (c) dipole moment of the neutral molecule, and (d) isotropic molecular polarizability in neutral and charged states, respectively.}
     \label{fig:autogen_MADN}
 \end{figure}
@@ -211,7 +211,7 @@ We begin with a brief discussion of the molecular parameters as they are used in
 
 \begin{figure*}[tbp]
   \centering
-  \includegraphics[width=\linewidth]{figs/scatterE_qmmm.pdf}
+  \includegraphics[width=\linewidth]{fig3.pdf}
   \caption{Panels (a)-(e): Scatter plot of site energies of the MADN system for different values of \ahfx vs the PBE0 ($\ahfx=0.25$) reference. (f) Site energy disorder $\sigma$ in \unit[]{eV} for all values of \ahfx.}
   \label{fig:E_qmmm_MADN}
 \end{figure*}
@@ -241,7 +241,7 @@ Interestingly, we find the biggest variation of \unit[0.1]{eV} in the values for
 
 \begin{figure*}[tbp]
   \centering
-  \includegraphics[width=\linewidth]{figs/scatterJ_all.pdf}
+  \includegraphics[width=\linewidth]{fig4.pdf}
   \caption{Scatter plot of electronic coupling elements of the MADN system for different values of \ahfx vs the PBE0 ($\ahfx=0.25$) reference.}
   \label{fig:J_MADN}
 \end{figure*}
@@ -250,7 +250,7 @@ Distributions and correlations compared with the PBE0 reference for the electron
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=\linewidth]{figs/fig_network_all.pdf}
+  \includegraphics[width=\linewidth]{fig5.pdf}
   \caption{The maximum size of the subgraphs obtained in the percolation algorithm as a function of critical value $J_c$.}
   \label{fig:J_percolate}
 \end{figure}
@@ -291,7 +291,7 @@ Because the precise distribution of the uncertainties of the $M$ parameters is n
 
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=0.45\textwidth]{figs/fig_mle_MADN_withE.pdf}
+  \includegraphics[width=0.45\textwidth]{fig6.pdf}
   \caption{Distribution of ToFs in the MADN system from  Monte Carlo sampling with a sample size $N_\text{MC}=50000$. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. The black circles indicate the ToF obtained using explicit \ahfx values. Uncertainties considered are (a) in the eorganziation energy, (b) in the site energy, (c) in the coupling elements, and (d) in all simultaneously.}
   \label{fig:mle_MADN_withE}
 \end{figure}
@@ -323,7 +323,7 @@ where $\mathbf{v} = \mathbf{s}/{\tau}$ is the effective velocity of the charge c
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=\linewidth]{figs/fig_mle_withE_mu2_ave.pdf}
+    \includegraphics[width=\linewidth]{fig7.pdf}
     \caption{Distribution of the mobility $\mu$ for different values of the externally applied electric field $F$ as obtained from uncertainty quantification using 
     Monte Carlo sampling with a sample size $N_\text{MC}=10000$. The red vertical lines indicate the lower bound and upper bound of the 99\% confidence interval around the median. (a) $|\vec{F}|=4 \cdot 10^7 \unit{V/m}$, (b) $|\vec{F}|=5 \cdot 10^7 \unit{V/m}$, (c) $|\vec{F}|=6 \cdot 10^7 \unit{V/m}$, (d) $|\vec{F}|=7 \cdot 10^7 \unit{V/m}$, (e) $|\vec{F}|=8 \cdot 10^7 \unit{V/m}$, (f) $|\vec{F}|=9 \cdot 10^7 \unit{V/m}$.}
     \label{fig:fig_mle_withE_mu2_ave}
@@ -333,7 +333,7 @@ We perform such mobility calculations for the six explicit \ahfx models as well 
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{figs/fig_PF_plot_ave.pdf}
+    \includegraphics[width=0.45\textwidth]{fig8.pdf}
     \caption{Electric-field dependence of the mobility $\mu$ in the multiscale modeled MADN system. The dash lines are Poole--Frenkel plots obtained with specific \ahfx values, and the green shaded area indicates the 99\% confidence interval estimated from the MC sampling with a sample size of $N_\text{MC}=10000$.}
     \label{fig:PF_plot_ave}
 \end{figure}
@@ -369,20 +369,20 @@ Despite the progress made, there are limitations to this study that warrant furt
 
 Furthermore, the study focuses on a single material system, MADN, which exhibits moderate disorder. Extending the analysis to other OSCs with varying degrees of disorder, charge-carrier types, or different molecular morphologies would enhance the generality of the conclusions.  
 
-\bibliography{references}
+\bibliography{../references.bib}
 
 \appendix*
 \section{Electrostatic and polarized energy contributions}
 \begin{figure*}
   \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterEstat_qmmm.pdf}
+  \includegraphics[width=0.80\textwidth]{fig9.pdf}
   \caption{Panels (a)-(e): Scatter plot of the electrostatic contribution to site energies of the MADN system for different values of \ahfx vs the PBE0 ($\ahfx=0.25$) reference. (f) Site energy disorder $\sigma$ in \unit[]{eV} for all values of \ahfx.}
   \label{fig:Estat_qmmm_MADN}
 \end{figure*}
 
 \begin{figure*}
   \centering
-  \includegraphics[width=0.80\textwidth]{figs/scatterEdip_qmmm.pdf}
+  \includegraphics[width=0.80\textwidth]{fig10.pdf}
   \caption{Panels (a)-(e): Scatter plot of polarization contribution to site energies of the MADN system for different values of \ahfx vs the PBE0 ($\ahfx=0.25$) reference. (f) Site energy disorder $\sigma$ in \unit[]{eV} for all values of \ahfx.}
   \label{fig:Edip_qmmm_MADN}
 \end{figure*}
