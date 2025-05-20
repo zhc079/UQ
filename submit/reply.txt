@@ -1,0 +1,252 @@
+Dear Dr. Gilmore,
+
+Thank you for the review of our manuscript ''Uncertainty Quantification in 
+Multiscale Models of Charge Transport in Organic Semiconductors: Influence 
+of the Exchange-Correlation Functional''.
+
+We thank the two referees for their detailed reports and the positive 
+assessment with both agreeing that our findings are useful, to be of interest
+for the field, convincing, and well written.
+
+We are also grateful for the very constructive suggestions and 
+a few minor points for clarification, which we have addressed in our revision. 
+
+We are convinced that our manuscript will be acceptable for publication 
+in its revised form.
+
+For convenience, we add to this reply a version of 
+the manuscript with changes indicated in blue.
+
+On behalf of the co-authors,
+Bjoern Baumeier
+
+-------------------------
+
+[Note: we have corrected the typos spotted by both reviewers and will not
+comment on each of them explicitly below.]
+
+Reviewer 1:
++++++++++++
+
+> In this work, the authors attempt to quantify how the uncertainty in 
+> the correct form of the exchange-correlation functional in DFT percolates 
+> through to the results of multi-scale models of charge transport in organic
+> semiconductors. They argue that although this uncertainty affects all the
+> parameters inputted into the model of transport properties, uncertainty 
+> in site energies dominates, suggesting that getting these correct is the 
+> most important part of having a predictive model.
+> The work is well written and thorough, with careful explanations of the 
+> methods used. In many places the authors have identified potential concerns 
+> with their approach, and carefully justified why these concerns are not 
+> applicable in the current situation, giving confidence in their results. The
+> results are certainly useful, both from a practical perspective by suggesting 
+> parameters to focus on, but also from a more philosophical level, as a
+> demonstration of the effect of the approximations inherent in DFT. They are 
+> certain to be of interest to anyone modelling charge transport with DFT,
+> and clearly within the scope of the field.
+> However, there are two fundamental points the authors should clarify, as well as 
+> some smaller issues. Once these are satisfactorily addressed, I would recommend
+> publication of this work in Physics Review B.
+
+We thank the reviewer for this positive assessment of our work.
+
+> General point:
+> 1. In pg. 1, paragraph 3, the authors argue that it is very difficult to map the many common
+> exchange-correlation functionals onto some model parameter, as is required for this
+> analysis. They therefore use the HF exchange fraction (α) as this model parameter. Whilst
+> this does have the advantage of being a single parameter that can be varied to give a range
+> of results, the authors do not really justify this choice beyond this. α is usually restricted to a
+> set value for a given functional (e.g. PBE0 or B3LYP), meaning that intermediate α values are
+> very rarely used. The authors should therefore justify why the results obtained from varying
+> α are a good proxy the results obtained by varying the xc functional, which would be more
+> typical. One way to do this might be to demonstrate that the range of results you obtain
+> from the variation of α encompasses the range of results you obtain with common
+> functionals (e.g. LDA, PBE, SCAN, PBE0, B3LYP, …).
+> 2. Further to this, there are in fact continuous parameters controlling the xc functional that
+> could have also served as a model parameter, e.g. the screening parameter in a screened
+> hybrid functional such as HSE. The authors should therefore justify their choice of α as the
+> model parameter of choice.
+
+We thank the reviewer for raising this important point of why we focus on the HF exchange
+fraction as, as we wrote, "a proxy for uncertainties in the choice of DFT functionals". We 
+see that the two points made above revolve around this question and address both at the same 
+time. Indeed, there are a multitude of different parameters used in the definitions of the zoo
+of possible exchange-correlation functionals that could in principle be used in a UQ study like
+the one in our manuscript. However, when we consider the dependence of simulated time-of-flight 
+results for a set of typical hybrid and meta-GGA functionals (PBE, B3LYP, PBE0, BHLYP, M06L, TPSS),
+we find that among that hybrid functional, the ToF varies between 10^-9 to 10^-7 s, whereas with 
+meta-GGAs we find variations of around 30% ''only'' in comparison. Based on this data, we made
+the informed decision to focus on the biggest contribution to the uncertainty, the HF exchange weight.
+To avoid additional noise in the uncertainty from different parameters in the rest of the functional
+definitions, we further decided to focus on PBE0 as the reference functional in which we vary the
+HF weight. This gives a controllable parameter for a UQ study.
+Note that the range of ToFs obtained from the explicit popular functionals agrees well with the 
+range of ToF obtained with our chosen proxy, giving an additional a posteriori justification for
+our model choice. 
+
+In the revised manuscipt, we have added to the data obtained from the explicit functionals as
+Table IV to the Appendix, and give a brief explanation of the choice of proxy in the Introduction. 
+We also add a short comparision between the alpha-varied ToF and the explicit functional data in
+Section III.D. 
+
+> Smaller issues:
+> 3. Pg. 3, para. 1. As far as I understand, after the MD is performed, individual molecules are
+> then extracted from final configuration, and DFT calculations are performed on these
+> isolated molecules to obtain the relevant parameters. This is not made clear in the text – the
+> authors should clarify exactly what is included within the DFT calculations. They should also
+> clarify if these calculations are performed in vacuo, or with some dielectric environment
+> included.
+
+It is correct that the DFT calculations that are used for the calcuations of the reorganization 
+energy, the electronic coupling elements, and the internal energy contributions to the site
+energies are performed on isolated molecules in vacuum, after their geometries have been extracted
+from the MD configuration. Environment effects are included on the site energies via the microelectrostatic
+model, which is parametrized also on the isolated DFT calculations. In the multiscale modeling of 
+charge transport in organic semiconductors, this is a commonly used approach. 
+
+We have clarified the extraction and post-processing of the molecular structures after MD, and which
+properties are calculated in vacuum and which with the inclusion of environment effects via the 
+microelectrostatic model thorughout the different parts of Section II of our revised manuscipt. 
+
+> Pg. 3, para. 3. Can the authors justify the assumption that a single value of reorganisation
+> energy is valid for all molecular pairs more strongly?
+
+This assumption is also common in multiscale workflows to simulate charge transport in organic
+semiconductors. In general, molecular conformations could be affected by the environment in the material, 
+with largest impact on soft degrees of freedom, such as dihedrals connecting rigid pi-conjugated 
+fragments with another. As geometry optimizations of a single molecule inside the environment is 
+computationally difficult, previous work has considered post-optimization of the molecular 
+geometries needed for the evaluation of the reorganization energies with constraints of the
+soft dihedrals to the values they have in the MD structure. However, the effects on reorganization 
+energy have been shown to be small, see e.g., [JCTC 7, 3335 (2011), Chem. Phys. Rev. 2, 031304 (2021)], 
+and are therefore not considered in this work.
+
+We have clarified this point in Section II.C of the revised manuscript.
+
+> Pg. 4, para. 1. It is not clear how the projections onto the dimer eigenbasis (pij) are obtained
+– the authors should clarify this.
+
+We clarify in Section II.E that the projections are obtained in a joint atomic orbital basis 
+(Gaussian-type orbitals) and refer the reader to reference 12 [PCCP 12, 11103 (2010)] for the
+implementational details of the method.
+
+> 7. Pg. 4, para. 2. The notation here is confusing, as pij is used for transition probability here, but
+> it has already been used for a completely different property immediately above. The authors
+> should consider changing the notation for one of these.
+
+We thank the reviewer for this observation and have changed the notation of the projections 
+accordingly to avoid confusion with the probabilities. 
+
+> Pg. 5, para. 3. The section about the Chebyshev distance is slightly confusing and could
+> benefit from rephrasing. The way the data is presented currently leaves open the suggestion
+> (and could even be read to imply) that the same molecule has the largest Chebyshev
+> distance for all values of α. I suspect this is not the desired message, and that the point is
+> that we always have at least one molecule whose site energy has changed by >0.1 eV
+> compared to α=0.25, but that molecule could be different in each case. If this is the case,
+> this should be emphasised. One way to do this would be to compare each value of α against
+> all other values, not just α=0.25 as a comparison.
+
+We thank the reviewer for pointing out the ambiguity in the presentation of the Chebyshev
+distance in Section III.B. It is indeed correct that this is not always the same molecule 
+with the mentioned value. 
+
+This point has been clarified in the revised version. 
+
+> 11. Pg. 5, para. 6. I’m not sure what is meant by ‘the mostly on distribution-level observed
+> variations’ – could this be rephrased?
+
+We realize that this formulation was unclear. The intention was to say that we cannot draw 
+any definite conclusions about how the choice of alpha affects the ToF or mobility
+by considering the dependence of the individual properties (reorganization energy,
+coupling elements, site energies) on alpha but have to perform the actual carrier
+dyanamics simulations.
+
+We have rephrased this in the revised version of the manucript for clarity.
+
+> 12. Pg. 7, para. 2. How are the mean and variance of the normal distributions obtained –
+> presumably from the values obtained from the 6 values of α? The text implies that a
+> individual normal distribution is assumed for each individual site energy/coupling element +
+> reorganisation energy – if so, are 6 data points really enough to obtain a reliable
+> mean/variance?
+
+FOR ALL:
+Good point, here it seems so. [be more fancy about it]
+
+
+> 14. Pg. 9, para. 2. The distributions shown in Fig. 7 now appear to be log-normal, rather than
+> normal – can the authors comment on this, particularly in comparison to Fig. 6?
+
+First, we would like to comment that the distributions shown in Fig.6 and Fig.7 show different
+properties: Fig.6 shows the UQ results for the ToF in the purely diffusive regime (no applied 
+external electric field) and different sources of uncertainty in the individual panels. Fig.7 
+shows UQ results for the mobility in the drift-diffusion regime with an applied external field 
+and sources of uncertainties in all parameters (reorganization energies, coupling elements, and
+site energies). As such, they should at best be compared to panel (d) of Fig.6. In all cases, 
+the distributions look log-normal rather than normal, so there is no discrepancy between the 
+two figures. 
+
+
+Reviewer 2:
++++++++++++
+
+> In this work, Chen et al. performed a detailed analysis of multiscale
+> modeling of charge transport in organic semiconductors. In the
+> multiscale model, the molecular parameters including site energies,
+> reorganization energy and intermolecular coupling, are determined
+> based on DFT related simulations. And then, these molecular parameters
+> are employed to simulate the Time-of-flight (Tof) and mobility in the
+> mesoscale material morphology. Based on sensitivity analysis, they
+> found that the site energy uncertainty dominates the variability of
+> Tof and mobility, while the uncertainty of reorganization energy and
+> intermolecular coupling displays a relatively minor effect. They
+> pointed out that the weight factor in the Hartree-Fock exchange
+> functional has a significant impact on the site energies and thus
+> indicates non-negligible effects on charge transport. Their findings
+> are quite useful in the multiscale modeling, which points out the key
+> molecular parameters that need be determined accurately with extensive
+> computational effort. Thus, this study is certainly important and of
+> general interest in the community of organic semiconductors.
+> Therefore, I would like to recommend this manuscript for publication.
+> The authors should consider addressing the following comments.
+
+We are grateful for the reviewer for the favorable comments on our work
+and the positive recommendation.
+
+> 1. In addition to the intermolecular distance, electronic coupling J
+> also sensitively depends on the structural orientation of two
+> molecules of the dimer. It is not clear whether the authors have
+> considered this effect in the calculation of variability of electronic
+> coupling.
+
+We would like to clarify that in the whole work we present in our manucript, 
+the structural details are fixed and the same for all investigations of the
+uncertainty as they pertain to the DFT-related steps in panel (b) of Fig.1.
+This is the objective of our work.
+
+In the calculations, explicit molecular conformations taken from the final MD
+configuration are taken to determine the electronic coupling element. This way 
+each molecular pair is characterized by different intermolecular distances and
+orientations, which we obtain with full atomistic detail. We mention also in 
+Section III.C that '' squared electronic coupling elements are found in a very
+wide range [...] due to its exponential distance dependence and sensitivity 
+to mutual orientation of the two involved molecules."
+
+We note that different choices in the MD step of the overall workflow, such
+as different force fields or different simulation protocols, can provide 
+another source of uncertainty. While interesting, investigating this is 
+outside the scope of our work.
+
+> 2. Overall, the Tof is monotonically increased with increasing
+> alpha_HFX except the value of 0.2. It seems that the reason is that
+> alpha_HFX=0.2 yields a smaller variability of site energy. Can the
+> authors explain this point?
+
+It is indeed an interesting observation but we are not convinced that 
+there is a straightforward explanation for this behavior. The problem is
+on the level of the atomistic details and the multiscale factors than 
+eventually determine the ToF highly non-linear. For instance, the argument
+of the smaller variability of the site energies alone cannot hold, as then 
+one would expect a similar reduction in ToF between alpha values 0.0 and 0.05,
+cf. Fig.3(f) and Table II. We think there is an interplay of several factors 
+here that is not obvious to disentangle. We also note that there is generally
+no general theory that would support a stictly increasing ToF as alpha increases.
