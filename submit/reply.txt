@@ -97,7 +97,7 @@ Section III.D.
 > clarify if these calculations are performed in vacuo, or with some dielectric environment
 > included.
 
-It is correct that [in or for] the DFT calculations that are used for the calcuations of the reorganization 
+It is correct that the DFT calculations that are used for the calcuations of the reorganization 
 energy, the electronic coupling elements, and the internal energy contributions to the site
 energies are performed on isolated molecules in vacuum, after their geometries have been extracted
 from the MD configuration. Environment effects are included on the site energies via the microelectrostatic
@@ -169,13 +169,12 @@ We have rephrased this in the revised version of the manucript for clarity.
 > reorganisation energy – if so, are 6 data points really enough to obtain a reliable
 > mean/variance?
 
-FOR ALL:
-Good point, here it seems so. [be more fancy about it]
-
-Maybe something along these lines:
 We agree with the referee that a more robust estimation would require more data points. Yet, 
-obtaining these is computationally challenging, which is why for this manuscript we stick to
-only 6 different values of alpha. We also note that since we apply the same fitting procedure
+obtaining these is computationally expensive, which is why for this manuscript we stick to
+only 6 different values of alpha. The fact that the six explicit results for the ToF for
+different alpha (black circles in Fig.6(d)) and the width of the distribution of the ToFs for all 
+considered sources of uncertainty in Fig.6(d) agree well serves as a posteriori evidence
+that our choices for the maximum likehood estimation are reasonable. We also note that since we apply the same fitting procedure
 (assuming a normal distribution and using only 6 data points) the conclusion on which 
 parameter has a dominated contribution to the ToF will be robust.
 
@@ -249,7 +248,7 @@ outside the scope of our work.
 
 It is indeed an interesting observation but we are not convinced that 
 there is a straightforward explanation for this behavior. The problem is
-on the level of the atomistic details and the multiscale factors than [that?] 
+on the level of the atomistic details and the multiscale factors that 
 eventually determine the ToF highly non-linear. For instance, the argument
 of the smaller variability of the site energies alone cannot hold, as then 
 one would expect a similar reduction in ToF between alpha values 0.0 and 0.05,
